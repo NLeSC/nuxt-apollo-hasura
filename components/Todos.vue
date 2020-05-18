@@ -33,9 +33,9 @@ import gql from 'graphql-tag'
 // `
 
 export const GET_TODOS = gql`
-  query getMyTodos($isPublic: Boolean!, $ownerId: String) {
+  query getMyTodos($isPublic: Boolean!, $userId: String) {
     todos(
-      where: { is_public: { _eq: $isPublic }, owner_id: { _eq: $ownerId } }
+      where: { is_public: { _eq: $isPublic }, user_id: { _eq: $userId } }
       order_by: { created_at: desc }
     ) {
       id
@@ -55,9 +55,9 @@ const TODOS_COUNT_SUBSCRIPTION = gql`
   }
 `
 const ADD_TODO = gql`
-  mutation insert_todos($todo: String!, $isPublic: Boolean!, $ownerId: String) {
+  mutation insert_todos($todo: String!, $isPublic: Boolean!, $userId: String) {
     insert_todos(
-      objects: { title: $todo, is_public: $isPublic, owner_id: $ownerId }
+      objects: { title: $todo, is_public: $isPublic, user_id: $userId }
     ) {
       affected_rows
       returning {
@@ -101,7 +101,7 @@ export default {
       variables() {
         return {
           isPublic: this.isPublic,
-          ownerId: this.isPublic ? null : this.$store?.state?.user?.user?.uid,
+          userId: this.isPublic ? null : this.$store?.state?.user?.user?.uid,
         }
       },
       error(error) {
@@ -129,7 +129,7 @@ export default {
         variables: {
           todo: title,
           isPublic: this.isPublic,
-          ownerId: this.isPublic ? null : this.$store.state.user.user.uid,
+          userId: this.isPublic ? null : this.$store.state.user.user.uid,
         },
         update: (cache, { data: { insert_todos } }) => {
           // Read the data from our cache for this query.
@@ -139,7 +139,7 @@ export default {
               query: GET_TODOS,
               variables: {
                 isPublic: this.isPublic,
-                ownerId: this.isPublic ? null : this.$store.state.user.user.uid,
+                userId: this.isPublic ? null : this.$store.state.user.user.uid,
               },
             })
             const insertedTodo = insert_todos.returning
@@ -148,7 +148,7 @@ export default {
               query: GET_TODOS,
               variables: {
                 isPublic: this.isPublic,
-                ownerId: this.isPublic ? null : this.$store.state.user.user.uid,
+                userId: this.isPublic ? null : this.$store.state.user.user.uid,
               },
               data,
             })
@@ -172,7 +172,7 @@ export default {
               query: GET_TODOS,
               variables: {
                 isPublic: this.isPublic,
-                ownerId: this.isPublic ? null : this.$store.state.user.user.uid,
+                userId: this.isPublic ? null : this.$store.state.user.user.uid,
               },
             })
             data.todos = data.todos.filter((t) => {
@@ -182,7 +182,7 @@ export default {
               query: GET_TODOS,
               variables: {
                 isPublic: this.isPublic,
-                ownerId:
+                userId:
                   this.type === 'public'
                     ? null
                     : this.$store.state.user.user.uid,
