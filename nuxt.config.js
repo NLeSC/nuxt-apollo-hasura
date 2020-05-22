@@ -94,6 +94,7 @@ export default {
     icons: {
       iconfont: 'mdiSvg',
     },
+    treeShake: true,
     theme: {
       dark: false,
       themes: {
