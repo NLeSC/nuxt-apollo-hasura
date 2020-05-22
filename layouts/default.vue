@@ -29,10 +29,11 @@
     <v-app-bar :clipped-left="clipped" fixed app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-btn icon @click.stop="miniVariant = !miniVariant">
-        <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
+        <v-icon v-if="miniVariant">{{ mdiChevronRight }}</v-icon>
+        <v-icon v-else>{{ mdiChevronLeft }}</v-icon>
       </v-btn>
       <v-btn icon @click.stop="clipped = !clipped">
-        <v-icon>mdi-application</v-icon>
+        <v-icon>{{ mdiApplication }}</v-icon>
       </v-btn>
       <v-toolbar-title class="ml-4" v-text="title" />
       <v-spacer />
@@ -57,28 +58,44 @@
 </template>
 
 <script>
+import {
+  mdiChevronRight,
+  mdiChevronLeft,
+  mdiApplication,
+  mdiHomeOutline,
+  mdiDatabaseSync,
+  mdiFileLockOutline,
+} from '@mdi/js'
 import { version } from '~/package.json'
 import LoginButton from '~/components/LoginButton'
+
 export default {
   components: { LoginButton },
   data() {
     return {
+      mdiChevronRight,
+      mdiChevronLeft,
+      mdiApplication,
+      mdiHomeOutline,
+      mdiDatabaseSync,
+      mdiFileLockOutline,
+
       clipped: true,
       drawer: true,
       miniVariant: true,
       items: [
         {
-          icon: 'mdi-home-outline',
+          icon: mdiHomeOutline,
           title: 'Home',
           to: '/',
         },
         {
-          icon: 'mdi-database-sync',
+          icon: mdiDatabaseSync,
           title: 'CRUD Database',
           to: '/crud',
         },
         {
-          icon: 'mdi-file-lock-outline',
+          icon: mdiFileLockOutline,
           title: 'Secret Page',
           to: '/secret',
         },

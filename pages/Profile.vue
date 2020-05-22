@@ -3,7 +3,7 @@
     <v-app-bar dense elevation="0">
       <v-btn rounded text @click="goBack">
         <v-icon left>
-          mdi-arrow-left
+          {{ mdiArrowLeft }}
         </v-icon>
         <span class="hidden-xs-only">Go back</span>
       </v-btn>
@@ -33,6 +33,7 @@
   </div>
 </template>
 <script>
+import { mdiArrowLeft } from '@mdi/js'
 import {
   mapActions,
   // mapGetters,
@@ -44,6 +45,7 @@ export default {
   name: 'App',
   data() {
     return {
+      mdiArrowLeft,
       showButton: false,
     }
   },

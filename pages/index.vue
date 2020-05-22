@@ -14,7 +14,7 @@
       </v-card-title>
 
       <v-card-text>
-        <v-icon>mdi-database</v-icon> Database:
+        <v-icon>{{ mdiDatabase }}</v-icon> Database:
         <a href="http://localhost:4000" target="_blank" class="link"
           >Hasura console</a
         >
@@ -36,7 +36,7 @@
           <v-col sm="6" cols="12"
             ><h4>Documentation</h4>
             <div v-for="link in links" :key="link.name">
-              <v-icon>mdi-link</v-icon>
+              <v-icon>{{ mdiLink }}</v-icon>
               <a :href="link.link" target="_blank">{{ link.name }}</a>
             </div></v-col
           >
@@ -54,10 +54,13 @@
 </template>
 
 <script>
+import { mdiDatabase, mdiLink } from '@mdi/js'
 export default {
   name: 'Home',
   data() {
     return {
+      mdiDatabase,
+      mdiLink,
       links: [
         {
           name: 'Nuxt Documentation',

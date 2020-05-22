@@ -18,7 +18,7 @@
           </v-list-item-content>
           <v-list-item-action>
             <v-btn icon @click="deleteTodo(todo.id)">
-              <v-icon color="grey lighten-1">mdi-close</v-icon>
+              <v-icon color="grey lighten-1">{{ mdiClose }}</v-icon>
             </v-btn>
           </v-list-item-action>
         </v-list-item>
@@ -28,6 +28,7 @@
 </template>
 <script>
 import gql from 'graphql-tag'
+import { mdiClose } from '@mdi/js'
 
 // const SUBSCRIPTION_NUM_TODOS= gql`
 // `
@@ -86,6 +87,7 @@ export default {
     type: { type: String, default: 'public' },
   },
   data: () => ({
+    mdiClose,
     newTodo: '',
     todosCount: 0,
   }),
