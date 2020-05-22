@@ -1,5 +1,4 @@
 import colors from 'vuetify/es5/util/colors'
-require('dotenv').config()
 
 /* nuxt.config.js */
 // only add `router.base = '/<repository-name>/'` if `DEPLOY_ENV` is `GH_PAGES`
@@ -7,7 +6,7 @@ const routerBase =
   process.env.DEPLOY_ENV === 'GH_PAGES'
     ? {
         router: {
-          base: '/<repository-name>/',
+          base: '/nuxt-apollo-hasura/',
         },
       }
     : {}
@@ -51,7 +50,6 @@ export default {
     // Doc: https://github.com/nuxt-community/eslint-module
     '@nuxtjs/eslint-module',
     '@nuxtjs/vuetify',
-    '@nuxtjs/dotenv',
   ],
   /*
    ** Nuxt.js modules
@@ -59,7 +57,6 @@ export default {
   modules: [
     '@nuxtjs/pwa',
     // Doc: https://github.com/nuxt-community/dotenv-module
-    '@nuxtjs/dotenv',
     '@nuxtjs/apollo',
   ],
 
