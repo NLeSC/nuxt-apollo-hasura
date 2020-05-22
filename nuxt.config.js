@@ -49,7 +49,6 @@ export default {
     // Doc: https://github.com/nuxt-community/dotenv-module
     '@nuxtjs/dotenv',
     '@nuxtjs/apollo',
-    '@nuxtjs/firebase',
   ],
 
   router: {
