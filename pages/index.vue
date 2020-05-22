@@ -67,8 +67,9 @@ export default {
           link: 'https://auth.nuxtjs.org/',
         },
         {
-          name: 'Nuxt Firebase',
-          link: '',
+          name: 'Auth0 with Vue and Hasura',
+          link:
+            'https://hasura.io/blog/add-authentication-and-authorization-to-vue-js-apps-with-auth0-graphql/',
         },
         {
           name: 'Hasura documentation',
