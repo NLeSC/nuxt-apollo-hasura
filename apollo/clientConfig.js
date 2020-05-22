@@ -7,5 +7,16 @@ export default function (context) {
     },
     cache: new InMemoryCache(),
     wsEndpoint: 'ws://localhost:4000/v1/graphql',
+
+    // get the authentication token from local storage if it exists
+    // return the headers to the context so httpLink can read them
+    getAuth: (tokenName = 'apollo-token') => {
+      const token = localStorage.getItem(tokenName)
+      if (token) {
+        return 'Bearer ' + token
+      } else {
+        return ''
+      }
+    },
   }
 }
