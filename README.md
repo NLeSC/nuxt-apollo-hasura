@@ -1,8 +1,9 @@
 # Nuxt Apollo Hasura Example
 
-Requirements locally: docker and Yarn. 
+ See project: https://github.com/NLeSC/full-stack-recipes
 
 ## Setup
+Requirements locally: docker and Yarn. 
 
 1. Create a Firebae project and write the config values on the `.env` file. 
 2. First create an `.env` file following `.env.example`.
