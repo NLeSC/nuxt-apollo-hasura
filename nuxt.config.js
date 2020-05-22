@@ -91,8 +91,9 @@ export default {
    */
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
-    icons: {
-      iconfont: 'mdiSvg',
+    defaultAssets: {
+      icons: 'mdiSvg',
+      font: '', // <- Needed to dont' load Roboto font fro the cdn
     },
     treeShake: true,
     theme: {
