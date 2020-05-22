@@ -5,14 +5,11 @@ import colors from 'vuetify/es5/util/colors'
 const routerBase =
   process.env.DEPLOY_ENV === 'GH_PAGES'
     ? {
-        router: {
-          base: '/nuxt-apollo-hasura/',
-        },
+        base: '/nuxt-apollo-hasura/',
       }
     : {}
 
 export default {
-  ...routerBase,
   mode: 'spa', // "spa" | "universal"
   /*
    ** Headers of the page
@@ -34,7 +31,7 @@ export default {
   /*
    ** Customize the progress-bar color
    */
-  loading: { color: '#ffffff' },
+  loading: { color: '#3872ff' },
   /*
    ** Global CSS
    */
@@ -54,13 +51,10 @@ export default {
   /*
    ** Nuxt.js modules
    */
-  modules: [
-    '@nuxtjs/pwa',
-    // Doc: https://github.com/nuxt-community/dotenv-module
-    '@nuxtjs/apollo',
-  ],
+  modules: ['@nuxtjs/pwa', '@nuxtjs/apollo'],
 
   router: {
+    ...routerBase,
     // middleware: ['auth'],
   },
 

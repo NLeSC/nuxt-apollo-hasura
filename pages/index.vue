@@ -3,7 +3,7 @@
     <v-img
       max-width="700"
       width="100%"
-      src="images/stack.jpg"
+      src="images/stack.webp"
       class="mt-4"
       :aspect-ratio="255 / 122"
     />
@@ -30,6 +30,7 @@
               <li>Optimistic UI</li>
               <li>Responsive UI</li>
               <li>One dev command with Docker</li>
+              <li>Deploy to Github pages</li>
             </ul>
           </v-col>
           <v-col sm="6" cols="12"
@@ -82,6 +83,11 @@ export default {
         {
           name: 'Material Design Icons',
           link: 'https://materialdesignicons.com/',
+        },
+
+        {
+          name: 'Deploy to Github pages',
+          link: 'https://nlesc.github.io/nuxt-apollo-hasura',
         },
       ],
     }

@@ -6,11 +6,13 @@
   "private": true,
   "scripts": {
     "serve": "concurrently \"docker-compose up -d\" \"nuxt\"",
-    "build": "nuxt build",
     "start": "nuxt start",
+    "build": "nuxt build",
     "generate": "nuxt generate",
+    "build:gh-pages": "DEPLOY_ENV=GH_PAGES nuxt build",
+    "generate:gh-pages": "DEPLOY_ENV=GH_PAGES nuxt generate",
     "lint": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
-    "deploy": "yarn generate && GIT_DEPLOY_DIR=dist GIT_DEPLOY_REPO=https://github.com/NLeSC/nuxt-apollo-hasura scripts/deploy.sh"
+    "deploy": "yarn generate:gh-pages && GIT_DEPLOY_REPO=https://github.com/NLeSC/nuxt-apollo-hasura scripts/deploy.sh"
   },
   "dependencies": {
     "@nuxtjs/apollo": "^4.0.0-rc19",
