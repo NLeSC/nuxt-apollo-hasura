@@ -12,7 +12,8 @@
     "build:gh-pages": "DEPLOY_ENV=GH_PAGES nuxt build",
     "generate:gh-pages": "DEPLOY_ENV=GH_PAGES nuxt generate",
     "lint": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
-    "deploy": "yarn build:gh-pages && GIT_DEPLOY_REPO=https://github.com/NLeSC/nuxt-apollo-hasura scripts/deploy.sh"
+    "deploy": "yarn build:gh-pages && GIT_DEPLOY_REPO=https://github.com/NLeSC/nuxt-apollo-hasura scripts/deploy.sh",
+    "analyze": "yarn nuxt build --analyze"
   },
   "dependencies": {
     "@mdi/js": "^5.2.45",
