@@ -97,7 +97,7 @@ export default {
         {
           icon: mdiFileLockOutline,
           title: 'Secret Page',
-          to: '/secret',
+          to: '/secure',
         },
       ],
       title: 'Nuxt Apollo Hasura',

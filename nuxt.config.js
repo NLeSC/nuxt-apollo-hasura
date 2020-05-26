@@ -51,20 +51,29 @@ export default {
   /*
    ** Nuxt.js modules
    */
-  modules: ['@nuxtjs/pwa', '@nuxtjs/apollo'],
+  modules: ['@nuxtjs/pwa', '@nuxtjs/apollo', '@nuxtjs/auth', '@nuxtjs/axios'],
 
   router: {
     ...routerBase,
     // middleware: ['auth'],
   },
 
-  pwa: {
-    workbox: {
-      // importScripts: ['/firebase-auth-sw.js'],
-      // by default the workbox module will not install the service worker in dev environment to avoid conflicts with HMR
-      // only set this true for testing and remember to always clear your browser cache in development
-      // dev: process.env.NODE_ENV === 'development',
-      debug: false,
+  auth: {
+    redirect: {
+      callback: '/callback',
+    },
+    strategies: {
+      local: false,
+      google: {
+        client_id:
+          '956336158440-rtrp89q9afo8mntfnfhfv5c1bmnb5cq7.apps.googleusercontent.com',
+      },
+      auth0: {
+        domain: 'nuxt-apollo-hasura.eu.auth0.com',
+        client_id: 'LcXt3QRhfP8I39pmMg3YoX14dmmT6wxN',
+        // https://manage.auth0.com/dashboard/eu/nuxt-apollo-hasura/apis
+        // audience: 'https://nuxt-apollo-hasura.eu.auth0.com/api/v2/',
+      },
     },
   },
 
@@ -123,6 +132,8 @@ export default {
      */
     extend(config, ctx) {},
 
+    extractCSS: true,
+
     babel: {
       presets({ isServer }) {
         return [
@@ -136,6 +147,16 @@ export default {
           ],
         ]
       },
+    },
+  },
+
+  pwa: {
+    workbox: {
+      // importScripts: ['/firebase-auth-sw.js'],
+      // by default the workbox module will not install the service worker in dev environment to avoid conflicts with HMR
+      // only set this true for testing and remember to always clear your browser cache in development
+      // dev: process.env.NODE_ENV === 'development',
+      debug: false,
     },
   },
 }

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!$store.state.user.loggedIn">
+    <div v-if="!$auth.$state.loggedIn">
       <div>
         Login to see this component
       </div>

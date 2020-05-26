@@ -103,7 +103,7 @@ export default {
       variables() {
         return {
           isPublic: this.isPublic,
-          userId: this.isPublic ? null : this.$store?.state?.user?.user?.uid,
+          userId: this.isPublic ? null : this.$auth.user.sub,
         }
       },
       error(error) {
@@ -131,7 +131,7 @@ export default {
         variables: {
           todo: title,
           isPublic: this.isPublic,
-          userId: this.isPublic ? null : this.$store.state.user.user.uid,
+          userId: this.isPublic ? null : this.$auth.user.sub,
         },
         update: (cache, { data: { insert_todos } }) => {
           // Read the data from our cache for this query.
@@ -141,7 +141,7 @@ export default {
               query: GET_TODOS,
               variables: {
                 isPublic: this.isPublic,
-                userId: this.isPublic ? null : this.$store.state.user.user.uid,
+                userId: this.isPublic ? null : this.$auth.user.sub,
               },
             })
             const insertedTodo = insert_todos.returning
@@ -150,7 +150,7 @@ export default {
               query: GET_TODOS,
               variables: {
                 isPublic: this.isPublic,
-                userId: this.isPublic ? null : this.$store.state.user.user.uid,
+                userId: this.isPublic ? null : this.$auth.user.sub,
               },
               data,
             })
@@ -174,7 +174,7 @@ export default {
               query: GET_TODOS,
               variables: {
                 isPublic: this.isPublic,
-                userId: this.isPublic ? null : this.$store.state.user.user.uid,
+                userId: this.isPublic ? null : this.$auth.user.sub,
               },
             })
             data.todos = data.todos.filter((t) => {
@@ -184,10 +184,7 @@ export default {
               query: GET_TODOS,
               variables: {
                 isPublic: this.isPublic,
-                userId:
-                  this.type === 'public'
-                    ? null
-                    : this.$store.state.user.user.uid,
+                userId: this.type === 'public' ? null : this.$auth.user.sub,
               },
               data,
             })

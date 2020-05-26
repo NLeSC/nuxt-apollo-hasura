@@ -41,17 +41,7 @@ export const actions = {
       console.error('‼️', error)
     }
   },
-  async LOGOUT_USER({ commit }) {
-    try {
-      await this.$fireAuth.signOut()
-      await this.$router.push('/')
-      commit('TOGGLE_LOGIN_DIALOG_USER', false)
-      // state.loggedIn = false
-      // state.user = {}
-    } catch (error) {
-      console.error(error)
-    }
-  },
+
   TOGGLE_LOGIN_DIALOG_USER({ commit }) {
     commit('TOGGLE_LOGIN_DIALOG_USER')
   },

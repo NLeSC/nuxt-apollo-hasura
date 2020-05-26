@@ -2,6 +2,10 @@
   <div>
     <blockquote class="blockquote">
       "First, solve the problem. Then, write the code."
+      <h4>Your API token is: {{ $route.query.apiKey }}</h4>
+
+      <h4>Mode: {{ $route.query.mode }}</h4>
+      <h4>Lang: {{ $route.query.lang }}</h4>
       <footer>
         <small>
           <em>&mdash;John Johnson</em>

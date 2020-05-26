@@ -1,10 +1,17 @@
 <template>
   <div>
-    <v-menu v-if="loggedIn && !!user" transition="slide-y-transition" bottom>
+    <v-menu
+      v-if="$auth.$state.loggedIn && !!$auth.user"
+      transition="slide-y-transition"
+      bottom
+    >
       <template v-slot:activator="{ on }">
-        <v-avatar size="36" v-on="on">
-          <v-img :src="user.picture" />
-        </v-avatar>
+        <div v-on="on">
+          {{ $auth.user.name }}
+          <v-avatar size="36">
+            <v-img :src="$auth.user.picture" />
+          </v-avatar>
+        </div>
       </template>
       <v-list>
         <v-list-item to="/profile">
@@ -14,7 +21,7 @@
 
           <v-list-item-title>Profile</v-list-item-title>
         </v-list-item>
-        <v-list-item @click="logout">
+        <v-list-item @click="$auth.logout()">
           <v-list-item-icon
             ><v-icon> {{ mdiExitRun }}</v-icon></v-list-item-icon
           >
@@ -213,7 +220,6 @@ export default {
       loginWithEmailLInk: 'login/LOGIN_WITH_EMAIL_LINK',
       loginWithGoogle: 'login/LOGIN_WITH_GOOGLE',
       loginWithGithub: 'login/LOGIN_WITH_GITHUB',
-      logout: 'login/LOGOUT_USER',
       toggleDialogLogin: 'login/TOGGLE_LOGIN_DIALOG_USER',
     }),
 

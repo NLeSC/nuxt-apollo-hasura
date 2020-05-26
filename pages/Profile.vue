@@ -9,21 +9,21 @@
       </v-btn>
     </v-app-bar>
     <v-container>
-      <v-row v-if="!!user" no-gutters justify="center" align="start">
+      <v-row v-if="!!$auth.user" no-gutters justify="center" align="start">
         <v-card width="500" class="mx-4 pa-2">
           <div class="d-flex">
-            <v-img :src="user.picture" max-width="100px" contain />
+            <v-img :src="$auth.user.picture" max-width="100px" contain />
             <v-card-title primary-title>
               <div>
                 <div class="headline">
-                  {{ user.name }}
+                  {{ $auth.user.name }}
                 </div>
-                <div>{{ user.email }}</div>
+                <div>{{ $auth.user.email }}</div>
               </div>
             </v-card-title>
           </div>
           <v-card-actions>
-            <v-btn depressed @click="LOGOUT_USER">
+            <v-btn depressed @click="$auth.logout()">
               LOG OUT
             </v-btn>
           </v-card-actions>
@@ -35,7 +35,6 @@
 <script>
 import { mdiArrowLeft } from '@mdi/js'
 import {
-  mapActions,
   // mapGetters,
   mapState,
 } from 'vuex'
@@ -53,7 +52,6 @@ export default {
     ...mapState('user', ['user', 'loggedIn']),
   },
   methods: {
-    ...mapActions('login', ['LOGOUT_USER']),
     goBack() {
       this.$router.go(-1)
     },

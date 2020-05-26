@@ -50,6 +50,8 @@
         </v-btn>
       </v-card-actions>
     </v-card>
+    User status:
+    {{ $auth.$state.loggedIn ? 'Logged In' : 'Guest' }}
   </div>
 </template>
 
