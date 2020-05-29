@@ -81,5 +81,13 @@ export default function (context) {
   }
 }
 
-
 ```
+
+## Protect route
+in page add:
+```
+export default {
+  middleware: ['auth'],
+  ...
+```
+
