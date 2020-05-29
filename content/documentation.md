@@ -4,19 +4,19 @@ Set up Authentication and Authorization
 Hasura documentation doesn't cover the details to make it work with Auth).
 
 Steps:
-- Create account in Auth0.
-  - Create a tenant
-  - Create rules
+- **Create account in Auth0**
+  - Create two applications (production and localhost)
+  - Create rules (2 for production, and 1 for localhost)
   - Create custom api
-- Nuxt:
+- **Nuxt**
   - Install all modules (@nuxt/apollo, @nuxt/axios and @nuxt/auth)
   - Config Nuxt Auth module
   - Config Nuxt apollo module
-- Hasura:
+- **Hasura**
   - Set roles with authentification in Hasura
   - Set up enviroment variables for Hasura
 
-Enviromentals:
+**Enviromentals**
 - BASE_URI_HASURA=
 - BASE_WS_HASURA=
 
@@ -24,6 +24,8 @@ Enviromentals:
 - HASURA_GRAPHQL_ADMIN_SECRET = adminpassword
 - HASURA_GRAPHQL_JWT_SECRET = [generate in jwt-config](https://hasura.io/jwt-config)
 
+
+- PRODUCTION_AUTH0_CLIENT_ID= ...  # do not forget to place the localhost app id in the nuxt app
 
 /nuxt.config.js:
 ```
