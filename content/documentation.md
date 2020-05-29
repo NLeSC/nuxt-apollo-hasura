@@ -1,11 +1,10 @@
-Seting up the project
-
+## Seting up the project
 
 Set up Authentication and Authorization
 Hasura documentation doesn't cover the details to make it work with Auth).
 
 Steps:
-- Create account in AUth0.
+- Create account in Auth0.
   - Create a tenant
   - Create rules
   - Create custom api
@@ -20,6 +19,10 @@ Steps:
 Enviromentals:
 - BASE_URI_HASURA=
 - BASE_WS_HASURA=
+
+- HASURA_GRAPHQL_UNAUTHORIZED_ROLE = public # or any other name you choose for the public role
+- HASURA_GRAPHQL_ADMIN_SECRET = adminpassword
+- HASURA_GRAPHQL_JWT_SECRET = [generate in jwt-config](https://hasura.io/jwt-config)
 
 
 /nuxt.config.js:
