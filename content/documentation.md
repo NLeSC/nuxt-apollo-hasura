@@ -10,9 +10,9 @@ Steps:
   - Create rules
   - Create custom api
 - Nuxt:
-- Install all modules (@nuxt/apollo, @nuxt/axios and @nuxt/auth)
-- Config Nuxt Auth module
-- Config Nuxt apollo module
+  - Install all modules (@nuxt/apollo, @nuxt/axios and @nuxt/auth)
+  - Config Nuxt Auth module
+  - Config Nuxt apollo module
 - Hasura:
   - Set roles with authentification in Hasura
   - Set up enviroment variables for Hasura
