@@ -93,3 +93,17 @@ export default {
   ...
 ```
 
+## Add dinamyc headers variables
+```
+apolloClient.query({
+    query: GRAPHQL_QUERY,
+    variables: {
+        var1: "this is a variable"
+    },
+    context: {
+        headers: {
+            X-Hasura-Role: "public"
+        }
+    }
+})
+```
