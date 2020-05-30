@@ -16,6 +16,12 @@ Steps:
   - Set roles with authentification in Hasura
   - Set up enviroment variables for Hasura
 
+## Working locally
+When running locally, Auth0 is able to create correct JWT but it doesn't create the user in the localdatabase, Auth0 doesn't simply have a way to communicate with localhost:3000 when creating a user in its database and then create a user in hasura. 
+
+You can login, and then create **manually** a user in your localhost with the 'sub' returned from the authentication.
+
+
 **Enviromentals**
 - BASE_URI_HASURA=
 - BASE_WS_HASURA=
