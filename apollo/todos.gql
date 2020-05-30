@@ -7,5 +7,6 @@ query getMyTodos($isPublic: Boolean!, $userId: String) {
     title
     created_at
     is_completed
+    user_id
   }
 }
