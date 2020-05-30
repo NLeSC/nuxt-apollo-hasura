@@ -1,22 +1,18 @@
 import { InMemoryCache } from 'apollo-cache-inmemory'
+
 export default function (context) {
   return {
     httpLinkOptions: {
-      uri: 'http://localhost:4000/v1/graphql',
+      uri: process.env.baseUriHasura,
       credentials: 'same-origin',
+      // headers: getHeaders(),
+    },
+    getAuth: () => {
+      // get the authentication token from local storage if it exists
+      const token = localStorage.getItem('auth._token.auth0')
+      return !token ? token : ''
     },
     cache: new InMemoryCache(),
-    wsEndpoint: 'ws://localhost:4000/v1/graphql',
-
-    // get the authentication token from local storage if it exists
-    // return the headers to the context so httpLink can read them
-    getAuth: (tokenName = 'apollo-token') => {
-      const token = localStorage.getItem(tokenName)
-      if (token) {
-        return 'Bearer ' + token
-      } else {
-        return ''
-      }
-    },
+    wsEndpoint: process.env.baseWsHasura,
   }
 }

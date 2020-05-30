@@ -1,0 +1,7 @@
+subscription todos_aggregate {
+  todos_aggregate {
+    aggregate {
+      count
+    }
+  }
+}

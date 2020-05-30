@@ -1,0 +1,5 @@
+mutation delete_todos_by_pk($id: Int!) {
+  delete_todos(where: { id: { _eq: $id } }) {
+    affected_rows
+  }
+}

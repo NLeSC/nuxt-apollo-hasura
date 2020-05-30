@@ -10,6 +10,12 @@ const routerBase =
     : {}
 
 export default {
+  env: {
+    baseUriHasura:
+      process.env.BASE_URI_HASURA || 'http://localhost:4000/v1/graphql',
+    baseWsHasura:
+      process.env.BASE_WS_HASURA || 'ws://localhost:4000/v1/graphql',
+  },
   mode: 'spa', // "spa" | "universal"
   /*
    ** Headers of the page
@@ -55,24 +61,24 @@ export default {
 
   router: {
     ...routerBase,
-    // middleware: ['auth'],
   },
 
+  /**
+   * Auth
+   */
   auth: {
     redirect: {
       callback: '/callback',
     },
+
     strategies: {
       local: false,
-      google: {
-        client_id:
-          '956336158440-rtrp89q9afo8mntfnfhfv5c1bmnb5cq7.apps.googleusercontent.com',
-      },
       auth0: {
         domain: 'nuxt-apollo-hasura.eu.auth0.com',
-        client_id: 'LcXt3QRhfP8I39pmMg3YoX14dmmT6wxN',
-        // https://manage.auth0.com/dashboard/eu/nuxt-apollo-hasura/apis
-        // audience: 'https://nuxt-apollo-hasura.eu.auth0.com/api/v2/',
+        client_id:
+          process.env.PRODUCTION_AUTH0_CLIENT_ID ||
+          'apEl6H8zjzPD6PhARUCUaPaFukByIQ07',
+        audience: 'custom_auth0_api_audience',
       },
     },
   },

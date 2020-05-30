@@ -2,6 +2,7 @@
   <v-card class="mt-3">
     <v-card-title>{{ title }}</v-card-title>
     <v-card-text>
+      {{ this.$auth.user && this.$auth.user.sub }}
       <h4>Num 'todos' subscription: {{ todosCount }}</h4>
       <v-form @submit.prevent="addTodo">
         <v-text-field
@@ -27,58 +28,11 @@
   </v-card>
 </template>
 <script>
-import gql from 'graphql-tag'
 import { mdiClose } from '@mdi/js'
-
-// const SUBSCRIPTION_NUM_TODOS= gql`
-// `
-
-export const GET_TODOS = gql`
-  query getMyTodos($isPublic: Boolean!, $userId: String) {
-    todos(
-      where: { is_public: { _eq: $isPublic }, user_id: { _eq: $userId } }
-      order_by: { created_at: desc }
-    ) {
-      id
-      title
-      created_at
-      is_completed
-    }
-  }
-`
-const TODOS_COUNT_SUBSCRIPTION = gql`
-  subscription todos_aggregate {
-    todos_aggregate {
-      aggregate {
-        count
-      }
-    }
-  }
-`
-const ADD_TODO = gql`
-  mutation insert_todos($todo: String!, $isPublic: Boolean!, $userId: String) {
-    insert_todos(
-      objects: { title: $todo, is_public: $isPublic, user_id: $userId }
-    ) {
-      affected_rows
-      returning {
-        id
-        title
-        is_completed
-        is_public
-        created_at
-      }
-    }
-  }
-`
-
-const DELETE_TODO = gql`
-  mutation deleteTodo($id: Int!) {
-    delete_todos(where: { id: { _eq: $id } }) {
-      affected_rows
-    }
-  }
-`
+import delete_todos_by_pk from '~/apollo/delete_todos_by_pk'
+import todos from '~/apollo/todos'
+import insert_todos from '~/apollo/insert_todos'
+import todos_aggregate_subscription from '~/apollo/todos_aggregate_subscription'
 
 export default {
   name: 'Todos',
@@ -99,7 +53,7 @@ export default {
   apollo: {
     todos: {
       // graphql query
-      query: GET_TODOS,
+      query: todos,
       variables() {
         return {
           isPublic: this.isPublic,
@@ -115,7 +69,7 @@ export default {
     $subscribe: {
       // When a tag is added
       todosCount: {
-        query: TODOS_COUNT_SUBSCRIPTION,
+        query: todos_aggregate_subscription,
         result({ data }) {
           this.todosCount = data?.todos_aggregate?.aggregate?.count
         },
@@ -127,7 +81,7 @@ export default {
       // insert new item into db
       const title = this.newTodo
       this.$apollo.mutate({
-        mutation: ADD_TODO,
+        mutation: insert_todos,
         variables: {
           todo: title,
           isPublic: this.isPublic,
@@ -138,7 +92,7 @@ export default {
           try {
             // readQuery will never make a request to your GraphQL server
             const data = cache.readQuery({
-              query: GET_TODOS,
+              query: todos,
               variables: {
                 isPublic: this.isPublic,
                 userId: this.isPublic ? null : this.$auth.user.sub,
@@ -147,7 +101,7 @@ export default {
             const insertedTodo = insert_todos.returning
             data.todos.splice(0, 0, insertedTodo[0])
             cache.writeQuery({
-              query: GET_TODOS,
+              query: todos,
               variables: {
                 isPublic: this.isPublic,
                 userId: this.isPublic ? null : this.$auth.user.sub,
@@ -164,14 +118,14 @@ export default {
 
     deleteTodo(id) {
       this.$apollo.mutate({
-        mutation: DELETE_TODO,
+        mutation: delete_todos_by_pk,
         variables: {
           id,
         },
         update: (store, { data, data: { delete_todos } }) => {
           if (delete_todos.affected_rows) {
             const data = store.readQuery({
-              query: GET_TODOS,
+              query: todos,
               variables: {
                 isPublic: this.isPublic,
                 userId: this.isPublic ? null : this.$auth.user.sub,
@@ -181,7 +135,7 @@ export default {
               return t.id !== id
             })
             store.writeQuery({
-              query: GET_TODOS,
+              query: todos,
               variables: {
                 isPublic: this.isPublic,
                 userId: this.type === 'public' ? null : this.$auth.user.sub,

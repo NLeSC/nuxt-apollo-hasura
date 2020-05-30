@@ -28,8 +28,5 @@ export default {
       return JSON.stringify(this.$auth.$state, undefined, 2)
     },
   },
-  created() {
-    console.log('🎹', this.$auth)
-  },
 }
 </script>
