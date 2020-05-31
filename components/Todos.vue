@@ -16,7 +16,7 @@
       <v-list dense>
         <v-list-item v-for="todo in todos" :key="todo.id">
           <v-list-item-content>
-            {{ todo.title }}
+            <Todo :todo="todo" />
           </v-list-item-content>
           <v-list-item-action>
             <v-btn
@@ -38,9 +38,11 @@ import delete_todos_by_pk from '~/apollo/delete_todos_by_pk'
 import todos from '~/apollo/todos'
 import insert_todos from '~/apollo/insert_todos'
 import todos_aggregate_subscription from '~/apollo/todos_aggregate_subscription'
+import Todo from '~/components/Todo'
 
 export default {
   name: 'Todos',
+  components: { Todo },
   props: {
     title: { type: String, default: 'Todos title' },
     type: { type: String, default: 'public' },
@@ -93,7 +95,7 @@ export default {
         variables: {
           todo: title,
           isPublic: this.isPublic,
-          userId: this.isPublic ? null : this.$auth.user.sub,
+          userId: this.$auth?.user?.sub,
         },
         update: (cache, { data: { insert_todos } }) => {
           // Read the data from our cache for this query.
