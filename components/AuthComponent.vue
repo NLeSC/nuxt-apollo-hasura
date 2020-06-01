@@ -4,7 +4,7 @@
       <div>
         Login to see this component
       </div>
-      <v-btn outlined @click="toggleDialogLogin">Login</v-btn>
+      <v-btn outlined @click="$auth.loginWith('auth0')">Login</v-btn>
     </div>
     <div v-else>
       <slot></slot>
@@ -13,13 +13,13 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+// import { mapActions } from 'vuex'
 export default {
   name: 'AuthComponent',
   methods: {
-    ...mapActions({
-      toggleDialogLogin: 'login/TOGGLE_LOGIN_DIALOG_USER',
-    }),
+    // ...mapActions({
+    //   toggleDialogLogin: 'login/TOGGLE_LOGIN_DIALOG_USER',
+    // }),
   },
 }
 </script>

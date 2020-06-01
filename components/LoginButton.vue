@@ -1,10 +1,6 @@
 <template>
   <div>
-    <v-menu
-      v-if="$auth.$state.loggedIn && !!$auth.user"
-      transition="slide-y-transition"
-      bottom
-    >
+    <v-menu v-if="$auth.$state.loggedIn" transition="slide-y-transition" bottom>
       <template v-slot:activator="{ on }">
         <div v-on="on">
           {{ $auth.user.name }}
@@ -29,7 +25,12 @@
         </v-list-item>
       </v-list>
     </v-menu>
-    <v-dialog v-else v-model="_loginDialog" width="350">
+
+    <v-btn v-else outlined @click="$auth.loginWith('auth0')"
+      >Log in <span class="hidden-xs-only">/ Sign up</span>
+    </v-btn>
+
+    <!--<v-dialog v-else v-model="_loginDialog" width="350">
       <template v-slot:activator="{ on }">
         <v-btn outlined v-on="on"
           >Log in <span class="hidden-xs-only">/ Sign up</span>
@@ -63,7 +64,7 @@
               v-if="linkSent"
               v-show="showEmailLinkBox"
               color="success"
-              class="pa-3 white--text text-center"
+              class="pa-3 white&#45;&#45;text text-center"
             >
               <v-icon class="mr-2" color="white">{{ mdiCheckBold }}</v-icon>
               Check your email to login.
@@ -155,7 +156,7 @@
           <v-spacer />
         </v-card-actions>
       </v-card>
-    </v-dialog>
+    </v-dialog>-->
   </div>
 </template>
 
