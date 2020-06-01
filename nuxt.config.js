@@ -79,7 +79,9 @@ export default {
     strategies: {
       local: false,
       auth0: {
-        domain: 'nuxt-apollo-hasura.eu.auth0.com',
+        domain:
+          process.env.PRODUCTION_AUTH0_DOMAIN ||
+          'nuxt-apollo-hasura.eu.auth0.com',
         client_id:
           process.env.PRODUCTION_AUTH0_CLIENT_ID ||
           'apEl6H8zjzPD6PhARUCUaPaFukByIQ07',
