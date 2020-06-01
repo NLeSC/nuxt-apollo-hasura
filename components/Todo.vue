@@ -1,8 +1,8 @@
 <template>
   <v-text-field
     v-model="todo.title"
-    @keyup="updateTodo"
     outlined
+    @keyup="updateTodo"
   ></v-text-field>
 </template>
 <script>
