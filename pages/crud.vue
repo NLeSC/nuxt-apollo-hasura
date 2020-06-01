@@ -2,10 +2,7 @@
   <div>
     <h2>CRUD Example with realtime Subscriptions</h2>
     <p>
-      <a
-        href="http://localhost:4000/console/data/schema/public"
-        target="_blank"
-      >
+      <a :href="dbUrl" target="_blank">
         Create a table
       </a>
       called 'todos' on the database with 4 columns: 'id'(Integer),
@@ -30,5 +27,10 @@ import AuthComponent from '~/components/AuthComponent'
 export default {
   name: 'Crud',
   components: { AuthComponent, Todos },
+  computed: {
+    dbUrl() {
+      return process.env.dbUrl
+    },
+  },
 }
 </script>

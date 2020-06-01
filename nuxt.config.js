@@ -1,5 +1,9 @@
 import colors from 'vuetify/es5/util/colors'
 
+// Check if we need to run Nuxt in development mode
+const isDev = process.env.NODE_ENV !== 'production'
+const DB_URL = 'nuxt-apollo-hasura.herokuapp.com'
+
 /* nuxt.config.js */
 // only add `router.base = '/<repository-name>/'` if `DEPLOY_ENV` is `GH_PAGES`
 const routerBase =
@@ -11,10 +15,11 @@ const routerBase =
 
 export default {
   env: {
-    baseUriHasura:
-      process.env.BASE_URI_HASURA || 'http://localhost:4000/v1/graphql',
-    baseWsHasura:
-      process.env.BASE_WS_HASURA || 'ws://localhost:4000/v1/graphql',
+    dbUrl: isDev ? 'http://localhost:4000' : `https://${DB_URL}`,
+    baseUriHasura: isDev
+      ? 'http://localhost:4000/v1/graphql'
+      : `https://${DB_URL}`,
+    baseWsHasura: isDev ? 'ws://localhost:4000/v1/graphql' : `wss://${DB_URL}`,
   },
   mode: 'spa', // "spa" | "universal"
   /*
