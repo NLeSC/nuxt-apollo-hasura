@@ -2,7 +2,7 @@
   <v-app>
     <v-navigation-drawer
       v-model="drawer"
-      :mini-variant="$vuetify.breakpoint.xs"
+      :mini-variant="true"
       :clipped="clipped"
       fixed
       app
@@ -81,7 +81,7 @@ export default {
       mdiFileLockOutline,
 
       clipped: true,
-      drawer: true,
+      drawer: this.$vuetify.breakpoint.smAndUp,
       miniVariant: true,
       items: [
         {
