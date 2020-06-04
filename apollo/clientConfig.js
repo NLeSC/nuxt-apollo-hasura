@@ -1,7 +1,7 @@
 const getHeaders = () => {
   const headers = {}
   const token = localStorage.getItem('auth._token.auth0')
-  if (token !== 'false') {
+  if (token && token !== 'false') {
     headers.authorization = token
   }
   return headers
