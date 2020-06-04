@@ -7,7 +7,9 @@ const getHeaders = () => {
   return headers
 }
 
-export default function (context) {
+// You can pass context to the function:
+// export default function (context) {
+export default function () {
   return {
     httpLinkOptions: {
       uri: process.env.baseUriHasura,
