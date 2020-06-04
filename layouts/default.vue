@@ -2,7 +2,7 @@
   <v-app>
     <v-navigation-drawer
       v-model="drawer"
-      :mini-variant="miniVariant"
+      :mini-variant="$vuetify.breakpoint.xs"
       :clipped="clipped"
       fixed
       app
