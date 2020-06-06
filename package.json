@@ -1,6 +1,6 @@
 {
   "name": "nuxt-apollo-hasura",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Nuxt Apollo Hasura Postgres recipes",
   "author": "Jesus Garcia Gonzalez",
   "organization": "NLeSC eScienceCenter",
