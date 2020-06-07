@@ -145,8 +145,6 @@ export default {
      */
     extend(config, ctx) {},
 
-    extractCSS: true,
-
     babel: {
       presets({ isServer }) {
         return [
