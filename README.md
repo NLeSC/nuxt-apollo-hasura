@@ -1,6 +1,20 @@
 # Nuxt Apollo Hasura Example
 
- See project: https://github.com/NLeSC/full-stack-recipes
+Project idea: https://github.com/NLeSC/full-stack-recipes
+ChangeLog: https://github.com/NLeSC/nuxt-apollo-hasura/blob/master/CHANGELOG.md
+
+Tech Stack
+- [ ] Nuxt.js
+- [x] Vuetify
+- [ ] Hasura
+- [ ] Postgres
+
+Features list: 
+- [ ] CRUD example with Subscription
+- [ ] Roles definitions
+- [ ] Federated login with Google and Github
+- [ ] Deploy to Firebase Hosting and Github pages
+- [ ] DB migrations between environments 
 
 ## Setup
 Requirements locally: docker and Yarn. 
@@ -14,15 +28,9 @@ $ yarn install
 $ yarn serve
 ```
 
-Setup database schema and data
 ```
-$ npx hasura migrate apply
-```
-
-```
-# build for production and launch server
+# build for production
 $ yarn build
-$ yarn start
 
 # generate static project
 $ yarn generate
