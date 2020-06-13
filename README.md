@@ -40,22 +40,30 @@ $ git push --origin master
 # Add template repository
 $ git remote add template https://github.com/NLeSC/nuxt-apollo-hasura
 ```
+## Environment variables
 
-## Running the application
-Requirements locally: docker and Yarn. 
+Modify the .env file to use the urls from NHost. You will need to add urls for GraphQL and auth.
 
-```bash
+## Getting started
 
-# install dependencies
-$ yarn install
+``` bash
+# Install the dependencies
+$ yarn
 
-# serve with hot reload at localhost:3000
+# Start the development server
 $ yarn serve
 ```
 
-```
-# build for production
-$ yarn build
+To run in production, use the `start` command
+
+``` bash
+$ yarn start
 ```
 
-For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+### Updating from template
+
+Fetch from the `template` remote. If you cloned via github, you will need to add the remote as above.
+
+``` bash
+$ git fetch --all --allow-unrelated-histories
+```
