@@ -18,7 +18,30 @@ Features list:
 - [x] Deploy to Firebase Hosting and Github pages
 - [ ] DB migrations between environments 
 
-## Setup
+## Template setup
+
+From Github, you can click on [`Use this template`](https://github.com/MarcelloTheArcane/nhost-template/generate) to create a new repository based on this one.
+
+Alternatively, you can create a new repository from your terminal:
+
+``` bash
+# Clone this repo
+$ git clone https://github.com/MarcelloTheArcane/nhost-template -b master --single-branch <project-name>
+
+# Enter the new directory
+$ cd <project-name>
+
+# Replace origin with your repository url
+$ git remote set-url origin <git repository>
+
+# Send this repository to the remote
+$ git push --origin master
+
+# Add template repository
+$ git remote add template https://github.com/MarcelloTheArcane/nhost-template
+```
+
+## Running the application
 Requirements locally: docker and Yarn. 
 
 ```bash
