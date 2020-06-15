@@ -11,10 +11,11 @@ Tech Stack:
 - [x] Postgres
 
 Features list: 
-- [x] Authotization with Auth0 -> JWT -> Hasura
+- [x] Authotization with PassportJs (with Google) -> JWT -> Hasura
 - [x] CRUD example with Subscriptions
 - [x] Roles definitions
-- [x] Federated login with Google and Github
+- [x] Federated login with Google
+- [ ] Federated login with Github
 - [x] Deploy to Firebase Hosting and Github pages
 - [ ] DB migrations between environments 
 
@@ -40,9 +41,17 @@ $ git push --origin master
 # Add template repository
 $ git remote add template https://github.com/NLeSC/nuxt-apollo-hasura
 ```
-## Environment variables
 
-Modify the .env file to use the urls from NHost. You will need to add urls for GraphQL and auth.
+## Setting up JWT signing tokens
+- Generate a new key public/private key running `./server/generate_RS512.sh` in the console.
+- Copy the content of `./server/publickey.txt` into the `docker-compose.yml` inside the environment variable `HASURA_GRAPHQL_JWT_SECRET` (inside the "key" string).
+- Create an application in [Google Console](https://console.cloud.google.com) for Oauth2.
+    - Grant JavaScript origins: `http://localhost:3000` and redirect url: `http://localhost:3000/redirect`.
+    - Copy the `GOOGLE_CLIENT_ID` and  `GOOGLE_CLIENT_SECRET` inside the `.env` file.
+    
+
+## Environment variables
+Rename `.env.example` file to `.env` and modify the variables in this file and the and `docker-compose.yml` accordingly.
 
 ## Getting started
 

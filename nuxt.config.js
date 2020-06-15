@@ -1,4 +1,4 @@
-import colors from 'vuetify/es5/util/colors'
+const colors = require('vuetify/es5/util/colors').default
 
 // Check if we need to run Nuxt in development mode
 const isDev = process.env.NODE_ENV !== 'production'
@@ -13,7 +13,7 @@ const routerBase =
       }
     : {}
 
-export default {
+module.exports = {
   env: {
     dbUrl: isDev ? 'http://localhost:4000' : `https://${DB_URL}`,
     baseUriHasura: isDev
@@ -21,7 +21,7 @@ export default {
       : `https://${DB_URL}`,
     baseWsHasura: isDev ? 'ws://localhost:4000/v1/graphql' : `wss://${DB_URL}`,
   },
-  mode: 'spa', // "spa" | "universal"
+  mode: 'universal', // "spa" | "universal"
   /*
    ** Headers of the page
    */
@@ -67,6 +67,11 @@ export default {
   router: {
     ...routerBase,
   },
+  /*
+   ** Axios module configuration
+   ** See https://axios.nuxtjs.org/options
+   */
+  axios: {},
 
   /**
    * Auth
@@ -77,16 +82,28 @@ export default {
     },
 
     strategies: {
-      local: false,
-      auth0: {
-        domain:
-          process.env.PRODUCTION_AUTH0_DOMAIN ||
-          'nuxt-apollo-hasura.eu.auth0.com',
-        client_id:
-          process.env.PRODUCTION_AUTH0_CLIENT_ID ||
-          'apEl6H8zjzPD6PhARUCUaPaFukByIQ07',
-        audience: 'custom_auth0_api_audience',
+      local: {
+        endpoints: {
+          login: {
+            url: '/api/auth/login',
+            method: 'post',
+            propertyName: 'access_token',
+          },
+          logout: { url: '/api/auth/logout', method: 'post' },
+          user: { url: '/api/auth/user', method: 'get', propertyName: 'user' },
+        },
+        tokenRequired: true,
+        tokenType: 'Bearer',
       },
+      // auth0: {
+      //   domain:
+      //     process.env.PRODUCTION_AUTH0_DOMAIN ||
+      //     'nuxt-apollo-hasura.eu.auth0.com',
+      //   client_id:
+      //     process.env.PRODUCTION_AUTH0_CLIENT_ID ||
+      //     'apEl6H8zjzPD6PhARUCUaPaFukByIQ07',
+      //   audience: 'custom_auth0_api_audience',
+      // },
     },
   },
 

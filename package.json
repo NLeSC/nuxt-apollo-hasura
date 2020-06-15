@@ -5,7 +5,8 @@
   "description": "Nuxt Apollo Hasura Postgres Template",
   "author": "Jesus Garcia Gonzalez",
   "scripts": {
-    "serve": "concurrently \"docker-compose up -d\" \"nuxt\"",
+    "serve": "docker-compose up -d && yarn dev",
+    "dev": "cross-env NODE_ENV=development nodemon server/index.js --watch server",
     "build": "nuxt build",
     "lint": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
     "deploy": "yarn build:gh-pages && GIT_DEPLOY_REPO=https://github.com/NLeSC/nuxt-apollo-hasura scripts/deploy.sh",
@@ -22,9 +23,18 @@
     "@nuxtjs/apollo": "^4.0.1-rc.1",
     "@nuxtjs/auth": "^4.9.1",
     "@nuxtjs/axios": "^5.11.0",
+    "@nuxtjs/dotenv": "^1.4.1",
     "@nuxtjs/pwa": "^3.0.0-beta.20",
+    "axios": "^0.19.2",
+    "cross-env": "^7.0.2",
+    "jose": "^1.27.1",
+    "jsonwebtoken": "^8.5.1",
     "lodash.debounce": "^4.0.8",
-    "nuxt": "^2.12.2"
+    "njwt": "^1.0.0",
+    "nuxt": "^2.12.2",
+    "passport": "^0.4.1",
+    "passport-google-oauth20": "^2.0.0",
+    "passport-http-bearer": "^1.0.1"
   },
   "devDependencies": {
     "@babel/runtime-corejs3": "^7.10.2",
@@ -38,6 +48,8 @@
     "eslint-plugin-nuxt": ">=1.0.0",
     "eslint-plugin-prettier": "^3.1.3",
     "hasura-cli": "^1.2.2",
+    "keypair": "^1.0.1",
+    "nodemon": "^2.0.4",
     "prettier": "^2.0.5",
     "standard-version": "^8.0.0"
   },
