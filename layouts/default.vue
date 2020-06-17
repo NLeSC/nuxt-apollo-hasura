@@ -89,18 +89,8 @@ export default {
           title: 'Home',
           to: '/',
         },
-        {
-          icon: mdiDatabaseSync,
-          title: 'CRUD Database',
-          to: '/crud',
-        },
-        {
-          icon: mdiFileLockOutline,
-          title: 'Secret Page',
-          to: '/secure',
-        },
       ],
-      title: 'Nuxt Apollo Hasura',
+      title: 'EMO Spectre',
     }
   },
   computed: {
