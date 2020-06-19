@@ -1,18 +1,44 @@
 <template>
-  <div id="erd">
-    <VideoPlayer src="video/erd_video.mp4"></VideoPlayer>
-  </div>
+  <v-container>
+    <v-row>
+      <v-col cols="12">
+        <v-btn color="primary" @click="goBack">Back</v-btn>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="12">
+        <div id="erd">
+          <VideoPlayer :src="'../videos/' + video"></VideoPlayer>
+        </div>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
-import VideoPlayer from "../components/VideoPlayer";
+import VideoPlayer from '../components/VideoPlayer'
 
 export default {
-  name: "Erd",
+  name: 'Erd',
   components: {
-    VideoPlayer
-  }
-};
+    VideoPlayer,
+  },
+  data() {
+    return {
+      video: '',
+    }
+  },
+  created() {
+    if (this.$route.query.video) {
+      this.video = this.$route.query.video
+    }
+  },
+  methods: {
+    goBack() {
+      this.$router.go(-1)
+    },
+  },
+}
 </script>
 
 <style>

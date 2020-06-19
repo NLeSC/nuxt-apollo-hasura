@@ -1,5 +1,5 @@
 {
-  "name": "nuxt-apollo-hasura",
+  "name": "emo-spectre",
   "version": "1.1.0",
   "description": "Nuxt Apollo Hasura Postgres recipes",
   "author": "Jesus Garcia Gonzalez",
@@ -19,6 +19,7 @@
     "release": "standard-version"
   },
   "dependencies": {
+    "@mdi/font": "^5.3.45",
     "@mdi/js": "^5.3.45",
     "@nuxtjs/apollo": "^4.0.1-rc.1",
     "@nuxtjs/auth": "^4.9.1",
