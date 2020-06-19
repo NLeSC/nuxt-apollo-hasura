@@ -4,11 +4,7 @@ Project idea: [Full Stack Recipes](https://github.com/NLeSC/full-stack-recipes)
 
 ChangeLog: [Changelog](https://github.com/NLeSC/nuxt-apollo-hasura/blob/master/CHANGELOG.md)
 
-Tech Stack:
-- [x] Nuxt.js
-- [x] Vuetify
-- [x] Hasura
-- [x] Postgres
+Tech Stack: Nuxt.js, Vuetify, Hasura, Postgres, Passport.js.
 
 Features list: 
 - [x] Authotization with Auth0 -> JWT -> Hasura
@@ -45,7 +41,7 @@ $ git remote add template https://github.com/NLeSC/nuxt-apollo-hasura
 Modify the .env file to use the urls from NHost. You will need to add urls for GraphQL and auth.
 
 ## Getting started
-
+You will need to have installed in your machine: Node, Yarn, Docker compose and Prettier
 ``` bash
 # Install the dependencies
 $ yarn
