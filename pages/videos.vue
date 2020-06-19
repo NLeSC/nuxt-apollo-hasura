@@ -1,5 +1,5 @@
 <template>
-  <v-container grid-list-md>
+  <v-container>
     <v-row>
       <v-col cols="12">
         <v-card outlined>
@@ -22,7 +22,7 @@
               </v-col>
               <v-col cols="2">
                 <v-btn color="primary" fab dark @click="addVideo()">
-                  <v-icon dark x-large>mdi-plus</v-icon>
+                  <v-icon dark x-large>{{ mdiPlus }}</v-icon>
                 </v-btn>
               </v-col>
             </v-row>
@@ -66,7 +66,7 @@
                   x-small
                   @click="removeVideo(name)"
                 >
-                  <v-icon dark small>mdi-close</v-icon>
+                  <v-icon dark small>{{ mdiClose }}</v-icon>
                 </v-btn>
               </v-col>
             </v-row>
@@ -77,7 +77,8 @@
   </v-container>
 </template>
 <script>
-import VideoPlayer from '../components/VideoPlayer'
+import { mdiPlus, mdiClose } from '@mdi/js'
+import VideoPlayer from '~/components/VideoPlayer'
 
 export default {
   components: {
@@ -85,6 +86,8 @@ export default {
   },
   data() {
     return {
+      mdiPlus,
+      mdiClose,
       videos: {},
       files: [],
     }

@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import VideoPlayer from '../components/VideoPlayer'
+import VideoPlayer from '~/components/VideoPlayer'
 
 export default {
   name: 'Erd',

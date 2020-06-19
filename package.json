@@ -19,7 +19,6 @@
     "release": "standard-version"
   },
   "dependencies": {
-    "@mdi/font": "^5.3.45",
     "@mdi/js": "^5.3.45",
     "@nuxtjs/apollo": "^4.0.1-rc.1",
     "@nuxtjs/auth": "^4.9.1",
