@@ -26,11 +26,7 @@
       </v-list>
     </v-menu>
 
-    <v-btn v-else outlined @click="$auth.loginWith('auth0')"
-      >Log in <span class="hidden-xs-only">/ Sign up</span>
-    </v-btn>
-
-    <!--<v-dialog v-else v-model="_loginDialog" width="350">
+    <v-dialog v-else v-model="_loginDialog" width="350">
       <template v-slot:activator="{ on }">
         <v-btn outlined v-on="on"
           >Log in <span class="hidden-xs-only">/ Sign up</span>
@@ -64,7 +60,7 @@
               v-if="linkSent"
               v-show="showEmailLinkBox"
               color="success"
-              class="pa-3 white&#45;&#45;text text-center"
+              class="pa-3 white--text text-center"
             >
               <v-icon class="mr-2" color="white">{{ mdiCheckBold }}</v-icon>
               Check your email to login.
@@ -156,7 +152,7 @@
           <v-spacer />
         </v-card-actions>
       </v-card>
-    </v-dialog>-->
+    </v-dialog>
   </div>
 </template>
 
@@ -219,9 +215,13 @@ export default {
     // ...mapActions('userData', ['LOGIN_WITH_GOOGLE', 'LOGOUT_USER', 'TOGGLE_LOGIN_DIALOG_USER']),
     ...mapActions({
       loginWithEmailLInk: 'login/LOGIN_WITH_EMAIL_LINK',
-      loginWithGoogle: 'login/LOGIN_WITH_GOOGLE',
       loginWithGithub: 'login/LOGIN_WITH_GITHUB',
       toggleDialogLogin: 'login/TOGGLE_LOGIN_DIALOG_USER',
+
+      loginWithGoogle() {
+        this.toggleDialogLogin()
+        window.location = '/login/google'
+      },
     }),
 
     toProfile() {
