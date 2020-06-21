@@ -3,3 +3,4 @@ openssl rsa -in private.pem -pubout -out public.pem
 
 awk -v ORS='\\n' '1' private.pem > privatekey.txt
 awk -v ORS='\\n' '1' public.pem  > publickey.txt
+echo "DO NOT COMMIT THE GENERATED PRIVATE KEY"

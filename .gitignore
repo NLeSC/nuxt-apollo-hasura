@@ -88,7 +88,7 @@ sw.*
 
 # Vim swap files
 *.swp
-/server/private.pem
-/server/privatekey.txt
-/server/public.pem
-/server/publickey.txt
+/server/auth/private.pem
+/server/auth/privatekey.txt
+/server/auth/public.pem
+/server/auth/publickey.txt
