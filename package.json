@@ -24,8 +24,10 @@
     "@nuxtjs/auth": "^4.9.1",
     "@nuxtjs/axios": "^5.11.0",
     "@nuxtjs/pwa": "^3.0.0-beta.20",
+    "apexcharts": "^3.19.2",
     "lodash.debounce": "^4.0.8",
-    "nuxt": "^2.12.2"
+    "nuxt": "^2.12.2",
+    "vue-apexcharts": "^1.5.3"
   },
   "devDependencies": {
     "@babel/runtime-corejs3": "^7.10.2",
