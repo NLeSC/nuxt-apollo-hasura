@@ -1,18 +1,22 @@
 <template>
-  <div id="erd">
-    <VideoPlayer src="video/erd_video.mp4"></VideoPlayer>
+  <div>
+    <div id="erd">
+      <VideoPlayer src="video/erd_video.mp4"></VideoPlayer>
+    </div>
+    <HeatMap />
   </div>
 </template>
 
 <script>
-import VideoPlayer from "../components/VideoPlayer";
-
+import VideoPlayer from '../components/VideoPlayer'
+import HeatMap from '../components/HeatMap'
 export default {
-  name: "Erd",
+  name: 'Erd',
   components: {
-    VideoPlayer
-  }
-};
+    VideoPlayer,
+    HeatMap,
+  },
+}
 </script>
 
 <style>
