@@ -14,6 +14,9 @@ const routerBase =
     : {}
 
 module.exports = {
+  // Nuxt telemetry questions
+  telemetry: false,
+
   env: {
     dbUrl: isDev ? 'http://localhost:4000' : `https://${DB_URL}`,
     baseUriHasura: isDev
@@ -62,7 +65,13 @@ module.exports = {
   /*
    ** Nuxt.js modules
    */
-  modules: ['@nuxtjs/pwa', '@nuxtjs/apollo', '@nuxtjs/auth', '@nuxtjs/axios'],
+  modules: [
+    '@nuxtjs/pwa',
+    '@nuxtjs/apollo',
+    '@nuxtjs/auth',
+    '@nuxtjs/axios',
+    '@nuxt/components',
+  ],
 
   router: {
     ...routerBase,
@@ -71,39 +80,37 @@ module.exports = {
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
    */
-  axios: {},
+  axios: {
+    // baseURL: 'http://localhost:3000',
+    // headers: {
+    //   'Access-Control-Allow-Origin': '*',
+    //   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    // },
+  },
 
   /**
    * Auth
    */
   auth: {
+    plugins: [{ src: '~/plugins/axios', ssr: true }, '~/plugins/auth.js'],
+    // resetOnError: true,
+    // watchLoggedIn: false,
     redirect: {
-      callback: '/callback',
+      // login: '/login', // User will be redirected to this path if login is required.
+      // home: '/', // User will be redirect to this path after login. (rewriteRedirects will rewrite this path)
+      // logout: '/', // User will be redirected to this path if after logout, current route is protected.
+      // user: '/profile',
+      callback: '/callback', // User will be redirect to this path by the identity provider after login. (Should match configured Allowed Callback URLs (or similar setting) in your app/client with the identity provider)
     },
-
     strategies: {
-      local: {
-        endpoints: {
-          login: {
-            url: '/api/auth/login',
-            method: 'post',
-            propertyName: 'access_token',
-          },
-          logout: { url: '/api/auth/logout', method: 'post' },
-          user: { url: '/api/auth/user', method: 'get', propertyName: 'user' },
-        },
-        tokenRequired: true,
-        tokenType: 'Bearer',
+      google: {
+        client_id:
+          '956336158440-r92a5pvq8597pi32fph1234n9m185pv7.apps.googleusercontent.com',
       },
-      // auth0: {
-      //   domain:
-      //     process.env.PRODUCTION_AUTH0_DOMAIN ||
-      //     'nuxt-apollo-hasura.eu.auth0.com',
-      //   client_id:
-      //     process.env.PRODUCTION_AUTH0_CLIENT_ID ||
-      //     'apEl6H8zjzPD6PhARUCUaPaFukByIQ07',
-      //   audience: 'custom_auth0_api_audience',
-      // },
+      github: {
+        client_id: 'cc9db191742f8c6a3b46',
+        client_secret: '7694a2d53f8c7a9f3eefdc681a907b59837a503c',
+      },
     },
   },
 
@@ -111,11 +118,14 @@ module.exports = {
    * Apollo
    */
   apollo: {
+    tokenName: 'apollo-token', // optional, default: apollo-token
     cookieAttributes: {
       expires: 7, // optional, default: 7 (days)
     },
     includeNodeModules: true, // optional, default: false (this includes graphql-tag for node_modules folder)
     authenticationType: 'Bearer', // optional, default: 'Bearer'
+    // optional
+    watchLoading: '~/plugins/apollo-watch-loading-handler.js',
     // optional
     errorHandler: '~/plugins/apollo-error-handler.js',
     // required
@@ -163,6 +173,7 @@ module.exports = {
     extend(config, ctx) {},
 
     babel: {
+      plugins: ['@babel/plugin-proposal-optional-chaining'],
       presets({ isServer }) {
         return [
           [
