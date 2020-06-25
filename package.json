@@ -30,7 +30,7 @@
     "cross-env": "^7.0.2",
     "jose": "^1.27.1",
     "lodash.debounce": "^4.0.8",
-    "nuxt": "^2.13.0"
+    "nuxt": "^2.13.1"
   },
   "devDependencies": {
     "@babel/plugin-proposal-optional-chaining": "^7.10.3",
@@ -40,7 +40,7 @@
     "@nuxtjs/vuetify": "^1.11.2",
     "babel-eslint": "^10.1.0",
     "concurrently": "^5.2.0",
-    "eslint": "^7.3.0",
+    "eslint": "^7.3.1",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-nuxt": ">=1.0.0",
     "eslint-plugin-prettier": "^3.1.4",
