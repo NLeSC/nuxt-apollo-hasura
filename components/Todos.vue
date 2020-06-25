@@ -2,7 +2,7 @@
   <v-card class="mt-3">
     <v-card-title>{{ title }}</v-card-title>
     <v-card-text>
-      {{ sub }}
+      userId: {{ userId }} \ is public: {{ isPublic }}
       <h4>Num 'todos' subscription: {{ todosCount }}</h4>
 
       <v-form v-if="!isPublic" @submit.prevent="addTodo">
@@ -12,15 +12,14 @@
           required
         ></v-text-field>
       </v-form>
-
       <v-list dense>
         <v-list-item v-for="todo in todos" :key="todo.id">
           <v-list-item-content>
-            <Todo :todo="todo" />
+            <Todo :todo="todo" :user-id="userId" />
           </v-list-item-content>
           <v-list-item-action>
             <v-btn
-              v-if="sub === todo.user_id"
+              v-if="userId === todo.user_id"
               icon
               @click="deleteTodo(todo.id)"
             >
@@ -35,14 +34,13 @@
 <script>
 import { mdiClose } from '@mdi/js'
 import delete_todos_by_pk from '~/apollo/delete_todos_by_pk'
+// import private_todos from '~/apollo/private_todos'
 import todos from '~/apollo/todos'
 import insert_todos from '~/apollo/insert_todos'
 import todos_aggregate_subscription from '~/apollo/todos_aggregate_subscription'
-import Todo from '~/components/Todo'
 
 export default {
   name: 'Todos',
-  components: { Todo },
   props: {
     title: { type: String, default: 'Todos title' },
     type: { type: String, default: 'public' },
@@ -50,11 +48,12 @@ export default {
   data: () => ({
     mdiClose,
     newTodo: '',
+    todos: [],
     todosCount: 0,
   }),
   computed: {
-    sub() {
-      return this.$auth?.user?.sub
+    userId() {
+      return this.$auth?.user?.id
     },
     isPublic() {
       return this.type === 'public'
@@ -66,8 +65,8 @@ export default {
       query: todos,
       variables() {
         return {
-          isPublic: this.isPublic,
-          userId: this.isPublic ? null : this.$auth.user.sub,
+          user_id: this.userId,
+          is_public: this.isPublic,
         }
       },
       error(error) {
@@ -86,6 +85,7 @@ export default {
       },
     },
   },
+
   methods: {
     addTodo() {
       // insert new item into db
@@ -93,19 +93,20 @@ export default {
       this.$apollo.mutate({
         mutation: insert_todos,
         variables: {
-          todo: title,
-          isPublic: this.isPublic,
-          userId: this.$auth?.user?.sub,
+          title,
+          user_id: this.userId,
+          is_public: this.isPublic,
         },
         update: (cache, { data: { insert_todos } }) => {
-          // Read the data from our cache for this query.
+          // console.log('🎹', insert_todos)
+          // // Read the data from our cache for this query.
           try {
             // readQuery will never make a request to your GraphQL server
             const data = cache.readQuery({
               query: todos,
               variables: {
-                isPublic: this.isPublic,
-                userId: this.isPublic ? null : this.$auth.user.sub,
+                user_id: this.userId,
+                is_public: this.isPublic,
               },
             })
             const insertedTodo = insert_todos.returning
@@ -113,8 +114,8 @@ export default {
             cache.writeQuery({
               query: todos,
               variables: {
-                isPublic: this.isPublic,
-                userId: this.isPublic ? null : this.$auth.user.sub,
+                user_id: this.userId,
+                is_public: this.isPublic,
               },
               data,
             })
@@ -137,8 +138,8 @@ export default {
             const data = store.readQuery({
               query: todos,
               variables: {
-                isPublic: this.isPublic,
-                userId: this.isPublic ? null : this.$auth.user.sub,
+                user_id: this.userId,
+                is_public: this.isPublic,
               },
             })
             data.todos = data.todos.filter((t) => {
@@ -147,8 +148,8 @@ export default {
             store.writeQuery({
               query: todos,
               variables: {
-                isPublic: this.isPublic,
-                userId: this.type === 'public' ? null : this.$auth.user.sub,
+                user_id: this.userId,
+                is_public: this.isPublic,
               },
               data,
             })

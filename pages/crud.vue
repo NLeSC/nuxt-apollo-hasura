@@ -22,11 +22,8 @@
 </template>
 
 <script>
-import Todos from '~/components/Todos'
-import AuthComponent from '~/components/AuthComponent'
 export default {
   name: 'Crud',
-  components: { AuthComponent, Todos },
   computed: {
     dbUrl() {
       return process.env.dbUrl

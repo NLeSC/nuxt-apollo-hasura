@@ -5,12 +5,10 @@
       <pre>{{ state }}</pre>
     </v-card>
     <v-card title="Scopes" class="mt-4 pa-2">
-      User: {{ $auth.hasScope('user') }} <br />
-      Test: {{ $auth.hasScope('test') }} <br />
-      Admin: {{ $auth.hasScope('https://hasura.io/jwt/claims') }}
+      Admin: {{ $auth.user.role }}
     </v-card>
     <v-card class="mt-4 pa-2" title="token">
-      Auth token {{ $auth.getToken('auth0') || '-' }}
+      Auth token: {{ $auth.user.token }}
     </v-card>
     <hr />
     <v-row class="mt-4">

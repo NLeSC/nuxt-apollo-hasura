@@ -1,11 +1,11 @@
 <template>
   <div>
-    <v-menu v-if="$auth.$state.loggedIn" transition="slide-y-transition" bottom>
+    <v-menu v-if="$auth.loggedIn" transition="slide-y-transition" bottom>
       <template v-slot:activator="{ on }">
         <div v-on="on">
           {{ $auth.user.name }}
           <v-avatar size="36">
-            <v-img :src="$auth.user.picture" />
+            <v-img :src="$auth.user.picture || $auth.user.avatar_url" />
           </v-avatar>
         </div>
       </template>
@@ -46,10 +46,39 @@
         </v-card-text>
 
         <div class="d-flex flex-column pa-4">
+          <v-row v-if="!showEmailLinkBox && !linkSent" no-gutters>
+            <v-col class="pb-2 pr-2">
+              <v-btn
+                style="width: 100%;"
+                color="white"
+                rounded
+                depressed
+                @click="loginWithGoogle"
+              >
+                <v-icon left>{{ mdiGoogle }}</v-icon>
+                Google
+              </v-btn>
+            </v-col>
+            <v-col>
+              <v-btn
+                style="width: 100%;"
+                color="white"
+                rounded
+                depressed
+                @click="loginWithGithub"
+              >
+                <v-icon left>{{ mdiGithub }}</v-icon>
+                Github
+              </v-btn>
+            </v-col>
+          </v-row>
+
           <v-btn
             color="white"
             rounded
             depressed
+            disabled
+            class="mt-3"
             @click="showEmailLinkBox = !showEmailLinkBox"
           >
             <v-icon left>{{ mdiEmailOutline }}</v-icon>
@@ -96,32 +125,6 @@
             </v-container>
           </v-sheet>
           <div v-if="!showEmailLinkBox && !linkSent" class="d-flex flex-column">
-            <v-row no-gutters>
-              <v-col class="pb-2 pr-2">
-                <v-btn
-                  style="width: 100%;"
-                  color="white"
-                  rounded
-                  depressed
-                  @click="loginWithGoogle"
-                >
-                  <v-icon left>{{ mdiGoogle }}</v-icon>
-                  Google
-                </v-btn>
-              </v-col>
-              <v-col>
-                <v-btn
-                  style="width: 100%;"
-                  color="white"
-                  rounded
-                  depressed
-                  @click="loginWithGithub"
-                >
-                  <v-icon left>{{ mdiGithub }}</v-icon>
-                  Github
-                </v-btn>
-              </v-col>
-            </v-row>
             <v-divider />
             <v-btn
               disabled
@@ -215,12 +218,23 @@ export default {
     // ...mapActions('userData', ['LOGIN_WITH_GOOGLE', 'LOGOUT_USER', 'TOGGLE_LOGIN_DIALOG_USER']),
     ...mapActions({
       loginWithEmailLInk: 'login/LOGIN_WITH_EMAIL_LINK',
-      loginWithGithub: 'login/LOGIN_WITH_GITHUB',
       toggleDialogLogin: 'login/TOGGLE_LOGIN_DIALOG_USER',
 
       loginWithGoogle() {
         this.toggleDialogLogin()
-        window.location = '/login/google'
+        console.log(
+          '🎹',
+          this.$apolloHelpers.onLogin('Bearer lacasadelapradera')
+        )
+        this.$auth.loginWith('google').catch((err) => {
+          console.error(err)
+        })
+      },
+
+      loginWithGithub() {
+        this.$auth.loginWith('github').catch((err) => {
+          console.error(err)
+        })
       },
     }),
 

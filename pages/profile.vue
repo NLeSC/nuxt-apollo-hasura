@@ -12,7 +12,11 @@
       <v-row v-if="!!$auth.user" no-gutters justify="center" align="start">
         <v-card width="500" class="mx-4 pa-2">
           <div class="d-flex">
-            <v-img :src="$auth.user.picture" max-width="100px" contain />
+            <v-img
+              :src="$auth.user.picture || $auth.user.avatar_url"
+              max-width="100px"
+              contain
+            />
             <v-card-title primary-title>
               <div>
                 <div class="headline">

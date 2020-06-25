@@ -67,10 +67,8 @@ import {
   mdiFileLockOutline,
 } from '@mdi/js'
 import { version } from '~/package.json'
-import LoginButton from '~/components/LoginButton'
 
 export default {
-  components: { LoginButton },
   data() {
     return {
       mdiChevronRight,

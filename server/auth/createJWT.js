@@ -15,27 +15,31 @@ const privateKey =
 
 module.exports = (user = '') => {
   // get the roles from the DB to see what  are the roles the user is able to have
+  // console.log('🎹 user in created token', user)
+
+  // Based on the role, add he allowed roles in the token
+  const allowedRoles = ['user']
+  if (user.role === 'admin') {
+    allowedRoles.push('admin')
+  }
+
   const claims = {
-    //TODO
     'https://hasura.io/jwt/claims': {
-      'x-hasura-user-id': user.id.toString(),
+      'x-hasura-user-id': user.id.toString(), // auto integer in the database
       // default role if the http call is missing 'x-hasura-role'
       'x-hasura-default-role': 'user',
-      'x-hasura-allowed-roles': ['admin', 'user'], // todo: <-- which roles are allowed???
+      'x-hasura-allowed-roles': allowedRoles, // todo: <-- which roles are allowed???
       // x-hasura-role: it is ignored in the JWT. Has to be sent in the http call.
     },
   }
   try {
-    const token = jose.JWT.sign(claims, privateKey, {
+    // return token
+    return jose.JWT.sign(claims, privateKey, {
       algorithm: 'PS256',
       expiresIn: '15 min',
     })
-    return token
-
-    // res.redirect(`${process.env.REDIRECT_URL}?token=${token}`)
-    // res.redirect(`/?token=${token}`)
   } catch (error) {
     console.error('❌ Error redirecting the user', error)
-    return null
+    return error
   }
 }

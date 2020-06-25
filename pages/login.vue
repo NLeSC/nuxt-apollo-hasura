@@ -14,12 +14,6 @@
       User?: {{ $auth.user }} <br />
       Token?: {{ $auth.token }} <br />
       is admin?: {{ $auth.hasScope('admin') }}
-
-      <v-row>
-        <!--        <v-btn @click="loginClicked">Login with google</v-btn>-->
-        <v-btn @click="$auth.loginWith('auth0')">Login with auth0</v-btn>
-        <v-btn @click="$auth.logout()">Logout</v-btn>
-      </v-row>
     </v-container>
   </v-content>
 </template>

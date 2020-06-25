@@ -1,12 +1,14 @@
-query getMyTodos($isPublic: Boolean!, $userId: String) {
+query todos($is_public: Boolean = true, $user_id: Int!) {
   todos(
-    where: { is_public: { _eq: $isPublic }, user_id: { _eq: $userId } }
-    order_by: { created_at: desc }
+    where: { is_public: { _eq: $is_public }, user_id: { _eq: $user_id } }
+    order_by: { created_at: asc }
   ) {
     id
     title
-    created_at
-    is_completed
     user_id
+    is_completed
+    is_public
+    created_at
+    updated_at
   }
 }

@@ -14,6 +14,9 @@ const routerBase =
     : {}
 
 module.exports = {
+  // Auto import components with @nuxt/components
+  components: true,
+
   // Nuxt telemetry questions
   telemetry: false,
 

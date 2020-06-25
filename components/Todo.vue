@@ -1,9 +1,13 @@
 <template>
-  <v-text-field
-    v-model="todo.title"
-    outlined
-    @keyup="updateTodo"
-  ></v-text-field>
+  <div>
+    <v-text-field
+      outlined
+      dense
+      v-model="todo.title"
+      :readonly="userId !== todo.id"
+      @keyup="updateTodo"
+    ></v-text-field>
+  </div>
 </template>
 <script>
 // import gql from 'graphql-tag'
@@ -14,6 +18,7 @@ export default {
   name: 'Todo',
   props: {
     todo: { type: Object, default: () => ({}) },
+    userId: { type: Number, default: null },
   },
 
   methods: {
@@ -29,3 +34,8 @@ export default {
   },
 }
 </script>
+<style>
+.v-text-field__details {
+  display: none;
+}
+</style>
