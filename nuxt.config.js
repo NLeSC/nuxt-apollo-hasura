@@ -128,7 +128,7 @@ module.exports = {
     includeNodeModules: true, // optional, default: false (this includes graphql-tag for node_modules folder)
     authenticationType: 'Bearer', // optional, default: 'Bearer'
     // optional
-    watchLoading: '~/plugins/apollo-watch-loading-handler.js',
+    // watchLoading: '~/plugins/apollo-watch-loading-handler.js',
     // optional
     errorHandler: '~/plugins/apollo-error-handler.js',
     // required

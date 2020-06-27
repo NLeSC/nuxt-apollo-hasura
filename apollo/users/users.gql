@@ -1,0 +1,26 @@
+query users($search: String) {
+  users_aggregate {
+    aggregate {
+      count
+    }
+  }
+  users(
+    limit: 50
+    where: {
+      _or: [{ email: { _ilike: $search } }, { name: { _ilike: $search } }]
+    }
+    order_by: { role: asc, name: asc }
+  ) {
+    role
+    name
+    locale
+    id
+    google_id
+    github_id
+    gender
+    email_verified
+    email
+    created_at
+    avatar_url
+  }
+}

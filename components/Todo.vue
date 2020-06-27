@@ -1,18 +1,20 @@
 <template>
-  <div>
+  <v-row no-gutters align="center">
+    <v-avatar size="26" class="mr-2">
+      <img :src="todo.user.avatar_url" alt="" />
+    </v-avatar>
     <v-text-field
+      v-model="todo.title"
       outlined
       dense
-      v-model="todo.title"
       :readonly="userId !== todo.id"
       @keyup="updateTodo"
     ></v-text-field>
-  </div>
+  </v-row>
 </template>
 <script>
-// import gql from 'graphql-tag'
 import debounce from 'lodash.debounce'
-import update_todos_by_pk from '~/apollo/update_todos_by_pk'
+import update_todos_by_pk from '~/apollo/todos/update_todos_by_pk'
 
 export default {
   name: 'Todo',

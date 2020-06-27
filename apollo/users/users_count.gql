@@ -1,0 +1,7 @@
+query users_aggregate {
+  users_aggregate {
+    aggregate {
+      count
+    }
+  }
+}

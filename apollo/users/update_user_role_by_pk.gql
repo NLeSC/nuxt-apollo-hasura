@@ -1,0 +1,5 @@
+mutation update_user_role_by_pk($id: Int!, $role: roles_enum_enum) {
+  update_users_by_pk(pk_columns: { id: $id }, _set: { role: $role }) {
+    id
+  }
+}

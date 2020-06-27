@@ -1,6 +1,9 @@
 /*
  * Watch for GraphQL requests loading
  */
-// export default (isLoading) => {
-//   console.log(isLoading)
-// }
+//
+// ENABLE watchLoading: '~/plugins/apollo-watch-loading-handler.js', IN NUXT.CONFIG.JS
+//
+export default (isLoading) => {
+  console.log(isLoading)
+}

@@ -1,4 +1,4 @@
-query todos($is_public: Boolean = true, $user_id: Int!) {
+query todos($is_public: Boolean = true, $user_id: Int) {
   todos(
     where: { is_public: { _eq: $is_public }, user_id: { _eq: $user_id } }
     order_by: { created_at: asc }
@@ -10,5 +10,10 @@ query todos($is_public: Boolean = true, $user_id: Int!) {
     is_public
     created_at
     updated_at
+    user {
+      id
+      avatar_url
+      name
+    }
   }
 }

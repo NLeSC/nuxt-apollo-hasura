@@ -33,11 +33,10 @@
 </template>
 <script>
 import { mdiClose } from '@mdi/js'
-import delete_todos_by_pk from '~/apollo/delete_todos_by_pk'
-// import private_todos from '~/apollo/private_todos'
-import todos from '~/apollo/todos'
-import insert_todos from '~/apollo/insert_todos'
-import todos_aggregate_subscription from '~/apollo/todos_aggregate_subscription'
+import delete_todos_by_pk from '~/apollo/todos/delete_todos_by_pk'
+import todos from '~/apollo/todos/todos'
+import insert_todos from '~/apollo/todos/insert_todos'
+import todos_aggregate_subscription from '~/apollo/todos/todos_aggregate_subscription'
 
 export default {
   name: 'Todos',
@@ -48,7 +47,6 @@ export default {
   data: () => ({
     mdiClose,
     newTodo: '',
-    todos: [],
     todosCount: 0,
   }),
   computed: {
@@ -61,11 +59,11 @@ export default {
   },
   apollo: {
     todos: {
-      // graphql query
+      //   //   // graphql query
       query: todos,
       variables() {
         return {
-          user_id: this.userId,
+          user_id: this.isPublic ? null : this.userId,
           is_public: this.isPublic,
         }
       },
