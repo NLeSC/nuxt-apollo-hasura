@@ -17,14 +17,20 @@
               max-width="100px"
               contain
             />
-            <v-card-title primary-title>
-              <div>
-                <div class="headline">
-                  {{ $auth.user.name }}
-                </div>
-                <div>{{ $auth.user.email }}</div>
+            <div class="ml-3">
+              <h2>
+                {{ $auth.user.name }}
+              </h2>
+              <h4>{{ $auth.user.email }}</h4>
+              <div v-if="$auth.user.created_at">
+                Since
+                {{
+                  $dateFns.formatDistanceToNow(
+                    Date.parse($auth.user.created_at)
+                  )
+                }}
               </div>
-            </v-card-title>
+            </div>
           </div>
           <v-card-actions>
             <v-btn depressed @click="$auth.logout()">

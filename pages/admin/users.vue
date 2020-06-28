@@ -180,7 +180,7 @@ export default {
 
 <style scoped>
 .v-list-item.admin {
-  background-color: #fff5d9;
+  background-color: #fb8c0024;
 }
 .v-list-item:hover {
   background-color: #00000010;

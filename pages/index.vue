@@ -3,7 +3,7 @@
     <v-img
       max-width="700"
       width="100%"
-      src="images/stack.webp"
+      :src="$vuetify.theme.dark ? 'images/stack-dark.png' : 'images/stack.webp'"
       class="mt-4"
       :aspect-ratio="255 / 122"
     />

@@ -37,6 +37,13 @@
       </v-btn>
       <v-toolbar-title class="ml-4" v-text="title" />
       <v-spacer />
+      <v-btn
+        icon
+        class="mr-2"
+        @click="$vuetify.theme.dark = !$vuetify.theme.dark"
+      >
+        <v-icon>{{ mdiBrightness6 }}</v-icon>
+      </v-btn>
       <login-button />
     </v-app-bar>
     <v-content>
@@ -65,9 +72,9 @@ import {
   mdiHomeOutline,
   mdiDatabaseSync,
   mdiFileLockOutline,
+  mdiBrightness6,
 } from '@mdi/js'
 import { version } from '~/package.json'
-
 export default {
   data() {
     return {
@@ -77,6 +84,7 @@ export default {
       mdiHomeOutline,
       mdiDatabaseSync,
       mdiFileLockOutline,
+      mdiBrightness6,
 
       clipped: true,
       drawer: this.$vuetify.breakpoint.smAndUp,

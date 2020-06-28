@@ -40,7 +40,7 @@
         </v-btn>
       </template>
 
-      <v-card class="dialog-login" color="grey lighten-3" min-height="200">
+      <v-card class="dialog-login" min-height="200">
         <v-card-title class="headline" primary-title>
           Getting access
         </v-card-title>
@@ -57,7 +57,6 @@
             <v-col class="pb-2 pr-2">
               <v-btn
                 style="width: 100%;"
-                color="white"
                 rounded
                 depressed
                 @click="loginWithGoogle"
@@ -69,7 +68,6 @@
             <v-col>
               <v-btn
                 style="width: 100%;"
-                color="white"
                 rounded
                 depressed
                 @click="loginWithGithub"
@@ -81,7 +79,6 @@
           </v-row>
 
           <v-btn
-            color="white"
             rounded
             depressed
             disabled
