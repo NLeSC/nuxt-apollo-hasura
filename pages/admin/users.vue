@@ -44,8 +44,17 @@
             </v-list-item-title>
             <v-list-item-subtitle v-text="user.email"></v-list-item-subtitle>
             <v-list-item-subtitle
-              v-text="user.gender + ' | ' + user.locale"
-            ></v-list-item-subtitle>
+              v-text="
+                user.gender +
+                ' | ' +
+                user.locale +
+                ' | ' +
+                'since ' +
+                $dateFns.formatDistanceToNow(Date.parse(user.created_at))
+              "
+            >
+            </v-list-item-subtitle>
+            <v-list-item-subtitle :text="'hol'" />
           </v-list-item-content>
           <v-list-item-action>
             <v-row no-gutters align="center">

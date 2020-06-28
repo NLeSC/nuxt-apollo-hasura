@@ -74,6 +74,7 @@ module.exports = {
     '@nuxtjs/auth',
     '@nuxtjs/axios',
     '@nuxt/components',
+    '@nuxtjs/date-fns',
   ],
 
   router: {
