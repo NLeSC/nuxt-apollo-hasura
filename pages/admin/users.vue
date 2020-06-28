@@ -60,8 +60,12 @@
                 :value="user.role"
                 @change="changeRole($event, user.id)"
               ></v-select>
-              <v-btn icon @click="deleteUser(user.id, user.email)">
-                <v-icon color="grey">{{ mdiDeleteEmpty }}</v-icon>
+              <v-btn
+                :disabled="user.id === $auth.user.id"
+                icon
+                @click="deleteUser(user.id, user.email)"
+              >
+                <v-icon>{{ mdiDeleteEmpty }}</v-icon>
               </v-btn>
             </v-row>
           </v-list-item-action>
