@@ -40,7 +40,6 @@
       </v-btn>
       <v-toolbar-title class="ml-4" v-text="title" />
       <v-spacer />
-
       <login-button />
     </v-app-bar>
     <v-content>
