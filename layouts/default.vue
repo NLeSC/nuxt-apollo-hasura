@@ -35,15 +35,12 @@
       <v-btn icon @click.stop="clipped = !clipped">
         <v-icon>{{ mdiApplication }}</v-icon>
       </v-btn>
-      <v-toolbar-title class="ml-4" v-text="title" />
-      <v-spacer />
-      <v-btn
-        icon
-        class="mr-2"
-        @click="$vuetify.theme.dark = !$vuetify.theme.dark"
-      >
+      <v-btn icon @click="$vuetify.theme.dark = !$vuetify.theme.dark">
         <v-icon>{{ mdiBrightness6 }}</v-icon>
       </v-btn>
+      <v-toolbar-title class="ml-4" v-text="title" />
+      <v-spacer />
+
       <login-button />
     </v-app-bar>
     <v-content>
@@ -52,6 +49,14 @@
       </v-container>
     </v-content>
     <v-footer app class="flex">
+      <v-btn
+        icon
+        small
+        class="mr-2"
+        @click="$vuetify.theme.dark = !$vuetify.theme.dark"
+      >
+        <v-icon size="20">{{ mdiBrightness6 }}</v-icon>
+      </v-btn>
       <img
         src="https://www.esciencecenter.nl/wp-content/themes/raadhuis/dist/assets/img/favicons/apple-touch-icon.png"
         width="20"

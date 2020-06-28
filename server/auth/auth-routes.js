@@ -22,8 +22,12 @@ mutation insert_users_one($email: String, $email_verified: Boolean, $gender: Str
 `
 
 router.get('/login/token', (req, res) => {
-  const token = createJWT(req.user)
-  res.send(token)
+  if (req.user) {
+    const token = createJWT(req.user)
+    res.send(token)
+  } else {
+    res.send('<h3>❌ No user defined</h3>')
+  }
 })
 
 router.post('/api/auth/insert_user', async (req, res) => {

@@ -1,6 +1,8 @@
-const axios = require('axios')
-const passport = require('passport')
-const GoogleStrategy = require('passport-google-oauth20').Strategy
+// const passport = require('passport')
+// const GoogleStrategy = require('passport-google-oauth20').Strategy
+// const JwtStrategy = require('passport-jwt').Strategy
+// const ExtractJwt = require('passport-jwt').ExtractJwt
+// const axios = require('axios')
 
 const INSERT_USER_ONE_QUERY = `
 mutation insert_users_one($google_id: String, $name: String, $email: String, $gender: String, $email_verified: Boolean, $avatar_url: String) {
@@ -9,12 +11,12 @@ mutation insert_users_one($google_id: String, $name: String, $email: String, $ge
     name
     email
     google_id
+    github_id
     avatar_url
     gender
     updated_at
   }
 }
-
 `
 const GET_USER_QUERY = `
   query users_by_pk($id: Int!) {
@@ -30,20 +32,37 @@ const GET_USER_QUERY = `
   }
 `
 
+const GET_USER_WHERE_GOOGLE_ID = `
+query users($google_id: String_comparison_exp = {}) {
+  users(where: {google_id: $google_id}) {
+    id
+    google_id
+    name
+    email
+    avatar_url
+    gender
+    role
+    updated_at
+    created_at
+  }
+}
+`
 /*
+
+/!*
  * Store id in the browser cookie Session
- */
+ *!/
 passport.serializeUser((user, done) => {
   console.log('serializeUser 🎹', user)
   done(null, user.id)
 })
 
-/*
+/!*
  * Read the user id from the browser cookie session,
  * get the user from the DB and return the user profile.
  * passport.deserialize will attach the user profile to the
  * req param in the express server
- */
+ *!/
 passport.deserializeUser((id, done) => {
   console.log('🎹 deserializeUser, id:', id)
   axios({
@@ -70,9 +89,9 @@ passport.use(
     {
       clientID:
         process.env.GOOGLE_CLIENT_ID ||
-        '956336158440-0anth03hfu9coij1s6qrkt4ojc68o98k.apps.googleusercontent.com',
+        '956336158440-r92a5pvq8597pi32fph1234n9m185pv7.apps.googleusercontent.com',
       clientSecret:
-        process.env.GOOGLE_CLIENT_SECRET || 'qT9yf7K0dby4lZ3l3e-v1U5m',
+        process.env.GOOGLE_CLIENT_SECRET || 'JQWgVMYm3qxq_7F7s__UcJ6c',
       callbackURL: '/login/google/redirect',
     },
     // Callback function to called when the auth is retrieved
@@ -87,6 +106,9 @@ passport.use(
         email_verified: profile._json.email_verified || '',
       }
 
+      //
+      // Create or update new user in DB
+      //
       axios({
         url: 'http://localhost:4000/v1/graphql',
         method: 'post',
@@ -99,17 +121,73 @@ passport.use(
         },
       })
         .then((result) => {
-          console.log(
-            '🎹 USER IN THE DATABSE!!!!!!!!!!!!!!!!!!!!',
-            result.data.data.insert_users_one.id
-          )
           // go to serialize the user, to store it in the cookie
-          done(null, result.data.data.insert_users_one)
+          const info = { scope: '*' }
+          done(null, result.data.data.insert_users_one, info)
         })
         .catch((error) => {
           console.error('❌ Error in creating the user')
           done(error)
         })
+
+      //
+      // Find first user with google_id
+      //
+      /!*axios({
+        url: 'http://localhost:4000/v1/graphql',
+        method: 'post',
+        headers: { 'x-hasura-admin-secret': 'adminpassword' },
+        data: {
+          query: GET_USER_WHERE_GOOGLE_ID,
+          variables: { google_id: profile.id },
+        },
+      })
+        .then((result) => {
+          console.log('🎹 from the database', result.data)
+          done(null, result.data)
+        })
+        .catch((error) => {
+          console.error(error)
+          done(error, null)
+        })*!/
     }
   )
 )
+/!*
+
+const opts = {}
+opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken()
+opts.secretOrKey = 'JWT_SECRET_OR_KEY'
+passport.use(
+  new JwtStrategy(opts, function (payload, done) {
+    axios({
+      url: 'http://localhost:4000/v1/graphql',
+      method: 'post',
+      headers: { 'x-hasura-admin-secret': 'adminpassword' },
+      data: {
+        query: GET_USER_QUERY,
+        //todo <-- user id ? not sure if payload has it
+        variables: { id: payload.user.google_id },
+      },
+    })
+      .then((result) => {
+        console.log('🎹 from the database', result.data)
+        done(null, result.data)
+      })
+      .catch((error) => {
+        console.error(error)
+        done(error, null)
+      })
+    // users.findById(payload, function (err, user) {
+    //   if (err) {
+    //     return done(err, false)
+    //   }
+    //   if (user) {
+    //     return done(null, user)
+    //   }
+    //   return done(null, false)
+    // })
+  })
+)
+*!/
+*/
