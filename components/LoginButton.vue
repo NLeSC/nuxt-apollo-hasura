@@ -12,7 +12,7 @@
       <v-list>
         <v-list-item to="/admin/users">
           <v-list-item-icon
-            ><v-icon> {{ mdiAccountLock }}</v-icon></v-list-item-icon
+            ><v-icon> {{ mdiAccountGroup }}</v-icon></v-list-item-icon
           >
           <v-list-item-title>Users</v-list-item-title>
         </v-list-item>
@@ -169,7 +169,7 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import {
-  mdiAccountLock,
+  mdiAccountGroup,
   mdiAccount,
   mdiExitRun,
   mdiEmailOutline,
@@ -184,7 +184,7 @@ export default {
   name: 'LoginButton',
   data() {
     return {
-      mdiAccountLock,
+      mdiAccountGroup,
       mdiAccount,
       mdiExitRun,
       mdiEmailOutline,

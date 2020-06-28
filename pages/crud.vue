@@ -3,10 +3,8 @@
     <h2>CRUD Example with realtime Subscriptions</h2>
     <p>
       <a :href="dbUrl" target="_blank">
-        Create a table
+        DB Console
       </a>
-      called 'todos' on the database with 4 columns: 'id'(Integer),
-      'title'(Text) and 'is_publish'(Boolean), 'is_completed'(Boolean).
     </p>
     <v-row>
       <v-col sm="6" cols="12">

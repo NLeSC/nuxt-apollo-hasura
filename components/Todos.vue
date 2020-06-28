@@ -6,12 +6,20 @@
       <h4>Num 'todos' subscription: {{ todosCount }}</h4>
 
       <v-form v-if="!isPublic" @submit.prevent="addTodo">
-        <v-text-field
-          v-model="newTodo"
-          label="Add todo (Optimistic UI)"
-          required
-        ></v-text-field>
+        <v-row no-gutters>
+          <v-col cols="3">
+            <v-switch v-model="makeTodoPublic" label="Public"></v-switch>
+          </v-col>
+          <v-col cols="9">
+            <v-text-field
+              v-model="newTodo"
+              label="Add todo (Optimistic UI)"
+              required
+            ></v-text-field>
+          </v-col>
+        </v-row>
       </v-form>
+
       <v-list dense>
         <v-list-item v-for="todo in todos" :key="todo.id">
           <v-list-item-content>
@@ -48,6 +56,7 @@ export default {
     mdiClose,
     newTodo: '',
     todosCount: 0,
+    makeTodoPublic: false,
   }),
   computed: {
     userId() {
@@ -59,7 +68,6 @@ export default {
   },
   apollo: {
     todos: {
-      //   //   // graphql query
       query: todos,
       variables() {
         return {
@@ -85,17 +93,25 @@ export default {
   },
 
   methods: {
+    refreshUsersList() {
+      this.$apollo.queries.todos.refetch()
+    },
     addTodo() {
       // insert new item into db
       const title = this.newTodo
-      this.$apollo.mutate({
-        mutation: insert_todos,
-        variables: {
-          title,
-          user_id: this.userId,
-          is_public: this.isPublic,
-        },
-        update: (cache, { data: { insert_todos } }) => {
+      this.$apollo
+        .mutate({
+          mutation: insert_todos,
+          variables: {
+            title,
+            user_id: this.userId,
+            is_public: this.makeTodoPublic,
+          },
+          // update: (cache, { data: { insert_todos } })=>{}
+          update: () => {
+            this.newTodo = ''
+          },
+          /* update: (cache, { data: { insert_todos } }) => {
           // console.log('🎹', insert_todos)
           // // Read the data from our cache for this query.
           try {
@@ -121,17 +137,24 @@ export default {
           } catch (e) {
             console.error(e)
           }
-        },
-      })
+        }, */
+        })
+        .then(() => {
+          // todo:
+          //  this will make the call again.
+          //  An improvement will be to use update cache from apollo client.
+          this.refreshUsersList()
+        })
     },
 
     deleteTodo(id) {
-      this.$apollo.mutate({
-        mutation: delete_todos_by_pk,
-        variables: {
-          id,
-        },
-        update: (store, { data, data: { delete_todos } }) => {
+      this.$apollo
+        .mutate({
+          mutation: delete_todos_by_pk,
+          variables: {
+            id,
+          },
+          /* update: (store, { data, data: { delete_todos } }) => {
           if (delete_todos.affected_rows) {
             const data = store.readQuery({
               query: todos,
@@ -152,8 +175,14 @@ export default {
               data,
             })
           }
-        },
-      })
+        }, */
+        })
+        .then(() => {
+          // todo:
+          //  this will make the call again.
+          //  An improvement will be to use update cache from apollo client.
+          this.refreshUsersList()
+        })
     },
   },
 }
