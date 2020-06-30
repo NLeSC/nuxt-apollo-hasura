@@ -2,7 +2,7 @@ export default (error, nuxtContext) => {
   // todo if the token is expired.. then get another one!!!! wop weop
   if (error.toString().includes('Malformed Authorization header')) {
     console.log(
-      '🎹 Malformed Authorization header',
+      'Malformed Authorization header',
       error.toString().includes('Malformed Authorization header')
     )
   }

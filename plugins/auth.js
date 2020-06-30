@@ -2,6 +2,7 @@
  * Auth plugin.
  * It will run after the application start
  */
+
 export default async function ({ $auth, $axios, $apolloHelpers }) {
   if (!$auth.loggedIn) {
     return
@@ -11,6 +12,9 @@ export default async function ({ $auth, $axios, $apolloHelpers }) {
   // Insert or update user in the DB
   //
   if (process.client) {
+    //
+    // Enters every time the user is logged in
+    //
     try {
       const { data: user } = await $axios({
         method: 'post',
@@ -25,17 +29,31 @@ export default async function ({ $auth, $axios, $apolloHelpers }) {
           google_id: $auth.user.sub,
         },
       })
-      // console.log('😎', $auth.user)
-      // console.log('🎹', user, user.token)
-      $auth.setUser({ ...user.createdUser, token: user.token, ...$auth.user })
-      $apolloHelpers.onLogin(user.token)
+      // Attach the new user to the user data retrieved from the provider
+      // $auth.setUser({ ...user.createdUser, token: user.token, ...$auth.user })
+      // console.log('🎹', user)
+      localStorage.setItem('auth._token_local', user.token)
+      localStorage.setItem('auth.role', user.createdUser.role)
 
-      localStorage.setItem('token', user.token)
-      // $auth.setUserToken(user.token)
-      // console.log('🎹')
+      const interval = setInterval(async function () {
+        console.log('GET NEW TOKEN INTERVAL')
+        if (!$auth.user) {
+          clearInterval(interval)
+          return
+        }
 
-      // console.log('😎', $auth.user)
-      // $auth.setToken('google', user.token)
+        //
+        // Request New token
+        //
+        const { data: token } = await $axios({
+          method: 'post',
+          url: '/login/token',
+          params: {
+            user: user.createdUser,
+          },
+        })
+        localStorage.setItem('auth._token_local', token)
+      }, 840000) // 840000 = 14min, less than 15 min before the expiration date of the token.
     } catch (error) {
       console.error('❌ Error in creating the user', error)
     }

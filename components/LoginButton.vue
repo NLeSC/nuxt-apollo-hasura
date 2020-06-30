@@ -10,13 +10,13 @@
         </div>
       </template>
       <v-list>
-        <v-list-item to="/admin/users">
+        <v-list-item v-if="isAdmin" to="/admin/users">
           <v-list-item-icon
             ><v-icon> {{ mdiAccountGroup }}</v-icon></v-list-item-icon
           >
           <v-list-item-title>Users</v-list-item-title>
         </v-list-item>
-        <v-divider></v-divider>
+        <v-divider v-if="isAdmin"></v-divider>
         <v-list-item to="/profile">
           <v-list-item-icon
             ><v-icon> {{ mdiAccount }}</v-icon></v-list-item-icon
@@ -24,7 +24,7 @@
 
           <v-list-item-title>Profile</v-list-item-title>
         </v-list-item>
-        <v-list-item @click="$auth.logout()">
+        <v-list-item @click="logout">
           <v-list-item-icon
             ><v-icon> {{ mdiExitRun }}</v-icon></v-list-item-icon
           >
@@ -210,6 +210,13 @@ export default {
     ...mapState('login', ['loginDialog']),
     ...mapState('user', ['user', 'loggedIn']),
     // Open this login dialog from every part of the application
+    isAdmin() {
+      if (process.client) {
+        return localStorage['auth.role'] === 'admin'
+      } else {
+        return false
+      }
+    },
     _loginDialog: {
       get() {
         return this.loginDialog
@@ -243,6 +250,12 @@ export default {
         })
       },
     }),
+
+    logout() {
+      localStorage.removeItem('auth._token_local')
+      localStorage.removeItem('auth.role')
+      this.$auth.logout()
+    },
 
     toProfile() {
       this.$router.push({ name: 'profile' })

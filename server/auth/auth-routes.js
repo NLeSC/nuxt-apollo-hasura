@@ -20,17 +20,23 @@ mutation insert_users_one($email: String, $email_verified: Boolean, $gender: Str
   }
 }
 `
-
-router.get('/login/token', (req, res) => {
-  if (req.user) {
-    const token = createJWT(req.user)
+/*
+ * Create new token
+ * @user {}
+ */
+router.post('/login/token', (req, res) => {
+  console.log('⚡️ User from api /login/token', req.query)
+  if (req.query.user) {
+    const token = createJWT(req.query.user)
     res.send(token)
   } else {
     res.send('<h3>❌ No user defined</h3>')
   }
 })
 
+// Insert user in the database everytime a user is logged in
 router.post('/api/auth/insert_user', async (req, res) => {
+  console.log(' USEER LOGGED IN')
   try {
     const resultUser = await axios({
       url: 'http://localhost:4000/v1/graphql',

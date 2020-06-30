@@ -7,15 +7,3 @@
     </pre>
   </div>
 </template>
-
-<script>
-// todo this doesnt' enter
-export default {
-  beforeRouteLeave(to, from, next) {
-    console.log('🎹 STOP HERE AT HE CALLBACK')
-    // called when the route that renders this component is about to
-    // be navigated away from.
-    // has access to `this` component instance.
-  },
-}
-</script>

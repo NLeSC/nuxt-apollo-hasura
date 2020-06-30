@@ -13,19 +13,19 @@ const privateKey =
  * In case the x-hasura-role is missing, the x-hasura-default-role from the JWT is used.
  */
 
-module.exports = (user = '') => {
+module.exports = (user = {}) => {
   // get the roles from the DB to see what  are the roles the user is able to have
-  // console.log('🎹 user in created token', user)
+  const parsedUser = typeof user === 'string' ? JSON.parse(user) : user
 
   // Based on the role, add he allowed roles in the token
   const allowedRoles = ['user']
-  if (user.role === 'admin') {
+  if (parsedUser.role === 'admin') {
     allowedRoles.push('admin')
   }
 
   const claims = {
     'https://hasura.io/jwt/claims': {
-      'x-hasura-user-id': user.id.toString(), // auto integer in the database
+      'x-hasura-user-id': parsedUser.id.toString(), // auto integer in the database
       // default role if the http call is missing 'x-hasura-role'
       'x-hasura-default-role': 'user',
       'x-hasura-allowed-roles': allowedRoles, // todo: <-- which roles are allowed???
