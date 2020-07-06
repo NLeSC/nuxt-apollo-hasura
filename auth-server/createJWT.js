@@ -3,7 +3,7 @@ const jose = require('jose')
 
 const privateKey =
   process.env.AUTH_PRIVATE_KEY ||
-  jose.JWK.asKey(fs.readFileSync('./server/auth/private.pem'))
+  jose.JWK.asKey(fs.readFileSync('./auth-server/keys/private.pem'))
 
 /**
  * x-hasura-role has to be sent with the http request.
@@ -13,22 +13,23 @@ const privateKey =
  * In case the x-hasura-role is missing, the x-hasura-default-role from the JWT is used.
  */
 
-module.exports = (user = {}) => {
+module.exports = (user_id = 0, user_role = 'user') => {
   // get the roles from the DB to see what  are the roles the user is able to have
-  const parsedUser = typeof user === 'string' ? JSON.parse(user) : user
+  // const parsedUser = typeof user_id === "string" ? JSON.parse(user_id) : user_id;
 
   // Based on the role, add he allowed roles in the token
   const allowedRoles = ['user']
-  if (parsedUser.role === 'admin') {
-    allowedRoles.push('admin')
+
+  if (user_role !== 'user') {
+    allowedRoles.push(user_role)
   }
 
   const claims = {
     'https://hasura.io/jwt/claims': {
-      'x-hasura-user-id': parsedUser.id.toString(), // auto integer in the database
+      'x-hasura-user-id': user_id.toString(), // auto integer in the database
       // default role if the http call is missing 'x-hasura-role'
       'x-hasura-default-role': 'user',
-      'x-hasura-allowed-roles': allowedRoles, // todo: <-- which roles are allowed???
+      'x-hasura-allowed-roles': allowedRoles,
       // x-hasura-role: it is ignored in the JWT. Has to be sent in the http call.
     },
   }

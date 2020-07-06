@@ -6,8 +6,9 @@
   "description": "Nuxt Apollo Hasura Postgres Template",
   "author": "Jesus Garcia Gonzalez",
   "scripts": {
-    "serve": "docker-compose up -d && yarn dev",
-    "dev": "cross-env NODE_ENV=development nodemon server/index.js --watch server",
+    "serve": "concurrently \"docker-compose up -d\" \"yarn auth-server\" \"yarn dev\"",
+    "auth-server": "nodemon ./auth-server",
+    "dev": "nuxt dev",
     "build": "nuxt build",
     "lint": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
     "deploy": "yarn build:gh-pages && GIT_DEPLOY_REPO=https://github.com/NLeSC/nuxt-apollo-hasura scripts/deploy.sh",

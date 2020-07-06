@@ -1,3 +1,7 @@
+/*
+ * TEMPORARY FILE, DELETE
+ */
+
 // const passport = require('passport')
 // const GoogleStrategy = require('passport-google-oauth20').Strategy
 // const JwtStrategy = require('passport-jwt').Strategy
@@ -17,7 +21,7 @@ mutation insert_users_one($google_id: String, $name: String, $email: String, $ge
     updated_at
   }
 }
-`
+`;
 const GET_USER_QUERY = `
   query users_by_pk($id: Int!) {
     users_by_pk(id: $id) {
@@ -30,7 +34,7 @@ const GET_USER_QUERY = `
       role
     }
   }
-`
+`;
 
 const GET_USER_WHERE_GOOGLE_ID = `
 query users($google_id: String_comparison_exp = {}) {
@@ -46,7 +50,7 @@ query users($google_id: String_comparison_exp = {}) {
     created_at
   }
 }
-`
+`;
 /*
 
 /!*

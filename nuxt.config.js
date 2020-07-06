@@ -27,7 +27,7 @@ module.exports = {
       : `https://${DB_URL}`,
     baseWsHasura: isDev ? 'ws://localhost:4000/v1/graphql' : `wss://${DB_URL}`,
   },
-  mode: 'universal', // "spa" | "universal"
+  mode: 'spa', // "spa" | "universal"
   /*
    ** Headers of the page
    */
