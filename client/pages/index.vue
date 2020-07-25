@@ -15,9 +15,7 @@
 
       <v-card-text>
         <v-icon>{{ mdiDatabase }}</v-icon> Database:
-        <a href="http://localhost:4000" target="_blank" class="link"
-          >Hasura console</a
-        >
+        <a :href="dbUrl" target="_blank" class="link">Hasura console</a>
         <hr class="my-3" />
         <v-row>
           <v-col sm="6" cols="12" class="mb-4"
@@ -96,6 +94,11 @@ export default {
         },
       ],
     }
+  },
+  computed: {
+    dbUrl() {
+      return process.env.dbUrl
+    },
   },
 }
 </script>

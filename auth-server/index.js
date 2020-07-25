@@ -1,14 +1,14 @@
-const express = require('express')
-const bodyParser = require('body-parser')
-const consola = require('consola')
-const cors = require('cors')
+const express = require("express");
+const bodyParser = require("body-parser");
+const consola = require("consola");
+const cors = require("cors");
 // const cookieSession = require('cookie-session')
 // const passport = require('passport')
-const authRoutes = require('./auth-routes')
+const authRoutes = require("./auth-routes");
 
-const app = express()
+const app = express();
 // support parsing of application/json type post data
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 app.use(
   cors()
   /*
@@ -16,7 +16,7 @@ app.use(
     origin: 'http://yourapp.com'   todo: when production
   }
   */
-)
+);
 
 function start() {
   // Use Cookie session
@@ -31,16 +31,16 @@ function start() {
   // app.use(passport.initialize())
   // app.use(passport.session())
 
-  app.use('/', authRoutes)
+  app.use("/", authRoutes);
 
-  const { host, port } = { host: 'localhost', port: 5000 } // todo get the ports and uri
+  const { host, port } = { host: "localhost", port: 5000 }; // todo get the ports and uri
 
   // Listen the server
-  app.listen(port, host)
+  app.listen(port, host);
   consola.ready({
-    message: `Server listening on http://${host}:${port}`,
+    message: `Auth Server listening on http://${host}:${port}`,
     badge: true,
-  })
+  });
 }
 
-start()
+start();

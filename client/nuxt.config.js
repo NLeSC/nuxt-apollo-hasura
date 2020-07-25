@@ -21,7 +21,7 @@ module.exports = {
   telemetry: false,
 
   env: {
-    dbUrl: isDev ? 'http://localhost:4000' : `https://${DB_URL}`,
+    dbUrl: isDev ? 'http://localhost:9695' : `https://${DB_URL}`,
     baseUriHasura: isDev
       ? 'http://localhost:4000/v1/graphql'
       : `https://${DB_URL}`,

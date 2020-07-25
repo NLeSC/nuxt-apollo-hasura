@@ -1,8 +1,16 @@
-# Nuxt Apollo Hasura Example
 
-Project idea: [Full Stack Recipes](https://github.com/NLeSC/full-stack-recipes)
+⚠️ 🚧 APP in development. Readme indication may not be accurate. 🚧 ⚠️
 
+
+# Nuxt Apollo Hasura Template
+📝 Please raise any questions over the installation process in the issues page.
+
+<hr>
+Project idea: [Full Stack Recipes by NLeSC](https://github.com/NLeSC/full-stack-recipes)
+
+[![Edit nuxtjs-postgres-graphql](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/github/hasura/graphql-engine/tree/master/community/sample-apps/nuxtjs-postgres-graphql?fontsize=14)
 ChangeLog: [Changelog](https://github.com/NLeSC/nuxt-apollo-hasura/blob/master/CHANGELOG.md)
+
 
 Tech Stack: Nuxt.js, Vuetify, Hasura, Postgres, Passport.js.
 
@@ -15,9 +23,13 @@ Features list:
 - [x] Deploy to Firebase Hosting and Github pages
 - [ ] DB migrations between environments 
 
+
 ## Template setup
 
 From Github, you can click on [`Use this template`](https://github.com/NLeSC/nuxt-apollo-hasura/generate) to create a new repository based on this one.
+
+Once you have created a copy of the template, you can deploy the app in one step deploying to heroku: <br>
+<a href="https://heroku.com/deploy"><img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy"></a>
 
 Alternatively, you can create a new repository from your terminal:
 
@@ -38,37 +50,12 @@ $ git push --origin master
 $ git remote add template https://github.com/NLeSC/nuxt-apollo-hasura
 ```
 
-## Setting up JWT signing tokens
-- Generate a new key public/private key running `./server/generate_RS512.sh` in the console.
-- Copy the content of `./server/publickey.txt` into the `docker-compose.yml` inside the environment variable `HASURA_GRAPHQL_JWT_SECRET` (inside the "key" string).
-- Create an application in [Google Console](https://console.cloud.google.com) for Oauth2.
-    - Grant JavaScript origins: `http://localhost:3000` and redirect url: `http://localhost:3000/redirect`.
-    - Copy the `GOOGLE_CLIENT_ID` and  `GOOGLE_CLIENT_SECRET` inside the `.env` file.
-    
-
-## Environment variables
-Rename `.env.example` file to `.env` and modify the variables in this file and the and `docker-compose.yml` accordingly.
-
-## Getting started
-You will need to have installed in your machine: Node, Yarn, Docker compose and Prettier
-``` bash
-# Install the dependencies
-$ yarn
-
-# Start the development server
+# Run locally
+```bash
+$ make install
+$ cd client
 $ yarn serve
-```
 
-To run in production, use the `start` command
+# on another terminal:
 
-``` bash
-$ yarn start
-```
-
-### Updating from template
-
-Fetch from the `template` remote. If you cloned via github, you will need to add the remote as above.
-
-``` bash
-$ git fetch --all --allow-unrelated-histories
 ```
