@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "tables": [
+    { "table": { "schema": "public", "name": "roles" } },
+    { "table": { "schema": "public", "name": "users" } },
+    {
+      "table": { "schema": "public", "name": "yet" },
+      "select_permissions": [
+        { "role": "public", "permission": { "columns": [], "filter": {} } }
+      ]
+    }
+  ]
+}
