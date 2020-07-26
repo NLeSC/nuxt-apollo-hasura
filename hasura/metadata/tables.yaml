@@ -1,0 +1,17 @@
+- table:
+    schema: public
+    name: new_table
+- table:
+    schema: public
+    name: roles
+- table:
+    schema: public
+    name: users
+- table:
+    schema: public
+    name: yet
+  select_permissions:
+  - role: public
+    permission:
+      columns: []
+      filter: {}

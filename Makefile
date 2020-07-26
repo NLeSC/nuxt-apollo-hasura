@@ -64,13 +64,13 @@ FILE=db/hasura_schema.json
 SCHEMA=`cd client && npx json-minify ../$(FILE)`
 hasura-restore:
 	# The order is very important!
-	#$(MAKE) hasura-apply-metadata
-	#$(MAKE) hasura-apply-migrations
+	cat db/dev.dump.sql | docker exec -i postgres-container psql -U postgres -d postgres < db/dev.dump.sql
+	$(MAKE) hasura-apply-metadata
+	$(MAKE) hasura-apply-migrations
 #	cat db/dev_inserts.dump.sql | docker exec -i postgres-container psql -U postgres -d postgres < db/dev_inserts.dump.sql
 #	cat db/dev.dumpall.sql | docker exec -i postgres-container psql -U postgres -d postgres < db/dev.dumpall.sql
-	cat db/dev.dump.sql | docker exec -i postgres-container psql -U postgres -d postgres < db/dev.dump.sql
 	#curl --header "x-hasura-admin-secret: adminpassword" --data '{"type":"replace_metadata", "args":'$(cat ./hasura/schema.json)'}' http://localhost:4000/v1/query
-	curl -d '{"type":"replace_metadata", "args":'$(SCHEMA)'}' -H "x-hasura-admin-secret: adminpassword" -H "X-Hasura-Role: admin" http://localhost:4000/v1/query
+	#curl -d '{"type":"replace_metadata", "args":'$(SCHEMA)'}' -H "x-hasura-admin-secret: adminpassword" -H "X-Hasura-Role: admin" http://localhost:4000/v1/query
 
 
 hasura-restore-full:
