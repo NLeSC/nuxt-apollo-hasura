@@ -4,14 +4,26 @@
 - table:
     schema: public
     name: roles
-- table:
-    schema: public
-    name: users
-- table:
-    schema: public
-    name: yet
+  array_relationships:
+  - name: users
+    using:
+      foreign_key_constraint_on:
+        column: role
+        table:
+          schema: public
+          name: users
   select_permissions:
   - role: public
     permission:
       columns: []
       filter: {}
+- table:
+    schema: public
+    name: users
+  object_relationships:
+  - name: roleByRole
+    using:
+      foreign_key_constraint_on: role
+- table:
+    schema: public
+    name: yet

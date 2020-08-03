@@ -13,7 +13,7 @@ install:
 	$(MAKE) serve
 
 serve:
-	$(MAKE) up
+	#$(MAKE) up
 	cd client && yarn serve
 
 
@@ -27,8 +27,8 @@ install_node_modules:
 # Docker compose
 # ----------------------------------------------------------------
 up:
-	docker-compose up -d
-	sleep 3 # wait for the volumens and the container to be created
+	docker-compose up --remove-orphans #-d
+#	sleep 10 # wait for the volumens and the container to be created
 
 stop:
 	docker-compose down
@@ -57,27 +57,33 @@ hasura-dump:
 	# Format file
 	cd client && npx prettier --write ../db/hasura_schema.json
 
-# RESTORE
+# RESTORE FORM JSON FILE
 # copy data in the database and then apply the hasura metadata (the file is minified in one line)
 # ----------------------------------------------------------------
 FILE=db/hasura_schema.json
 SCHEMA=`cd client && npx json-minify ../$(FILE)`
 hasura-restore:
 	# The order is very important!
-	cat db/dev.dump.sql | docker exec -i postgres-container psql -U postgres -d postgres < db/dev.dump.sql
+	# cat db/dev.dump.sql | docker exec -i postgres-container psql -U postgres -d postgres < db/dev.dump.sql
+	 cat db/dev_inserts.dump.sql | docker exec -i postgres-container psql -U postgres -d postgres < db/dev_inserts.dump.sql
 	$(MAKE) hasura-apply-metadata
-	$(MAKE) hasura-apply-migrations
-#	cat db/dev_inserts.dump.sql | docker exec -i postgres-container psql -U postgres -d postgres < db/dev_inserts.dump.sql
-#	cat db/dev.dumpall.sql | docker exec -i postgres-container psql -U postgres -d postgres < db/dev.dumpall.sql
+	# cat db/dev.dumpall.sql | docker exec -i postgres-container psql -U postgres -d postgres < db/dev.dumpall.sql
+	#$(MAKE) hasura-apply-migrations
 	#curl --header "x-hasura-admin-secret: adminpassword" --data '{"type":"replace_metadata", "args":'$(cat ./hasura/schema.json)'}' http://localhost:4000/v1/query
 	#curl -d '{"type":"replace_metadata", "args":'$(SCHEMA)'}' -H "x-hasura-admin-secret: adminpassword" -H "X-Hasura-Role: admin" http://localhost:4000/v1/query
 
 
-hasura-restore-full:
-	cat db/dev.dumpall.sql | docker exec -i postgres-container psql -U postgres -d postgres < db/dev.dumpall.sql
+# HASURA METADATA
+################################
+hasura-metadata-export:
+	cd hasura && npx hasura metadata export --admin-secret adminpassword
 
 hasura-apply-metadata:
-	cd hasura && npx hasura migrate apply  --admin-secret adminpassword # --endpoint http://another-graphql-instance.herokuapp.com
+	cd hasura && npx hasura metadata apply  --admin-secret adminpassword # --endpoint http://another-graphql-instance.herokuapp.com
 
 hasura-apply-migrations:
 	cd hasura && npx hasura metadata apply --admin-secret adminpassword
+
+hasura-restore-full:
+	cat db/dev.dumpall.sql | docker exec -i postgres-container psql -U postgres -d postgres < db/dev.dumpall.sql
+
