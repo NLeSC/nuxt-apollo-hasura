@@ -92,7 +92,7 @@ export default {
         {
           icon: mdiHomeOutline,
           title: 'Home',
-          to: '/erd',
+          to: '/videos',
         },
         {
           icon: mdiDatabaseSync,
