@@ -105,7 +105,7 @@ export default {
           to: '/secure',
         },
       ],
-      title: 'Nuxt Apollo Hasura',
+      title: 'EMO Spectre',
     }
   },
   computed: {

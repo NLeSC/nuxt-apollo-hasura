@@ -1,7 +1,7 @@
 <template>
   <video
-    id="video"
     ref="video"
+    class="video"
     :src="srcComputed"
     :controls="true"
     :autoplay="autoplay"
@@ -148,7 +148,7 @@ export default {
 }
 </script>
 <style>
-#video {
+video.video {
   width: 100%;
 }
 </style>
