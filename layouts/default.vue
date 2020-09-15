@@ -90,6 +90,11 @@ export default {
           to: '/',
         },
         {
+          icon: mdiHomeOutline,
+          title: 'Home',
+          to: '/erd',
+        },
+        {
           icon: mdiDatabaseSync,
           title: 'CRUD Database',
           to: '/crud',
