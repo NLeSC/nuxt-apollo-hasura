@@ -14,6 +14,7 @@ const routerBase =
     : {}
 
 export default {
+  components: true,
   env: {
     dbUrl: isDev ? 'http://localhost:4000' : `https://${DB_URL}`,
     baseUriHasura: isDev
@@ -37,12 +38,16 @@ export default {
         content: process.env.npm_package_description || '',
       },
     ],
+    script: [
+      { src: 'https://unpkg.com/d3' },
+      { src: 'https://unpkg.com/d3fc' },
+    ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
   /*
    ** Customize the progress-bar color
    */
-  loading: { color: '#3872ff' },
+  loading: { color: '#3872FF' },
   /*
    ** Global CSS
    */

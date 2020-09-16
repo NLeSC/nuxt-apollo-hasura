@@ -7,6 +7,7 @@ module.exports = {
   parserOptions: {
     parser: 'babel-eslint',
   },
+  globals: { fc: true, d3: true },
   extends: [
     '@nuxtjs',
     'prettier',
