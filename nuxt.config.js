@@ -17,9 +17,7 @@ export default {
   components: true,
   env: {
     dbUrl: isDev ? 'http://localhost:4000' : `https://${DB_URL}`,
-    baseUriHasura: isDev
-      ? 'http://localhost:4000/v1/graphql'
-      : `https://${DB_URL}`,
+    baseUriHasura: isDev ? 'http://localhost:4000/v1/graphql' : `https://${DB_URL}`,
     baseWsHasura: isDev ? 'ws://localhost:4000/v1/graphql' : `wss://${DB_URL}`,
   },
   mode: 'spa', // "spa" | "universal"
@@ -41,6 +39,10 @@ export default {
     script: [
       { src: 'https://unpkg.com/d3' },
       { src: 'https://unpkg.com/d3fc' },
+      {
+        src: 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js',
+      },
+      { src: 'https://d3js.org/d3-scale.v3.min.js' },
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
@@ -84,12 +86,8 @@ export default {
     strategies: {
       local: false,
       auth0: {
-        domain:
-          process.env.PRODUCTION_AUTH0_DOMAIN ||
-          'nuxt-apollo-hasura.eu.auth0.com',
-        client_id:
-          process.env.PRODUCTION_AUTH0_CLIENT_ID ||
-          'apEl6H8zjzPD6PhARUCUaPaFukByIQ07',
+        domain: process.env.PRODUCTION_AUTH0_DOMAIN || 'nuxt-apollo-hasura.eu.auth0.com',
+        client_id: process.env.PRODUCTION_AUTH0_CLIENT_ID || 'apEl6H8zjzPD6PhARUCUaPaFukByIQ07',
         audience: 'custom_auth0_api_audience',
       },
     },

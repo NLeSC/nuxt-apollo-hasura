@@ -6,11 +6,7 @@
       <h4>Num 'todos' subscription: {{ todosCount }}</h4>
 
       <v-form v-if="!isPublic" @submit.prevent="addTodo">
-        <v-text-field
-          v-model="newTodo"
-          label="Add todo (Optimistic UI)"
-          required
-        ></v-text-field>
+        <v-text-field v-model="newTodo" label="Add todo (Optimistic UI)" required></v-text-field>
       </v-form>
 
       <v-list dense>
@@ -19,11 +15,7 @@
             <Todo :todo="todo" />
           </v-list-item-content>
           <v-list-item-action>
-            <v-btn
-              v-if="sub === todo.user_id"
-              icon
-              @click="deleteTodo(todo.id)"
-            >
+            <v-btn v-if="sub === todo.user_id" icon @click="deleteTodo(todo.id)">
               <v-icon color="grey lighten-1">{{ mdiClose }}</v-icon>
             </v-btn>
           </v-list-item-action>

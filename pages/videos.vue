@@ -35,37 +35,18 @@
         <v-card id="video-list" outlined>
           <v-card-title class="headline">Videos</v-card-title>
           <v-container>
-            <v-row
-              v-for="(path, name) in videos"
-              :key="name"
-              class="video"
-              align="center"
-            >
+            <v-row v-for="(path, name) in videos" :key="name" class="video" align="center">
               <v-col cols="3">
-                <VideoPlayer
-                  :src="'../videos/' + name"
-                  :controls="false"
-                ></VideoPlayer>
+                <VideoPlayer :src="'../videos/' + name" :controls="false"></VideoPlayer>
               </v-col>
               <v-col cols="8">
                 <p>{{ name }}</p>
-                <nuxt-link
-                  v-slot="{ href, route, navigate }"
-                  :to="{ name: 'erd', query: { video: name } }"
-                >
-                  <v-btn :href="href" color="primary" @click="navigate"
-                    >Analyze</v-btn
-                  >
+                <nuxt-link v-slot="{ href, route, navigate }" :to="{ name: 'erd', query: { video: name } }">
+                  <v-btn :href="href" color="primary" @click="navigate">Analyze</v-btn>
                 </nuxt-link>
               </v-col>
               <v-col cols="1">
-                <v-btn
-                  color="error"
-                  fab
-                  dark
-                  x-small
-                  @click="removeVideo(name)"
-                >
+                <v-btn color="error" fab dark x-small @click="removeVideo(name)">
                   <v-icon dark small>{{ mdiClose }}</v-icon>
                 </v-btn>
               </v-col>

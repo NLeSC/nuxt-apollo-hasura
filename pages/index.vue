@@ -1,10 +1,9 @@
 <template>
   <div class="d-flex flex-column justify-center align-center">
     <v-card max-width="700" width="100%" class="mt-4" outlined>
-      <v-card-title class="headline">
-        Emotion Recognition for Dementia
-      </v-card-title>
+      <v-card-title class="headline"> Emotion Recognition for Dementia </v-card-title>
 
+      <spark-example />
       <lib-d3fc class="ma-10" />
     </v-card>
   </div>
@@ -12,10 +11,11 @@
 
 <script>
 import { mdiDatabase, mdiLink } from '@mdi/js'
+import SparkExample from '@/components/sparkExample'
 import LibD3fc from '~/components/LibD3fc'
 export default {
   name: 'Home',
-  components: { LibD3fc },
+  components: { SparkExample, LibD3fc },
   data() {
     return {
       mdiDatabase,
@@ -31,8 +31,7 @@ export default {
         },
         {
           name: 'Auth0 with Vue and Hasura',
-          link:
-            'https://hasura.io/blog/add-authentication-and-authorization-to-vue-js-apps-with-auth0-graphql/',
+          link: 'https://hasura.io/blog/add-authentication-and-authorization-to-vue-js-apps-with-auth0-graphql/',
         },
         {
           name: 'Hasura documentation',

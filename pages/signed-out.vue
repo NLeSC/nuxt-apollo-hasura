@@ -1,8 +1,6 @@
 <template>
   <div>
-    <v-alert color="info">
-      You have been signed out!
-    </v-alert>
+    <v-alert color="info"> You have been signed out! </v-alert>
   </div>
 </template>
 

@@ -1,9 +1,5 @@
 <template>
-  <v-text-field
-    v-model="todo.title"
-    outlined
-    @keyup="updateTodo"
-  ></v-text-field>
+  <v-text-field v-model="todo.title" outlined @keyup="updateTodo"></v-text-field>
 </template>
 <script>
 // import gql from 'graphql-tag'
