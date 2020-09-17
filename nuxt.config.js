@@ -37,12 +37,9 @@ export default {
       },
     ],
     script: [
-      { src: 'https://unpkg.com/d3' },
-      { src: 'https://unpkg.com/d3fc' },
       {
         src: 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js',
       },
-      { src: 'https://d3js.org/d3-scale.v3.min.js' },
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },

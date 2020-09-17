@@ -13,6 +13,8 @@
 </template>
 
 <script>
+import * as d3 from 'd3'
+
 export default {
   name: 'SparkExample',
   data() {
@@ -47,7 +49,6 @@ export default {
       const element = document.getElementById('visualization')
 
       if ($(element).children()) {
-        console.log('re-drawing')
         $(element).empty()
       }
 
