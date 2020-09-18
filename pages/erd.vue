@@ -2,7 +2,7 @@
   <v-container>
     <v-row no-gutters>
       <v-col cols="12" sm="12" md="6">
-        <VideoPlayer src="video/erd_video.mp4" />
+        <video-player :src="'videos/' + $route.query.video" />
       </v-col>
       <v-col cols="12" sm="12" md="6">
         <!-- <HeatMap /> -->
@@ -13,15 +13,24 @@
 </template>
 
 <script>
-import VideoPlayer from '../components/VideoPlayer'
-// import HeatMap from '../components/HeatMap'
-import D3HeatMap from '../components/D3HeatMap'
 export default {
   name: 'Erd',
-  components: {
-    VideoPlayer,
-    // HeatMap,
-    D3HeatMap,
+
+  data() {
+    return {
+      isPlaying: false,
+    }
+  },
+
+  methods: {
+    play() {
+      this.$refs.myvideo.play()
+      this.isPlaying = true
+    },
+    stop() {
+      this.$refs.myvideo.pause()
+      this.isPlaying = false
+    },
   },
 }
 </script>

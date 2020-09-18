@@ -2,7 +2,7 @@
   <video
     ref="video"
     class="video"
-    :src="srcComputed"
+    :src="videoSrc"
     :controls="true"
     :autoplay="autoplay"
     :playsinline="playsinline"
@@ -18,10 +18,7 @@
 export default {
   name: 'VideoPlayer',
   props: {
-    src: {
-      required: true,
-      type: [String, Array],
-    },
+    videoSrc: { required: true, type: String },
     /**
      * set the video to autoplay as it's loaded
      */
@@ -58,14 +55,6 @@ export default {
     }
   },
   computed: {
-    /**
-     * @private
-     */
-    srcComputed() {
-      if (typeof this.src === 'string') return this.src
-      return null
-    },
-
     /**
      * @private
      */

@@ -92,46 +92,23 @@ export default {
       // Labels for row & column
       const myGroups = d3.range(this.startTime, this.endTime, 1)
       const tickValues = d3.range(this.startTime, this.endTime, 30)
-      const formatDuration = (d) =>
-        new Date(1000 * d).toISOString().substr(14, 5)
+      const formatDuration = (d) => new Date(1000 * d).toISOString().substr(14, 5)
       // Build X scales and axis:
-      const x = d3
-        .scaleBand()
-        .range([0, this.width])
-        .domain(myGroups)
-        .padding(0.01)
+      const x = d3.scaleBand().range([0, this.width]).domain(myGroups).padding(0.01)
       const xAxis = (g) =>
         g
           .attr('transform', 'translate(0,' + this.height + ')')
-          .call(
-            d3.axisBottom(x).tickValues(tickValues).tickFormat(formatDuration)
-          )
-      svg
-        .append('g')
-        .attr('class', 'x-axis')
-        .attr('clip-path', 'url(#clip)')
-        .call(xAxis)
+          .call(d3.axisBottom(x).tickValues(tickValues).tickFormat(formatDuration))
+      svg.append('g').attr('class', 'x-axis').attr('clip-path', 'url(#clip)').call(xAxis)
       // Build Y scales and axis:
-      const y = d3
-        .scaleBand()
-        .range([this.height, 0])
-        .domain(this.myVars)
-        .padding(0.01)
+      const y = d3.scaleBand().range([this.height, 0]).domain(this.myVars).padding(0.01)
       const yAxis = (g) => g.call(d3.axisLeft(y))
       svg.append('g').attr('class', 'y-axis').call(yAxis)
       // Group for main content
-      const main = svg
-        .append('g')
-        .attr('class', 'main')
-        .attr('clip-path', 'url(#clip)')
+      const main = svg.append('g').attr('class', 'main').attr('clip-path', 'url(#clip)')
       // Build color scale
-      const myColor = d3
-        .scaleSequential()
-        .domain([0, 4])
-        .interpolator(d3.interpolateInferno)
-      const cells = main
-        .selectAll('.cell')
-        .data(this.chartData, (d) => '' + d.frame + ':' + d.variable)
+      const myColor = d3.scaleSequential().domain([0, 4]).interpolator(d3.interpolateInferno)
+      const cells = main.selectAll('.cell').data(this.chartData, (d) => '' + d.frame + ':' + d.variable)
       cells.exit().remove()
       cells
         .enter()
@@ -153,11 +130,7 @@ export default {
       svg.selectAll('.x-axis').call(xAxis)
       svg.selectAll('.y-axis').call(yAxis)
       const zoomed = ({ transform }) => {
-        x.range(
-          [margin.left, this.width - margin.right].map((d) =>
-            transform.applyX(d)
-          )
-        )
+        x.range([margin.left, this.width - margin.right].map((d) => transform.applyX(d)))
         svg
           .selectAll('.cell')
           .attr('x', (d) => x(d.frame))

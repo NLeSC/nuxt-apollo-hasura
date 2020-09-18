@@ -17,7 +17,6 @@
                   outlined
                   multiple
                   chips
-                  class
                 />
               </v-col>
               <v-col cols="2">
@@ -37,30 +36,17 @@
           <v-container>
             <v-row v-for="(path, name) in videos" :key="name" class="video">
               <v-col md="3" sm="4">
-                <VideoPlayer
-                  :src="'video/' + name"
-                  :controls="false"
-                ></VideoPlayer>
+                {{ name }}
+                <VideoPlayer :src="'videos/' + name" :controls="false"></VideoPlayer>
               </v-col>
               <v-col md="8" sm="6">
                 <p>{{ name }}</p>
-                <nuxt-link
-                  v-slot="{ href, navigate }"
-                  :to="{ name: 'erd', query: { video: name } }"
-                >
-                  <v-btn :href="href" color="primary" @click="navigate">
-                    Analyze
-                  </v-btn>
+                <nuxt-link :to="{ name: 'erd', query: { video: name } }">
+                  <v-btn color="primary"> Analyze </v-btn>
                 </nuxt-link>
               </v-col>
               <v-col md="1" sm="2">
-                <v-btn
-                  color="error"
-                  fab
-                  dark
-                  x-small
-                  @click="removeVideo(name)"
-                >
+                <v-btn color="error" fab dark x-small @click="removeVideo(name)">
                   <v-icon dark small>{{ mdiDelete }}</v-icon>
                 </v-btn>
               </v-col>
@@ -103,6 +89,7 @@ export default {
           this.videos[video.name] = video.webkitRelativePath
         }
       }
+
       this.files = []
       localStorage.videos = JSON.stringify(this.videos)
     },
