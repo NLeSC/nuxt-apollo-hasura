@@ -38,10 +38,7 @@ export default {
   },
   computed: {
     redirect() {
-      return (
-        this.$route.query.redirect &&
-        decodeURIComponent(this.$route.query.redirect)
-      )
+      return this.$route.query.redirect && decodeURIComponent(this.$route.query.redirect)
     },
     errorMessage() {
       const { error } = this
@@ -80,9 +77,7 @@ export default {
     },
 
     loginWithGoogle() {
-      this.$auth
-        .loginWith('google')
-        .then(() => this.$toast.success('Logged In!'))
+      this.$auth.loginWith('google').then(() => this.$toast.success('Logged In!'))
     },
   },
 }
