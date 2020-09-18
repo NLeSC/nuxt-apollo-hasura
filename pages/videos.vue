@@ -35,30 +35,25 @@
         <v-card id="video-list" outlined>
           <v-card-title class="headline">Videos</v-card-title>
           <v-container>
-            <v-row
-              v-for="(path, name) in videos"
-              :key="name"
-              class="video"
-              align="center"
-            >
-              <v-col cols="3">
+            <v-row v-for="(path, name) in videos" :key="name" class="video">
+              <v-col md="3" sm="4">
                 <VideoPlayer
-                  :src="'../videos/' + name"
+                  :src="'video/' + name"
                   :controls="false"
                 ></VideoPlayer>
               </v-col>
-              <v-col cols="8">
+              <v-col md="8" sm="6">
                 <p>{{ name }}</p>
                 <nuxt-link
-                  v-slot="{ href, route, navigate }"
+                  v-slot="{ href, navigate }"
                   :to="{ name: 'erd', query: { video: name } }"
                 >
-                  <v-btn :href="href" color="primary" @click="navigate"
-                    >Analyze</v-btn
-                  >
+                  <v-btn :href="href" color="primary" @click="navigate">
+                    Analyze
+                  </v-btn>
                 </nuxt-link>
               </v-col>
-              <v-col cols="1">
+              <v-col md="1" sm="2">
                 <v-btn
                   color="error"
                   fab
@@ -66,7 +61,7 @@
                   x-small
                   @click="removeVideo(name)"
                 >
-                  <v-icon dark small>{{ mdiClose }}</v-icon>
+                  <v-icon dark small>{{ mdiDelete }}</v-icon>
                 </v-btn>
               </v-col>
             </v-row>
@@ -77,7 +72,7 @@
   </v-container>
 </template>
 <script>
-import { mdiPlus, mdiClose } from '@mdi/js'
+import { mdiPlus, mdiDelete } from '@mdi/js'
 import VideoPlayer from '~/components/VideoPlayer'
 
 export default {
@@ -87,7 +82,7 @@ export default {
   data() {
     return {
       mdiPlus,
-      mdiClose,
+      mdiDelete,
       videos: {},
       files: [],
     }
@@ -128,9 +123,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
   display: block;
-}
-
-#video-list video.video {
-  width: 250px;
 }
 </style>
