@@ -3,12 +3,13 @@
     <h1>Chart</h1>
     <!--    <d3fc-svg use-device-pixel-ratio></d3fc-svg>-->
     <!-- Create a div where the graph will take place -->
+    <div ref="my_dataviz"></div>
 
-    <div id="dataviz_basicZoom"></div>
+    <div ref="dataviz_basicZoom"></div>
 
     <div id="chart"></div>
     <div id="arc"></div>
-    <div id="my_dataviz"></div>
+    <!--    <div id="my_dataviz"></div>-->
     <hr />
   </div>
 </template>
@@ -34,7 +35,7 @@ export default {
   mounted() {
     // append the svg object to the body of the page
     const svg = d3
-      .select('#dataviz_basicZoom')
+      .select(this.$refs.dataviz_basicZoom)
       .append('svg')
       .attr('width', 460)
       .attr('height', 460)
@@ -188,7 +189,7 @@ export default {
 
       // append the svg object to the body of the page
       const svg = d3
-        .select('#my_dataviz')
+        .select(this.$refs.my_dataviz)
         .append('svg')
         .attr('width', width + margin.left + margin.right)
         .attr('height', height + margin.top + margin.bottom)
@@ -216,35 +217,36 @@ export default {
 
       d3.csv('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/heatmap_data.csv', (data) => {
         // create a tooltip
-        const tooltip = d3
-          .select('#my_dataviz')
-          .append('div')
-          .style('opacity', 0)
-          .attr('class', 'tooltip')
-          .style('background-color', 'white')
-          .style('border', 'solid')
-          .style('border-width', '2px')
-          .style('border-radius', '5px')
-          .style('padding', '5px')
+        // const tooltip = d3
+        //   .select('#my_dataviz')
+        //   .append('div')
+        //   .style('opacity', 0)
+        //   .attr('class', 'tooltip')
+        //   .style('background-color', 'white')
+        //   .style('border', 'solid')
+        //   .style('border-width', '2px')
+        //   .style('border-radius', '5px')
+        //   .style('padding', '5px')
 
         // Three function that change the tooltip when user hover / move / leave a cell
-        const mouseover = function (d) {
-          console.log('🎹', d)
-          tooltip.style('opacity', 1)
-        }
-        const mousemove = function (d) {
-          tooltip
-            .html('The exact value of<br>this cell is: ' + d.value)
-            .style('left', d3.mouse(this)[0] + 70 + 'px')
-            .style('top', d3.mouse(this)[1] + 'px')
-        }
-        const mouseleave = function (d) {
-          tooltip.style('opacity', 0)
-        }
+        // const mouseover = function (d) {
+        //   console.log('🎹', d)
+        //   tooltip.style('opacity', 1)
+        // }
+        // const mousemove = function (d) {
+        //   tooltip
+        //     .html('The exact value of<br>this cell is: ' + d.value)
+        //     .style('left', d3.mouse(this)[0] + 70 + 'px')
+        //     .style('top', d3.mouse(this)[1] + 'px')
+        // }
+        // const mouseleave = function (d) {
+        //   tooltip.style('opacity', 0)
+        // }
         // add the squares
         svg
           .selectAll()
           .data(data, function (d) {
+            debugger
             return d.group + ':' + d.variable
           })
           .enter()
@@ -260,9 +262,9 @@ export default {
           .style('fill', function (d) {
             return myColor(d.value)
           })
-          .on('mouseover', mouseover)
-          .on('mousemove', mousemove)
-          .on('mouseleave', mouseleave)
+        // .on('mouseover', mouseover)
+        // .on('mousemove', mousemove)
+        // .on('mouseleave', mouseleave)
       })
     },
   },

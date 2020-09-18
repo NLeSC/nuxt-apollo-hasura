@@ -3,6 +3,8 @@
     <v-card max-width="700" width="100%" class="mt-4" outlined>
       <v-card-title class="headline"> Emotion Recognition for Dementia </v-card-title>
 
+      <heatmap-e-r-d class="ma-10" />
+
       <spark-example />
       <lib-d3fc class="ma-10" />
     </v-card>
@@ -11,11 +13,12 @@
 
 <script>
 import { mdiDatabase, mdiLink } from '@mdi/js'
-import SparkExample from '@/components/sparkExample'
+import SparkExample from '~/components/sparkExample'
+import HeatmapERD from '~/components/HeatmapERD'
 import LibD3fc from '~/components/LibD3fc'
 export default {
   name: 'Home',
-  components: { SparkExample, LibD3fc },
+  components: { HeatmapERD, SparkExample, LibD3fc },
   data() {
     return {
       mdiDatabase,
