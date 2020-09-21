@@ -1,3 +1,4 @@
+<!-- Description of the Component-->
 <template>
   <video
     ref="video"
@@ -10,6 +11,7 @@
     @pause="pause"
     @click="atPlayPause"
     @ended="atEnded"
+    @seeking="atTimeupdate"
     @timeupdate="atTimeupdate"
     @volumechange="atVolumechange"
   />
@@ -106,8 +108,9 @@ export default {
      * @private
      */
     atTimeupdate() {
-      this.time = this.$refs.video.currentTime
-      console.log('time updated', this.time)
+      // this.time = this.$refs.video.currentTime
+      this.$emit('onTimeupdate', this.$refs.video.currentTime)
+      // console.log('time updated', this.time)
     },
     /**
      * @private

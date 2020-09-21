@@ -33,11 +33,11 @@
       <v-col cols="12">
         <v-card id="video-list" outlined>
           <v-card-title class="headline">Videos</v-card-title>
-          <v-container>
+          <v-container v-if="videos">
             <v-row v-for="(path, name) in videos" :key="name" class="video">
               <v-col md="3" sm="4">
                 {{ name }}
-                <VideoPlayer :src="'videos/' + name" :controls="false"></VideoPlayer>
+                <video-player :video-src="'videos/' + name" :controls="false"></video-player>
               </v-col>
               <v-col md="8" sm="6">
                 <p>{{ name }}</p>
@@ -59,12 +59,8 @@
 </template>
 <script>
 import { mdiPlus, mdiDelete } from '@mdi/js'
-import VideoPlayer from '~/components/VideoPlayer'
 
 export default {
-  components: {
-    VideoPlayer,
-  },
   data() {
     return {
       mdiPlus,

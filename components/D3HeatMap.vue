@@ -5,6 +5,7 @@
 <script>
 import * as d3 from 'd3'
 import testaggau from '~/apollo/action_units'
+
 export default {
   data() {
     return {
@@ -104,6 +105,40 @@ export default {
       const y = d3.scaleBand().range([this.height, 0]).domain(this.myVars).padding(0.01)
       const yAxis = (g) => g.call(d3.axisLeft(y))
       svg.append('g').attr('class', 'y-axis').call(yAxis)
+
+      //
+      // Cursor
+      //
+      const cursor = this.cursor
+      const height = 580 // todo get it dynamic
+      // const onCursorChange = this.onCursorChange;
+      const cursorGroup = svg
+        .append('g')
+        .attr('class', 'cursor')
+        .append('line')
+        .attr('class', 'cursorline')
+        .attr('x1', () => {
+          console.log(cursor)
+          return x(cursor)
+        })
+        .attr('y1', 0 - margin.top)
+        .attr('x2', () => x(cursor))
+        .attr('y2', height + margin.bottom)
+        .attr('stroke', '#4ec0ff')
+        .attr('stroke-width', 4)
+        .call(d3.drag().on('drag', dragmove))
+
+      function dragmove(dragEvent) {
+        const eventX = dragEvent.x
+        //      console.log("dragmove: " + x.invert(eventX));
+        svg.selectAll('.cursorline').attr('x1', eventX).attr('x2', eventX)
+        cursorGroup.attr('transform', 'translate(' + eventX + ',' + 0 + ')')
+
+        /// CONTINUE HERE!!!!!!!
+        console.log('🎹', eventX)
+        // onCursorChange(eventX)
+      }
+
       // Group for main content
       const main = svg.append('g').attr('class', 'main').attr('clip-path', 'url(#clip)')
       // Build color scale

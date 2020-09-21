@@ -2,7 +2,9 @@
   <v-container>
     <v-row no-gutters>
       <v-col cols="12" sm="12" md="6">
-        <video-player :src="'videos/' + $route.query.video" />
+        <video-player :video-src="'videos/' + $route.query.video" @onTimeupdate="timeupdate" />
+        <br />
+        time: {{ time }}
       </v-col>
       <v-col cols="12" sm="12" md="6">
         <!-- <HeatMap /> -->
@@ -19,6 +21,7 @@ export default {
   data() {
     return {
       isPlaying: false,
+      time: 0,
     }
   },
 
@@ -30,6 +33,9 @@ export default {
     stop() {
       this.$refs.myvideo.pause()
       this.isPlaying = false
+    },
+    timeupdate(time) {
+      this.time = time
     },
   },
 }
