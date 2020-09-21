@@ -1,8 +1,9 @@
+<!-- Description of the Component-->
 <template>
   <video
     ref="video"
     class="video"
-    :src="srcComputed"
+    :src="videoSrc"
     :controls="true"
     :autoplay="autoplay"
     :playsinline="playsinline"
@@ -10,6 +11,7 @@
     @pause="pause"
     @click="atPlayPause"
     @ended="atEnded"
+    @seeking="atTimeupdate"
     @timeupdate="atTimeupdate"
     @volumechange="atVolumechange"
   />
@@ -18,10 +20,7 @@
 export default {
   name: 'VideoPlayer',
   props: {
-    src: {
-      required: true,
-      type: [String, Array],
-    },
+    videoSrc: { required: true, type: String },
     /**
      * set the video to autoplay as it's loaded
      */
@@ -58,14 +57,6 @@ export default {
     }
   },
   computed: {
-    /**
-     * @private
-     */
-    srcComputed() {
-      if (typeof this.src === 'string') return this.src
-      return null
-    },
-
     /**
      * @private
      */
@@ -117,8 +108,9 @@ export default {
      * @private
      */
     atTimeupdate() {
-      this.time = this.$refs.video.currentTime
-      console.log('time updated', this.time)
+      // this.time = this.$refs.video.currentTime
+      this.$emit('onTimeupdate', this.$refs.video.currentTime)
+      // console.log('time updated', this.time)
     },
     /**
      * @private

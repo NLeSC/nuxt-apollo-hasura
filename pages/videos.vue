@@ -17,7 +17,6 @@
                   outlined
                   multiple
                   chips
-                  class
                 />
               </v-col>
               <v-col cols="2">
@@ -34,39 +33,21 @@
       <v-col cols="12">
         <v-card id="video-list" outlined>
           <v-card-title class="headline">Videos</v-card-title>
-          <v-container>
-            <v-row
-              v-for="(path, name) in videos"
-              :key="name"
-              class="video"
-              align="center"
-            >
-              <v-col cols="3">
-                <VideoPlayer
-                  :src="'../videos/' + name"
-                  :controls="false"
-                ></VideoPlayer>
+          <v-container v-if="videos">
+            <v-row v-for="(path, name) in videos" :key="name" class="video">
+              <v-col md="3" sm="4">
+                {{ name }}
+                <video-player :video-src="'videos/' + name" :controls="false"></video-player>
               </v-col>
-              <v-col cols="8">
+              <v-col md="8" sm="6">
                 <p>{{ name }}</p>
-                <nuxt-link
-                  v-slot="{ href, route, navigate }"
-                  :to="{ name: 'erd', query: { video: name } }"
-                >
-                  <v-btn :href="href" color="primary" @click="navigate"
-                    >Analyze</v-btn
-                  >
+                <nuxt-link :to="{ name: 'erd', query: { video: name } }">
+                  <v-btn color="primary"> Analyze </v-btn>
                 </nuxt-link>
               </v-col>
-              <v-col cols="1">
-                <v-btn
-                  color="error"
-                  fab
-                  dark
-                  x-small
-                  @click="removeVideo(name)"
-                >
-                  <v-icon dark small>{{ mdiClose }}</v-icon>
+              <v-col md="1" sm="2">
+                <v-btn color="error" fab dark x-small @click="removeVideo(name)">
+                  <v-icon dark small>{{ mdiDelete }}</v-icon>
                 </v-btn>
               </v-col>
             </v-row>
@@ -77,17 +58,13 @@
   </v-container>
 </template>
 <script>
-import { mdiPlus, mdiClose } from '@mdi/js'
-import VideoPlayer from '~/components/VideoPlayer'
+import { mdiPlus, mdiDelete } from '@mdi/js'
 
 export default {
-  components: {
-    VideoPlayer,
-  },
   data() {
     return {
       mdiPlus,
-      mdiClose,
+      mdiDelete,
       videos: {},
       files: [],
     }
@@ -108,6 +85,7 @@ export default {
           this.videos[video.name] = video.webkitRelativePath
         }
       }
+
       this.files = []
       localStorage.videos = JSON.stringify(this.videos)
     },
@@ -128,9 +106,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
   display: block;
-}
-
-#video-list video.video {
-  width: 250px;
 }
 </style>

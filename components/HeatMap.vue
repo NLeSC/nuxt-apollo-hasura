@@ -2,12 +2,7 @@
   <client-only>
     <div>
       <!-- {{ getTestaggau }} -->
-      <VueApexCharts
-        width="700"
-        type="heatmap"
-        :options="chartOptions"
-        :series="getTestaggau"
-      ></VueApexCharts>
+      <VueApexCharts width="700" type="heatmap" :options="chartOptions" :series="getTestaggau"></VueApexCharts>
     </div>
   </client-only>
 </template>
@@ -115,8 +110,7 @@ export default {
       const series = []
       while (i < count) {
         const x = (i + 1).toString()
-        const y =
-          Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min
+        const y = Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min
         series.push({
           x,
           y,

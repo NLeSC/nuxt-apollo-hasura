@@ -10,13 +10,7 @@
       mobile-break-point="759"
     >
       <v-list>
-        <v-list-item
-          v-for="(item, i) in items"
-          :key="i"
-          :to="item.to"
-          router
-          exact
-        >
+        <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" router exact>
           <v-list-item-action>
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-item-action>
@@ -28,16 +22,8 @@
     </v-navigation-drawer>
     <v-app-bar :clipped-left="clipped" fixed app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-btn icon @click.stop="miniVariant = !miniVariant">
-        <v-icon v-if="miniVariant">{{ mdiChevronRight }}</v-icon>
-        <v-icon v-else>{{ mdiChevronLeft }}</v-icon>
-      </v-btn>
-      <v-btn icon @click.stop="clipped = !clipped">
-        <v-icon>{{ mdiApplication }}</v-icon>
-      </v-btn>
       <v-toolbar-title class="ml-4" v-text="title" />
       <v-spacer />
-      <login-button />
     </v-app-bar>
     <v-content>
       <v-container>
@@ -65,12 +51,11 @@ import {
   mdiHomeOutline,
   mdiDatabaseSync,
   mdiFileLockOutline,
+  mdiMovieFilterOutline,
 } from '@mdi/js'
 import { version } from '~/package.json'
-import LoginButton from '~/components/LoginButton'
 
 export default {
-  components: { LoginButton },
   data() {
     return {
       mdiChevronRight,
@@ -79,10 +64,11 @@ export default {
       mdiHomeOutline,
       mdiDatabaseSync,
       mdiFileLockOutline,
+      mdiMovieFilterOutline,
 
       clipped: true,
       drawer: this.$vuetify.breakpoint.smAndUp,
-      miniVariant: true,
+      miniVariant: false,
       items: [
         {
           icon: mdiHomeOutline,
@@ -90,20 +76,20 @@ export default {
           to: '/',
         },
         {
-          icon: mdiHomeOutline,
+          icon: mdiMovieFilterOutline,
           title: 'Home',
           to: '/videos',
         },
-        {
-          icon: mdiDatabaseSync,
-          title: 'CRUD Database',
-          to: '/crud',
-        },
-        {
-          icon: mdiFileLockOutline,
-          title: 'Secret Page',
-          to: '/secure',
-        },
+        // {
+        //   icon: mdiDatabaseSync,
+        //   title: 'CRUD Database',
+        //   to: '/crud',
+        // },
+        // {
+        //   icon: mdiFileLockOutline,
+        //   title: 'Secret Page',
+        //   to: '/secure',
+        // },
       ],
       title: 'EMO Spectre',
     }

@@ -25,6 +25,8 @@
     "@nuxtjs/axios": "^5.12.2",
     "@nuxtjs/pwa": "^3.0.2",
     "apexcharts": "^3.20.2",
+    "d3": "^6.1.1",
+    "d3fc": "^15.0.18",
     "lodash.debounce": "^4.0.8",
     "nuxt": "^2.14.5",
     "vue-apexcharts": "^1.6.0"
