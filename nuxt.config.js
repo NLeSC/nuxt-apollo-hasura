@@ -14,11 +14,10 @@ const routerBase =
     : {}
 
 export default {
+  components: true,
   env: {
     dbUrl: isDev ? 'http://localhost:4000' : `https://${DB_URL}`,
-    baseUriHasura: isDev
-      ? 'http://localhost:4000/v1/graphql'
-      : `https://${DB_URL}`,
+    baseUriHasura: isDev ? 'http://localhost:4000/v1/graphql' : `https://${DB_URL}`,
     baseWsHasura: isDev ? 'ws://localhost:4000/v1/graphql' : `wss://${DB_URL}`,
   },
   mode: 'spa', // "spa" | "universal"
@@ -37,12 +36,17 @@ export default {
         content: process.env.npm_package_description || '',
       },
     ],
+    script: [
+      {
+        src: 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js',
+      },
+    ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
   /*
    ** Customize the progress-bar color
    */
-  loading: { color: '#3872ff' },
+  loading: { color: '#3872FF' },
   /*
    ** Global CSS
    */
@@ -79,12 +83,8 @@ export default {
     strategies: {
       local: false,
       auth0: {
-        domain:
-          process.env.PRODUCTION_AUTH0_DOMAIN ||
-          'nuxt-apollo-hasura.eu.auth0.com',
-        client_id:
-          process.env.PRODUCTION_AUTH0_CLIENT_ID ||
-          'apEl6H8zjzPD6PhARUCUaPaFukByIQ07',
+        domain: process.env.PRODUCTION_AUTH0_DOMAIN || 'nuxt-apollo-hasura.eu.auth0.com',
+        client_id: process.env.PRODUCTION_AUTH0_CLIENT_ID || 'apEl6H8zjzPD6PhARUCUaPaFukByIQ07',
         audience: 'custom_auth0_api_audience',
       },
     },

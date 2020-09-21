@@ -9,9 +9,7 @@
       Test: {{ $auth.hasScope('test') }} <br />
       Admin: {{ $auth.hasScope('https://hasura.io/jwt/claims') }}
     </v-card>
-    <v-card class="mt-4 pa-2" title="token">
-      Auth token {{ $auth.getToken('auth0') || '-' }}
-    </v-card>
+    <v-card class="mt-4 pa-2" title="token"> Auth token {{ $auth.getToken('auth0') || '-' }} </v-card>
     <hr />
     <v-row class="mt-4">
       <v-btn @click="$auth.fetchUser()">Fetch User</v-btn>

@@ -1,20 +1,42 @@
 <template>
-  <div>
-    <div id="erd">
-      <VideoPlayer src="video/erd_video.mp4"></VideoPlayer>
-    </div>
-    <HeatMap />
-  </div>
+  <v-container>
+    <v-row no-gutters>
+      <v-col cols="12" sm="12" md="6">
+        <video-player :video-src="'videos/' + $route.query.video" @onTimeupdate="timeupdate" />
+        <br />
+        time: {{ time }}
+      </v-col>
+      <v-col cols="12" sm="12" md="6">
+        <!-- <HeatMap /> -->
+        <D3HeatMap />
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
-import VideoPlayer from '../components/VideoPlayer'
-import HeatMap from '../components/HeatMap'
 export default {
   name: 'Erd',
-  components: {
-    VideoPlayer,
-    HeatMap,
+
+  data() {
+    return {
+      isPlaying: false,
+      time: 0,
+    }
+  },
+
+  methods: {
+    play() {
+      this.$refs.myvideo.play()
+      this.isPlaying = true
+    },
+    stop() {
+      this.$refs.myvideo.pause()
+      this.isPlaying = false
+    },
+    timeupdate(time) {
+      this.time = time
+    },
   },
 }
 </script>
