@@ -41,9 +41,14 @@ export default {
   },
   mounted() {
     this.$apollo.queries.retrieveColumnNames.refetch().then((results) => {
-      this.feature_names = results.data.retrieveColumnNames.fields.map((field) => {
-        return field.name
-      })
+      this.feature_names = results.data.retrieveColumnNames.fields
+        .map((field) => {
+          return field.name
+        })
+        .filter((name) => {
+          return name !== 'grouped_seconds' && name !== 'min_timestamp'
+        })
+      this.selected_features = this.feature_names
     })
   },
   methods: {
