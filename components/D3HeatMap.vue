@@ -7,41 +7,47 @@ import * as d3 from 'd3'
 import testaggau from '~/apollo/action_units'
 
 export default {
+  props: {
+    features: {
+      type: Array,
+      required: true,
+    },
+  },
   data() {
     return {
       startTime: 0,
       endTime: 350,
       resolution: 1,
       chartData: [],
-      myVars: [
-        'au01r',
-        'au01c',
-        'au04r',
-        'au04c',
-        'au09r',
-        'au09c',
-        'au10r',
-        'au10c',
-        'au12r',
-        'au12c',
-        'au14r',
-        'au14c',
-      ],
       height: 700,
       width: 900,
     }
   },
+  watch: {
+    features: {
+      handler(newval, oldval) {
+        this.updateChart()
+      },
+    },
+  },
   mounted() {
-    this.$apollo.queries.testaggau.refetch().then((results) => {
-      this.chartData = this.longify(results.data.testaggau)
-      this.drawChart()
-    })
+    this.margin = { top: 30, right: 100, bottom: 50, left: 50 }
+    this.width = this.width - this.margin.left - this.margin.right
+    this.height = this.height - this.margin.top - this.margin.bottom
+
+    this.updateChart()
   },
   methods: {
+    updateChart() {
+      this.$apollo.queries.testaggau.refetch().then((results) => {
+        this.chartData = this.longify(results.data.testaggau)
+        this.drawChart()
+      })
+    },
     longify(rows) {
       const extracted = []
       rows.forEach((row) => {
-        this.myVars.forEach((varr) => {
+        this.features.forEach((varr) => {
           extracted.push({
             frame: row.min_timestamp,
             variable: varr,
@@ -53,7 +59,7 @@ export default {
     },
     // getTestaggau() {
     //   const extracted = []
-    //   this.myVars.forEach((varr) => {
+    //   this.features.forEach((varr) => {
     //     const data = []
     //     this.testaggau.forEach((row) => {
     //       data.push({
@@ -69,16 +75,16 @@ export default {
     //   return extracted
     // },
     drawChart() {
-      const margin = { top: 30, right: 100, bottom: 50, left: 50 }
-      this.width = this.width - margin.left - margin.right
-      this.height = this.height - margin.top - margin.bottom
+      // remove old chart if its there
+      d3.select('#chart > *').remove()
+
       const svg = d3
         .select('#chart')
         .append('svg')
-        .attr('width', this.width + margin.left + margin.right)
-        .attr('height', this.height + margin.top + margin.bottom)
+        .attr('width', this.width + this.margin.left + this.margin.right)
+        .attr('height', this.height + this.margin.top + this.margin.bottom)
         .append('g')
-        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+        .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')')
       // Clipping
       svg
         .append('defs')
@@ -102,7 +108,7 @@ export default {
           .call(d3.axisBottom(x).tickValues(tickValues).tickFormat(formatDuration))
       svg.append('g').attr('class', 'x-axis').attr('clip-path', 'url(#clip)').call(xAxis)
       // Build Y scales and axis:
-      const y = d3.scaleBand().range([this.height, 0]).domain(this.myVars).padding(0.01)
+      const y = d3.scaleBand().range([this.height, 0]).domain(this.features).padding(0.01)
       const yAxis = (g) => g.call(d3.axisLeft(y))
       svg.append('g').attr('class', 'y-axis').call(yAxis)
 
@@ -121,9 +127,9 @@ export default {
           console.log(cursor)
           return x(cursor)
         })
-        .attr('y1', 0 - margin.top)
+        .attr('y1', 0 - this.margin.top)
         .attr('x2', () => x(cursor))
-        .attr('y2', height + margin.bottom)
+        .attr('y2', height + this.margin.bottom)
         .attr('stroke', '#4ec0ff')
         .attr('stroke-width', 4)
         .call(d3.drag().on('drag', dragmove))
@@ -165,7 +171,7 @@ export default {
       svg.selectAll('.x-axis').call(xAxis)
       svg.selectAll('.y-axis').call(yAxis)
       const zoomed = ({ transform }) => {
-        x.range([margin.left, this.width - margin.right].map((d) => transform.applyX(d)))
+        x.range([this.margin.left, this.width - this.margin.right].map((d) => transform.applyX(d)))
         svg
           .selectAll('.cell')
           .attr('x', (d) => x(d.frame))

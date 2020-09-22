@@ -1,0 +1,7 @@
+query retrieveColumnNames {
+  retrieveColumnNames: __type(name: "agg_result") {
+    fields {
+      name
+    }
+  }
+}
