@@ -13,14 +13,6 @@ export default {
   props: {
     cursor: { required: false, type: Number, default: 0 },
   },
-  computed: {
-    localCursor: {
-      set() {},
-      get() {
-        return this.cursor
-      },
-    },
-  },
   data() {
     return {
       svg: null,
@@ -46,6 +38,14 @@ export default {
       height: 500,
       width: 750,
     }
+  },
+  computed: {
+    localCursor: {
+      set() {},
+      get() {
+        return this.cursor
+      },
+    },
   },
   mounted() {
     this.$apollo.queries.testaggau.refetch().then((results) => {
@@ -94,16 +94,16 @@ export default {
     //   return extracted
     // },
     drawChart() {
-      const margin = { top: 30, right: 100, bottom: 50, left: 50 }
-      this.width = this.width - margin.left - margin.right
-      this.height = this.height - margin.top - margin.bottom
+      this.margin = { top: 30, right: 100, bottom: 50, left: 50 }
+      this.width = this.width - this.margin.left - this.margin.right
+      this.height = this.height - this.margin.top - this.margin.bottom
       this.svg = d3
         .select('#chart')
         .append('svg')
-        .attr('width', this.width + margin.left + margin.right)
-        .attr('height', this.height + margin.top + margin.bottom)
+        .attr('width', this.width + this.margin.left + this.margin.right)
+        .attr('height', this.height + this.margin.top + this.margin.bottom)
         .append('g')
-        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+        .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')')
       // Clipping
       this.svg
         .append('defs')
@@ -137,17 +137,34 @@ export default {
 
       // const onCursorChange = this.onCursorChange;
 
-      const dragmove = (dragEvent) => {
-        const eventX = dragEvent.x
-        //      console.log("dragmove: " + x.invert(eventX));
-        this.svg.selectAll('.cursorline').attr('x1', eventX).attr('x2', eventX)
-        cursorGroup.attr('transform', 'translate(' + eventX + ',' + 0 + ')')
+      let deltaX
 
-        /// CONTINUE HERE!!!!!!!
-        this.localCursor = eventX
+      function drag(that) {
+        const svg = that.svg
 
-        this.$emit('onCursorUpdate', eventX)
-        // onCursorChange(eventX)
+        function dragstarted(event) {
+          const cursorline = svg.selectAll('.cursorline')
+          deltaX = cursorline.attr('x1') - event.x
+        }
+
+        function dragged(event) {
+          const cursorline = svg.selectAll('.cursorline')
+          let changeX = event.x + deltaX
+          const maxValue = that.width
+
+          if (changeX < 0) changeX = 0
+          if (changeX > maxValue) changeX = maxValue
+          cursorline.attr('x1', changeX)
+          cursorline.attr('x2', changeX)
+
+          that.$emit('onCursorUpdate', changeX)
+        }
+
+        function dragended(event) {
+          deltaX = 0
+        }
+
+        return d3.drag().on('start', dragstarted).on('drag', dragged).on('end', dragended)
       }
 
       // Group for main content
@@ -176,7 +193,7 @@ export default {
       this.svg.selectAll('.x-axis').call(xAxis)
       this.svg.selectAll('.y-axis').call(yAxis)
       const zoomed = ({ transform }) => {
-        x.range([margin.left, this.width - margin.right].map((d) => transform.applyX(d)))
+        x.range([this.margin.left, this.width - this.margin.right].map((d) => transform.applyX(d)))
         this.svg
           .selectAll('.cell')
           .attr('x', (d) => x(d.frame))
@@ -186,20 +203,20 @@ export default {
       const zoom = d3.zoom().on('zoom', zoomed)
       this.svg.call(zoom)
 
-      const cursorGroup = this.svg
+      this.svg
         .append('g')
-        .attr('class', 'cursor')
+        .attr('class', 'cursorlineGroup')
         .append('line')
         .attr('class', 'cursorline')
         .attr('x1', () => {
           return x(this.cursor)
         })
-        .attr('y1', 0 - margin.top)
+        .attr('y1', 0 - this.margin.top)
         .attr('x2', () => x(this.cursor))
-        .attr('y2', this.height + margin.bottom)
+        .attr('y2', this.height + this.margin.bottom)
         .attr('stroke', '#4ec0ff')
         .attr('stroke-width', 4)
-        .call(d3.drag().on('drag', dragmove))
+        .call(drag(this))
     },
   },
 }
