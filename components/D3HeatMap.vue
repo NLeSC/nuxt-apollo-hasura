@@ -1,5 +1,8 @@
 <template>
-  <div id="chart"></div>
+  <div>
+    {{ cursor }} - {{ localCursor }}
+    <div id="chart"></div>
+  </div>
 </template>
 
 <script>
@@ -7,8 +10,21 @@ import * as d3 from 'd3'
 import testaggau from '~/apollo/action_units'
 
 export default {
+  props: {
+    cursor: { required: false, type: Number, default: 0 },
+  },
+  computed: {
+    localCursor: {
+      set() {},
+      get() {
+        return this.cursor
+      },
+    },
+  },
   data() {
     return {
+      svg: null,
+
       startTime: 0,
       endTime: 350,
       resolution: 1,
@@ -27,8 +43,8 @@ export default {
         'au14r',
         'au14c',
       ],
-      height: 700,
-      width: 900,
+      height: 500,
+      width: 750,
     }
   },
   mounted() {
@@ -36,6 +52,15 @@ export default {
       this.chartData = this.longify(results.data.testaggau)
       this.drawChart()
     })
+  },
+  apollo: {
+    testaggau: {
+      // graphql query
+      query: testaggau,
+      error(error) {
+        this.error = JSON.stringify(error.message)
+      },
+    },
   },
   methods: {
     longify(rows) {
@@ -72,7 +97,7 @@ export default {
       const margin = { top: 30, right: 100, bottom: 50, left: 50 }
       this.width = this.width - margin.left - margin.right
       this.height = this.height - margin.top - margin.bottom
-      const svg = d3
+      this.svg = d3
         .select('#chart')
         .append('svg')
         .attr('width', this.width + margin.left + margin.right)
@@ -80,7 +105,7 @@ export default {
         .append('g')
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
       // Clipping
-      svg
+      this.svg
         .append('defs')
         .append('clipPath')
         .attr('id', 'clip')
@@ -100,47 +125,33 @@ export default {
         g
           .attr('transform', 'translate(0,' + this.height + ')')
           .call(d3.axisBottom(x).tickValues(tickValues).tickFormat(formatDuration))
-      svg.append('g').attr('class', 'x-axis').attr('clip-path', 'url(#clip)').call(xAxis)
+      this.svg.append('g').attr('class', 'x-axis').attr('clip-path', 'url(#clip)').call(xAxis)
       // Build Y scales and axis:
       const y = d3.scaleBand().range([this.height, 0]).domain(this.myVars).padding(0.01)
       const yAxis = (g) => g.call(d3.axisLeft(y))
-      svg.append('g').attr('class', 'y-axis').call(yAxis)
+      this.svg.append('g').attr('class', 'y-axis').call(yAxis)
 
       //
       // Cursor
       //
-      const cursor = this.cursor
-      const height = 580 // todo get it dynamic
-      // const onCursorChange = this.onCursorChange;
-      const cursorGroup = svg
-        .append('g')
-        .attr('class', 'cursor')
-        .append('line')
-        .attr('class', 'cursorline')
-        .attr('x1', () => {
-          console.log(cursor)
-          return x(cursor)
-        })
-        .attr('y1', 0 - margin.top)
-        .attr('x2', () => x(cursor))
-        .attr('y2', height + margin.bottom)
-        .attr('stroke', '#4ec0ff')
-        .attr('stroke-width', 4)
-        .call(d3.drag().on('drag', dragmove))
 
-      function dragmove(dragEvent) {
+      // const onCursorChange = this.onCursorChange;
+
+      const dragmove = (dragEvent) => {
         const eventX = dragEvent.x
         //      console.log("dragmove: " + x.invert(eventX));
-        svg.selectAll('.cursorline').attr('x1', eventX).attr('x2', eventX)
+        this.svg.selectAll('.cursorline').attr('x1', eventX).attr('x2', eventX)
         cursorGroup.attr('transform', 'translate(' + eventX + ',' + 0 + ')')
 
         /// CONTINUE HERE!!!!!!!
-        console.log('🎹', eventX)
+        this.localCursor = eventX
+
+        this.$emit('onCursorUpdate', eventX)
         // onCursorChange(eventX)
       }
 
       // Group for main content
-      const main = svg.append('g').attr('class', 'main').attr('clip-path', 'url(#clip)')
+      const main = this.svg.append('g').attr('class', 'main').attr('clip-path', 'url(#clip)')
       // Build color scale
       const myColor = d3.scaleSequential().domain([0, 4]).interpolator(d3.interpolateInferno)
       const cells = main.selectAll('.cell').data(this.chartData, (d) => '' + d.frame + ':' + d.variable)
@@ -162,28 +173,33 @@ export default {
           }
           return myColor(d.value)
         })
-      svg.selectAll('.x-axis').call(xAxis)
-      svg.selectAll('.y-axis').call(yAxis)
+      this.svg.selectAll('.x-axis').call(xAxis)
+      this.svg.selectAll('.y-axis').call(yAxis)
       const zoomed = ({ transform }) => {
         x.range([margin.left, this.width - margin.right].map((d) => transform.applyX(d)))
-        svg
+        this.svg
           .selectAll('.cell')
           .attr('x', (d) => x(d.frame))
           .attr('width', x.bandwidth())
-        svg.selectAll('.x-axis').call(xAxis)
+        this.svg.selectAll('.x-axis').call(xAxis)
       }
       const zoom = d3.zoom().on('zoom', zoomed)
-      svg.call(zoom)
-    },
-  },
+      this.svg.call(zoom)
 
-  apollo: {
-    testaggau: {
-      // graphql query
-      query: testaggau,
-      error(error) {
-        this.error = JSON.stringify(error.message)
-      },
+      const cursorGroup = this.svg
+        .append('g')
+        .attr('class', 'cursor')
+        .append('line')
+        .attr('class', 'cursorline')
+        .attr('x1', () => {
+          return x(this.cursor)
+        })
+        .attr('y1', 0 - margin.top)
+        .attr('x2', () => x(this.cursor))
+        .attr('y2', this.height + margin.bottom)
+        .attr('stroke', '#4ec0ff')
+        .attr('stroke-width', 4)
+        .call(d3.drag().on('drag', dragmove))
     },
   },
 }

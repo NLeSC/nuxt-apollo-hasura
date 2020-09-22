@@ -1,14 +1,16 @@
 <template>
   <v-container>
-    <v-row no-gutters>
-      <v-col cols="12" sm="12" md="6">
-        <video-player :video-src="'videos/' + $route.query.video" @onTimeupdate="timeupdate" />
-        <br />
-        time: {{ time }}
-      </v-col>
-      <v-col cols="12" sm="12" md="6">
-        <!-- <HeatMap /> -->
-        <D3HeatMap />
+    <v-row>
+      <v-col sm="3" style="background-color: #eee"> AColumn</v-col>
+      <v-col sm="9" style="background-color: #ddd">
+        <v-row justify="center">
+          <div style="width: 600px">
+            <video-player :video-src="'videos/' + $route.query.video" :cursor="cursor" @onTimeupdate="timeupdate" />
+            <br />
+            Cursor position: {{ cursor }}
+            <D3HeatMap style="transform: translateX(-50px)" :cursor="cursor" @onCursorUpdate="onCursorUpdate" />
+          </div>
+        </v-row>
       </v-col>
     </v-row>
   </v-container>
@@ -21,7 +23,7 @@ export default {
   data() {
     return {
       isPlaying: false,
-      time: 0,
+      cursor: 0,
     }
   },
 
@@ -34,22 +36,12 @@ export default {
       this.$refs.myvideo.pause()
       this.isPlaying = false
     },
-    timeupdate(time) {
-      this.time = time
+    timeupdate(cursorPosition) {
+      this.cursor = cursorPosition
+    },
+    onCursorUpdate(cursor) {
+      this.cursor = cursor
     },
   },
 }
 </script>
-
-<style>
-#erd {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-  width: 500px;
-  height: 500px;
-}
-</style>
