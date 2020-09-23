@@ -1,8 +1,5 @@
 <template>
-  <div>
-    {{ cursor }} - {{ localCursor }}
-    <div id="chart"></div>
-  </div>
+  <div id="chart"></div>
 </template>
 
 <script>
@@ -11,6 +8,7 @@ import testaggau from '~/apollo/action_units'
 
 export default {
   props: {
+    features: { type: Array, required: true },
     cursor: { required: false, type: Number, default: 0 },
   },
   data() {
@@ -21,37 +19,25 @@ export default {
       endTime: 350,
       resolution: 1,
       chartData: [],
-      actionUnits: [
-        'au01r',
-        'au01c',
-        'au04r',
-        'au04c',
-        'au09r',
-        'au09c',
-        'au10r',
-        'au10c',
-        'au12r',
-        'au12c',
-        'au14r',
-        'au14c',
-      ],
       height: 500,
       width: 700,
     }
   },
+  watch: {
+    features: {
+      handler(newval, oldval) {
+        this.updateChart()
+      },
+    },
+  },
   computed: {
     localCursor: {
-      set() {},
+      set() {
+      },
       get() {
         return this.cursor
       },
     },
-  },
-  mounted() {
-    this.$apollo.queries.testaggau.refetch().then((results) => {
-      this.chartData = this.longify(results.data.testaggau)
-      this.drawChart()
-    })
   },
   apollo: {
     testaggau: {
@@ -62,11 +48,20 @@ export default {
       },
     },
   },
+  mounted() {
+    this.updateChart()
+  },
   methods: {
+    updateChart() {
+      this.$apollo.queries.testaggau.refetch().then((results) => {
+        this.chartData = this.longify(results.data.testaggau)
+        this.drawChart()
+      })
+    },
     longify(rows) {
       const extracted = []
       rows.forEach((row) => {
-        this.actionUnits.forEach((varr) => {
+        this.features.forEach((varr) => {
           extracted.push({
             frame: row.min_timestamp,
             variable: varr,
@@ -77,25 +72,10 @@ export default {
       return extracted
     },
 
-    // getTestaggau() {
-    //   const extracted = []
-    //   this.myVars.forEach((varr) => {
-    //     const data = []
-    //     this.testaggau.forEach((row) => {
-    //       data.push({
-    //         x: row.min_timestamp,
-    //         y: row[varr],
-    //       })
-    //     })
-    //     extracted.push({
-    //       name: varr,
-    //       data,
-    //     })
-    //   })
-    //   return extracted
-    // },
-
     drawChart() {
+      // remove old chart if its there
+      d3.select('#chart > *').remove()
+
       const margin = { top: 0, right: 0, bottom: 50, left: 50 }
       this.chartWidth = this.width - margin.left - margin.right
       this.chartHeight = this.height - margin.top - margin.bottom
@@ -151,7 +131,7 @@ export default {
       const y = d3
         .scaleBand()
         .range([this.chartHeight - margin.bottom - margin.top, 0])
-        .domain(this.actionUnits)
+        .domain(this.features)
         .padding(0.01)
       const yAxis = chartGroup
         .append('g')
@@ -258,11 +238,11 @@ export default {
         .attr('y', 0)
         .attr('width', 4)
         .attr('height', this.chartHeight - margin.bottom)
-        .attr('fill', '#4ec0ff')
+        .attr('fill', '#4EC0FF')
         .call(dragHandler(this))
 
       this.svg.call(zoomHandler(this))
-    },
-  },
+    }
+  }
 }
 </script>

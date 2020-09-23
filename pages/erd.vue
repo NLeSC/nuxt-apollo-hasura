@@ -1,14 +1,23 @@
 <template>
   <v-container>
     <v-row>
-      <v-col sm="3" style="background-color: #eee"> AColumn</v-col>
+      <v-col sm="3" style="background-color: #eee">
+        <v-switch
+          v-for="name in feature_names"
+          :key="name"
+          v-model="selected_features"
+          :label="name"
+          :value="name"
+          dense
+          >{{ name }}
+        </v-switch>
+      </v-col>
       <v-col sm="9" style="background-color: #ddd">
         <v-row justify="center">
           <div style="width: 600px">
             <video-player :video-src="'videos/' + $route.query.video" :cursor="cursor" @onTimeupdate="timeupdate" />
             <br />
-            Cursor position: {{ cursor }}
-            <D3HeatMap style="transform: translateX(-50px)" :cursor="cursor" @onCursorUpdate="onCursorUpdate" />
+            <D3HeatMap :features="selected_features" style="transform: translateX(-50px)" :cursor="cursor" @onCursorUpdate="onCursorUpdate"/>
           </div>
         </v-row>
       </v-col>
@@ -17,6 +26,8 @@
 </template>
 
 <script>
+import retrieveColumnNames from '~/apollo/retrieve_column_names'
+
 export default {
   name: 'Erd',
 
@@ -24,9 +35,22 @@ export default {
     return {
       isPlaying: false,
       cursor: 0,
+      feature_names: [],
+      selected_features: [],
     }
   },
-
+  mounted() {
+    this.$apollo.queries.retrieveColumnNames.refetch().then((results) => {
+      this.feature_names = results.data.retrieveColumnNames.fields
+        .map((field) => {
+          return field.name
+        })
+        .filter((name) => {
+          return name !== 'grouped_seconds' && name !== 'min_timestamp'
+        })
+      this.selected_features = this.feature_names
+    })
+  },
   methods: {
     play() {
       this.$refs.myvideo.play()
@@ -41,6 +65,14 @@ export default {
     },
     onCursorUpdate(cursor) {
       this.cursor = cursor
+    },
+  },
+  apollo: {
+    retrieveColumnNames: {
+      query: retrieveColumnNames,
+      error(error) {
+        this.error = JSON.stringify(error.message)
+      },
     },
   },
 }
