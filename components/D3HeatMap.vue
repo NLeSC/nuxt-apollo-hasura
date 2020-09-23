@@ -4,7 +4,7 @@
 
 <script>
 import * as d3 from 'd3'
-import aggregate_features from '~/apollo/action_units'
+import aggregate_features from '~/apollo/aggregate_features'
 
 export default {
   props: {
@@ -46,9 +46,6 @@ export default {
         this.error = JSON.stringify(error.message)
       },
     },
-  },
-  mounted() {
-    this.updateChart()
   },
   methods: {
     updateChart() {

@@ -1,7 +1,0 @@
-query get_action_units {
-  action_units: __type(name: "agg_result") {
-    fields {
-      name
-    }
-  }
-}
