@@ -1,0 +1,41 @@
+query aggregate_features {
+  aggregate_features(args: { start_time: 0, end_time: 420, resolution: 1 }) {
+    au01c
+    au01r
+    au02c
+    au02r
+    au04c
+    au04r
+    au05c
+    au05r
+    au06c
+    au06r
+    au07c
+    au07r
+    au09c
+    au09r
+    au10c
+    au10r
+    au12c
+    au12r
+    au14c
+    au14r
+    au15c
+    au15r
+    au17c
+    au17r
+    au20c
+    au20r
+    au23c
+    au23r
+    au25c
+    au25r
+    au26c
+    au26r
+    au28c
+    au45c
+    au45r
+    grouped_seconds
+    min_timestamp
+  }
+}

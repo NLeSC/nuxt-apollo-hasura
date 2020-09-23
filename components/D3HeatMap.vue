@@ -7,7 +7,7 @@
 
 <script>
 import * as d3 from 'd3'
-import testaggau from '~/apollo/action_units'
+import aggregate_features from '~/apollo/aggregate_features'
 
 export default {
   props: {
@@ -42,21 +42,18 @@ export default {
     },
   },
   apollo: {
-    testaggau: {
+    aggregate_features: {
       // graphql query
-      query: testaggau,
+      query: aggregate_features,
       error(error) {
         this.error = JSON.stringify(error.message)
       },
     },
   },
-  mounted() {
-    this.updateChart()
-  },
   methods: {
     updateChart() {
-      this.$apollo.queries.testaggau.refetch().then((results) => {
-        this.chartData = this.longify(results.data.testaggau)
+      this.$apollo.queries.aggregate_features.refetch().then((results) => {
+        this.chartData = this.longify(results.data.aggregate_features)
         this.drawChart()
       })
     },
@@ -73,7 +70,6 @@ export default {
       })
       return extracted
     },
-
     drawChart() {
       // remove old chart if its there
       d3.select('#chart > *').remove()

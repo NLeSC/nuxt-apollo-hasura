@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import retrieveColumnNames from '~/apollo/retrieve_column_names'
+import get_feature_names from '~/apollo/get_feature_names'
 
 export default {
   name: 'Erd',
@@ -44,9 +44,17 @@ export default {
       selected_features: [],
     }
   },
+  apollo: {
+    get_feature_names: {
+      query: get_feature_names,
+      error(error) {
+        this.error = JSON.stringify(error.message)
+      },
+    },
+  },
   mounted() {
-    this.$apollo.queries.retrieveColumnNames.refetch().then((results) => {
-      this.feature_names = results.data.retrieveColumnNames.fields
+    this.$apollo.queries.get_feature_names.refetch().then((results) => {
+      this.feature_names = results.data.get_feature_names.fields
         .map((field) => {
           return field.name
         })
@@ -70,14 +78,6 @@ export default {
     },
     onCursorUpdate(cursor) {
       this.cursor = cursor
-    },
-  },
-  apollo: {
-    retrieveColumnNames: {
-      query: retrieveColumnNames,
-      error(error) {
-        this.error = JSON.stringify(error.message)
-      },
     },
   },
 }
