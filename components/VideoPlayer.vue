@@ -20,28 +20,20 @@
 export default {
   name: 'VideoPlayer',
   props: {
+    cursor: { required: false, type: Number, default: 0 },
     videoSrc: { required: true, type: String },
     /**
      * set the video to autoplay as it's loaded
      */
-    autoplay: {
-      type: Boolean,
-      default: false,
-    },
+    autoplay: { type: Boolean, default: false },
     /**
      * show/hide the controls
      */
-    controls: {
-      type: Boolean,
-      default: undefined,
-    },
+    controls: { type: Boolean, default: undefined },
     /**
      * set the video to playsinline as it's loaded
      */
-    playsinline: {
-      type: Boolean,
-      default: false,
-    },
+    playsinline: { type: Boolean, default: false },
   },
   data() {
     return {
@@ -78,6 +70,9 @@ export default {
   },
 
   watch: {
+    cursor(newPosition) {
+      this.$refs.video.currentTime = newPosition
+    },
     value(after) {
       if (after && this.$refs.video.paused) {
         this.$refs.video.play()
