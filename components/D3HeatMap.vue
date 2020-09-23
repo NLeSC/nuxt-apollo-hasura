@@ -1,5 +1,8 @@
 <template>
-  <div id="chart"></div>
+  <div>
+    {{ cursor }}
+    <div id="chart"></div>
+  </div>
 </template>
 
 <script>
@@ -14,9 +17,9 @@ export default {
   data() {
     return {
       svg: null,
-
+      cursorWidth: 5,
       startTime: 0,
-      endTime: 350,
+      endTime: 420,
       resolution: 1,
       chartData: [],
       height: 500,
@@ -233,9 +236,9 @@ export default {
         .enter()
         .append('rect')
         .attr('class', 'cursorline')
-        .attr('x', (d) => x(d))
+        .attr('x', (d) => x(d) - this.cursorWidth / 2)
         .attr('y', 0)
-        .attr('width', 4)
+        .attr('width', this.cursorWidth)
         .attr('height', this.chartHeight - margin.bottom)
         .attr('fill', '#4EC0FF')
         .call(dragHandler(this))

@@ -1,5 +1,5 @@
 query testaggau {
-  testaggau(args: { start_time: 0, end_time: 350, resolution: 1 }) {
+  testaggau(args: { start_time: 0, end_time: 420, resolution: 1 }) {
     au01r
     au01c
     au04r
