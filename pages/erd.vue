@@ -3,13 +3,16 @@
     <v-row>
       <v-col sm="3" style="background-color: #eee">
         <v-switch
-          v-for="name in feature_names"
-          :key="name"
-          v-model="selected_features"
-          :label="name"
-          :value="name"
+          v-for="feature in feature_names"
+          :key="feature.label"
+          v-model="feature.active"
+          :label="feature.label"
+          @change="updateFeatures(feature)"
           dense
-          >{{ name }}
+          flat
+          inset
+        >
+          {{ feature.label }}
         </v-switch>
       </v-col>
       <v-col sm="9" style="background-color: #ddd">
@@ -41,8 +44,13 @@ export default {
       isPlaying: false,
       cursor: 0,
       feature_names: [],
-      selected_features: [],
+      defaultEnabledFeatures: ['au01c', 'au01r', 'au02c', 'au02r', 'au04c'],
     }
+  },
+  computed: {
+    selected_features() {
+      return this.feature_names.filter((filed) => filed.active)
+    },
   },
   apollo: {
     get_feature_names: {
@@ -55,16 +63,19 @@ export default {
   mounted() {
     this.$apollo.queries.get_feature_names.refetch().then((results) => {
       this.feature_names = results.data.get_feature_names.fields
-        .map((field) => {
-          return field.name
+        .map((field) => ({
+          label: field.name,
+          active: this.defaultEnabledFeatures.includes(field.name),
+        }))
+        .filter((filed) => {
+          return filed.label !== 'grouped_seconds' && filed.label !== 'min_timestamp'
         })
-        .filter((name) => {
-          return name !== 'grouped_seconds' && name !== 'min_timestamp'
-        })
-      this.selected_features = this.feature_names
     })
   },
   methods: {
+    updateFeatures(feature) {
+      this.selected_features.findIndex((feat) => feat.label === feature.label)
+    },
     play() {
       this.$refs.myvideo.play()
       this.isPlaying = true
@@ -82,3 +93,11 @@ export default {
   },
 }
 </script>
+<style>
+.v-messages {
+  display: none;
+}
+.v-input--selection-controls {
+  margin-top: 0 !important;
+}
+</style>

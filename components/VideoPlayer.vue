@@ -1,7 +1,6 @@
 <!-- Description of the Component-->
 <template>
   <div>
-    {{ cursor }}
     <video
       ref="video"
       class="video"
