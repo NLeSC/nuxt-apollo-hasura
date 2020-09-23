@@ -1,5 +1,5 @@
 query aggregate_features {
-  aggregate_features(args: { start_time: 0, end_time: 350, resolution: 1 }) {
+  aggregate_features(args: { start_time: 0, end_time: 420, resolution: 1 }) {
     au01c
     au01r
     au02c
