@@ -1,47 +1,42 @@
 <!-- Description of the Component-->
 <template>
-  <video
-    ref="video"
-    class="video"
-    :src="videoSrc"
-    :controls="true"
-    :autoplay="autoplay"
-    :playsinline="playsinline"
-    @play="play"
-    @pause="pause"
-    @click="atPlayPause"
-    @ended="atEnded"
-    @seeking="atTimeupdate"
-    @timeupdate="atTimeupdate"
-    @volumechange="atVolumechange"
-  />
+  <div>
+    {{ cursor }}
+    <video
+      ref="video"
+      class="video"
+      :src="videoSrc"
+      :controls="true"
+      :autoplay="autoplay"
+      :playsinline="playsinline"
+      @play="play"
+      @pause="pause"
+      @click="atPlayPause"
+      @ended="atEnded"
+      @seeking="atTimeupdate"
+      @timeupdate="atTimeupdate"
+      @volumechange="atVolumechange"
+    />
+  </div>
 </template>
 <script>
 export default {
   name: 'VideoPlayer',
   props: {
+    cursor: { required: false, type: Number, default: 0 },
     videoSrc: { required: true, type: String },
     /**
      * set the video to autoplay as it's loaded
      */
-    autoplay: {
-      type: Boolean,
-      default: false,
-    },
+    autoplay: { type: Boolean, default: false },
     /**
      * show/hide the controls
      */
-    controls: {
-      type: Boolean,
-      default: undefined,
-    },
+    controls: { type: Boolean, default: undefined },
     /**
      * set the video to playsinline as it's loaded
      */
-    playsinline: {
-      type: Boolean,
-      default: false,
-    },
+    playsinline: { type: Boolean, default: false },
   },
   data() {
     return {
@@ -78,6 +73,9 @@ export default {
   },
 
   watch: {
+    // cursor(newPosition) {
+    //   this.$refs.video.currentTime = newPosition
+    // },
     value(after) {
       if (after && this.$refs.video.paused) {
         this.$refs.video.play()

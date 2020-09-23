@@ -17,7 +17,12 @@
           <div style="width: 600px">
             <video-player :video-src="'videos/' + $route.query.video" :cursor="cursor" @onTimeupdate="timeupdate" />
             <br />
-            <D3HeatMap :features="selected_features" style="transform: translateX(-50px)" :cursor="cursor" />
+            <D3HeatMap
+              :features="selected_features"
+              style="transform: translateX(-50px)"
+              :cursor="cursor"
+              @onCursorUpdate="onCursorUpdate"
+            />
           </div>
         </v-row>
       </v-col>
@@ -34,7 +39,7 @@ export default {
   data() {
     return {
       isPlaying: false,
-      time: 0,
+      cursor: 0,
       feature_names: [],
       selected_features: [],
     }
@@ -61,8 +66,11 @@ export default {
       this.$refs.myvideo.pause()
       this.isPlaying = false
     },
-    timeupdate(time) {
-      this.time = time
+    timeupdate(cursorPosition) {
+      this.cursor = cursorPosition
+    },
+    onCursorUpdate(cursor) {
+      this.cursor = cursor
     },
   },
   apollo: {
@@ -75,20 +83,3 @@ export default {
   },
 }
 </script>
-
-<style>
-#erd {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-  width: 500px;
-  height: 500px;
-}
-
-#features ul li {
-  list-style: none;
-}
-</style>

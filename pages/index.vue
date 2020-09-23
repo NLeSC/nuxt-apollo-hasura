@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex flex-column justify-center align-center">
     <v-card max-width="700" width="100%" class="mt-4" outlined>
-      <v-card-title class="headline"> Emotion Recognition for Dementia </v-card-title>
+      <v-card-title class="headline"> Emotion Recognition</v-card-title>
     </v-card>
   </div>
 </template>

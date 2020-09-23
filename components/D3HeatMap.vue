@@ -8,20 +8,28 @@ import aggregate_features from '~/apollo/action_units'
 
 export default {
   props: {
-    features: {
-      type: Array,
-      required: true,
-    },
+    features: { type: Array, required: true },
+    cursor: { required: false, type: Number, default: 0 },
   },
   data() {
     return {
+      svg: null,
+
       startTime: 0,
       endTime: 350,
       resolution: 1,
       chartData: [],
-      height: 700,
-      width: 900,
+      height: 500,
+      width: 700,
     }
+  },
+  computed: {
+    localCursor: {
+      set() {},
+      get() {
+        return this.cursor
+      },
+    },
   },
   watch: {
     features: {
@@ -30,11 +38,16 @@ export default {
       },
     },
   },
+  apollo: {
+    aggregate_features: {
+      // graphql query
+      query: aggregate_features,
+      error(error) {
+        this.error = JSON.stringify(error.message)
+      },
+    },
+  },
   mounted() {
-    this.margin = { top: 30, right: 100, bottom: 50, left: 50 }
-    this.width = this.width - this.margin.left - this.margin.right
-    this.height = this.height - this.margin.top - this.margin.bottom
-
     this.updateChart()
   },
   methods: {
@@ -57,105 +70,146 @@ export default {
       })
       return extracted
     },
-    // getAggregateFeatures() {
-    //   const extracted = []
-    //   this.features.forEach((varr) => {
-    //     const data = []
-    //     this.aggregate_features.forEach((row) => {
-    //       data.push({
-    //         x: row.min_timestamp,
-    //         y: row[varr],
-    //       })
-    //     })
-    //     extracted.push({
-    //       name: varr,
-    //       data,
-    //     })
-    //   })
-    //   return extracted
-    // },
     drawChart() {
       // remove old chart if its there
       d3.select('#chart > *').remove()
 
-      const svg = d3
-        .select('#chart')
-        .append('svg')
-        .attr('width', this.width + this.margin.left + this.margin.right)
-        .attr('height', this.height + this.margin.top + this.margin.bottom)
-        .append('g')
-        .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')')
+      const margin = { top: 0, right: 0, bottom: 50, left: 50 }
+      this.chartWidth = this.width - margin.left - margin.right
+      this.chartHeight = this.height - margin.top - margin.bottom
+
+      this.svg = d3.select('#chart').append('svg').attr('width', this.chartWidth).attr('height', this.chartHeight)
+      const chartGroup = this.svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+
       // Clipping
-      svg
-        .append('defs')
+      const defs = chartGroup.append('defs')
+      defs
         .append('clipPath')
         .attr('id', 'clip')
         .append('rect')
         .attr('x', 0)
         .attr('y', 0)
-        .attr('width', this.width)
-        .attr('height', this.height)
+        .attr('width', this.chartWidth - margin.left - margin.right)
+        .attr('height', this.chartHeight - margin.top - margin.bottom)
+
+      defs
+        .append('clipPath')
+        .attr('id', 'clipx')
+        .append('rect')
+        .attr('x', 0)
+        .attr('y', this.chartHeight - margin.top - margin.bottom)
+        .attr('width', this.chartWidth - margin.left - margin.right)
+        .attr('height', margin.bottom)
+
+      defs
+        .append('clipPath')
+        .attr('id', 'clipy')
+        .append('rect')
+        .attr('x', -margin.left)
+        .attr('y', 0)
+        .attr('width', margin.left + 1)
+        .attr('height', this.chartHeight - margin.top - margin.bottom)
 
       // Labels for row & column
-      const myGroups = d3.range(this.startTime, this.endTime, 1)
+      const timeBins = d3.range(this.startTime, this.endTime, 1)
       const tickValues = d3.range(this.startTime, this.endTime, 30)
       const formatDuration = (d) => new Date(1000 * d).toISOString().substr(14, 5)
+
       // Build X scales and axis:
-      const x = d3.scaleBand().range([0, this.width]).domain(myGroups).padding(0.01)
-      const xAxis = (g) =>
-        g
-          .attr('transform', 'translate(0,' + this.height + ')')
-          .call(d3.axisBottom(x).tickValues(tickValues).tickFormat(formatDuration))
-      svg.append('g').attr('class', 'x-axis').attr('clip-path', 'url(#clip)').call(xAxis)
-      // Build Y scales and axis:
-      const y = d3.scaleBand().range([this.height, 0]).domain(this.features).padding(0.01)
-      const yAxis = (g) => g.call(d3.axisLeft(y))
-      svg.append('g').attr('class', 'y-axis').call(yAxis)
-
-      //
-      // Cursor
-      //
-      const cursor = this.cursor
-      const height = 580 // todo get it dynamic
-      // const onCursorChange = this.onCursorChange;
-      const cursorGroup = svg
+      const x = d3.scaleBand().range([0, this.chartWidth]).domain(timeBins).padding(0.01)
+      const xAxis = chartGroup
         .append('g')
-        .attr('class', 'cursor')
-        .append('line')
-        .attr('class', 'cursorline')
-        .attr('x1', () => {
-          console.log(cursor)
-          return x(cursor)
-        })
-        .attr('y1', 0 - this.margin.top)
-        .attr('x2', () => x(cursor))
-        .attr('y2', height + this.margin.bottom)
-        .attr('stroke', '#4ec0ff')
-        .attr('stroke-width', 4)
-        .call(d3.drag().on('drag', dragmove))
+        .attr('clip-path', 'url(#clipx)')
+        .append('g')
+        .attr('class', 'axis axis--x')
+        .attr('transform', 'translate(0,' + (this.chartHeight - margin.bottom) + ')')
+        .call(d3.axisBottom(x).tickValues(tickValues).tickFormat(formatDuration))
 
-      function dragmove(dragEvent) {
-        const eventX = dragEvent.x
-        //      console.log("dragmove: " + x.invert(eventX));
-        svg.selectAll('.cursorline').attr('x1', eventX).attr('x2', eventX)
-        cursorGroup.attr('transform', 'translate(' + eventX + ',' + 0 + ')')
+      // Build Y scales and axis:
+      const y = d3
+        .scaleBand()
+        .range([this.chartHeight - margin.bottom - margin.top, 0])
+        .domain(this.features)
+        .padding(0.01)
+      const yAxis = chartGroup
+        .append('g')
+        .attr('clip-path', 'url(#clipy)')
+        .append('g')
+        .attr('class', 'axis axis--y')
+        .call(d3.axisLeft(y))
 
-        /// CONTINUE HERE!!!!!!!
-        console.log('🎹', eventX)
-        // onCursorChange(eventX)
+      // Build color scale
+      const myColor = d3.scaleSequential().domain([0, 4]).interpolator(d3.interpolateInferno)
+
+      // Cursor
+      let deltaX
+
+      function dragHandler(that) {
+        function dragstarted(event) {
+          deltaX = cursorLine.attr('x') - event.x
+        }
+
+        function dragged(event) {
+          let newX = event.x + deltaX
+          const maxValue = that.chartWidth - margin.left - margin.right
+
+          if (newX < 0) newX = 0
+          if (newX > maxValue) newX = maxValue
+
+          const eachBand = x.step()
+          const index = Math.round(newX / eachBand)
+          const cursor = x.domain()[index]
+
+          cursorLine.attr('x', newX)
+          that.$emit('onCursorUpdate', cursor)
+        }
+
+        function dragended(event) {
+          deltaX = 0
+        }
+
+        return d3.drag().on('start', dragstarted).on('drag', dragged).on('end', dragended)
+      }
+
+      // Zoom Handler
+      function zoomHandler(that) {
+        function zoomed(event) {
+          const t = event.transform
+          cells.attr('transform', t)
+          cursorLine.attr('transform', t)
+
+          xAxis.attr('transform', d3.zoomIdentity.translate(t.x, that.chartHeight - margin.bottom).scale(t.k))
+          xAxis.selectAll('text').attr('transform', d3.zoomIdentity.scale(1 / t.k))
+          xAxis.selectAll('line').attr('transform', d3.zoomIdentity.scale(1 / t.k))
+
+          yAxis.attr('transform', d3.zoomIdentity.translate(0, t.y).scale(t.k))
+          yAxis.selectAll('text').attr('transform', d3.zoomIdentity.scale(1 / t.k))
+          yAxis.selectAll('line').attr('transform', d3.zoomIdentity.scale(1 / t.k))
+        }
+
+        return d3
+          .zoom()
+          .scaleExtent([1, 20])
+          .translateExtent([
+            [0, 0],
+            [that.chartWidth, that.chartHeight],
+          ])
+          .extent([
+            [0, 0],
+            [that.chartWidth, that.chartHeight],
+          ])
+          .on('zoom', zoomed)
       }
 
       // Group for main content
-      const main = svg.append('g').attr('class', 'main').attr('clip-path', 'url(#clip)')
-      // Build color scale
-      const myColor = d3.scaleSequential().domain([0, 4]).interpolator(d3.interpolateInferno)
-      const cells = main.selectAll('.cell').data(this.chartData, (d) => '' + d.frame + ':' + d.variable)
-      cells.exit().remove()
-      cells
+      const cells = chartGroup
+        .append('g')
+        .attr('clip-path', 'url(#clip)')
+        .selectAll('.cell')
+        .data(this.chartData, (d) => '' + d.frame + ':' + d.variable)
         .enter()
         .append('rect')
         .attr('class', 'cell')
-        .merge(cells)
         .attr('x', (d) => {
           return x(d.frame)
         })
@@ -168,28 +222,24 @@ export default {
           }
           return myColor(d.value)
         })
-      svg.selectAll('.x-axis').call(xAxis)
-      svg.selectAll('.y-axis').call(yAxis)
-      const zoomed = ({ transform }) => {
-        x.range([this.margin.left, this.width - this.margin.right].map((d) => transform.applyX(d)))
-        svg
-          .selectAll('.cell')
-          .attr('x', (d) => x(d.frame))
-          .attr('width', x.bandwidth())
-        svg.selectAll('.x-axis').call(xAxis)
-      }
-      const zoom = d3.zoom().on('zoom', zoomed)
-      svg.call(zoom)
-    },
-  },
+      cells.exit().remove()
 
-  apollo: {
-    aggregate_features: {
-      // graphql query
-      query: aggregate_features,
-      error(error) {
-        this.error = JSON.stringify(error.message)
-      },
+      const cursorLineGroup = chartGroup.append('g').attr('clip-path', 'url(#clip)')
+
+      const cursorLine = cursorLineGroup
+        .selectAll('.cursorline')
+        .data([this.cursor])
+        .enter()
+        .append('rect')
+        .attr('class', 'cursorline')
+        .attr('x', (d) => x(d))
+        .attr('y', 0)
+        .attr('width', 4)
+        .attr('height', this.chartHeight - margin.bottom)
+        .attr('fill', '#4EC0FF')
+        .call(dragHandler(this))
+
+      this.svg.call(zoomHandler(this))
     },
   },
 }
