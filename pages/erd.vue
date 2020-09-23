@@ -17,7 +17,12 @@
           <div style="width: 600px">
             <video-player :video-src="'videos/' + $route.query.video" :cursor="cursor" @onTimeupdate="timeupdate" />
             <br />
-            <D3HeatMap :features="selected_features" style="transform: translateX(-50px)" :cursor="cursor" @onCursorUpdate="onCursorUpdate"/>
+            <D3HeatMap
+              :features="selected_features"
+              style="transform: translateX(-50px)"
+              :cursor="cursor"
+              @onCursorUpdate="onCursorUpdate"
+            />
           </div>
         </v-row>
       </v-col>

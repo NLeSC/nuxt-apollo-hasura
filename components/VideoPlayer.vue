@@ -1,20 +1,23 @@
 <!-- Description of the Component-->
 <template>
-  <video
-    ref="video"
-    class="video"
-    :src="videoSrc"
-    :controls="true"
-    :autoplay="autoplay"
-    :playsinline="playsinline"
-    @play="play"
-    @pause="pause"
-    @click="atPlayPause"
-    @ended="atEnded"
-    @seeking="atTimeupdate"
-    @timeupdate="atTimeupdate"
-    @volumechange="atVolumechange"
-  />
+  <div>
+    {{ cursor }}
+    <video
+      ref="video"
+      class="video"
+      :src="videoSrc"
+      :controls="true"
+      :autoplay="autoplay"
+      :playsinline="playsinline"
+      @play="play"
+      @pause="pause"
+      @click="atPlayPause"
+      @ended="atEnded"
+      @seeking="atTimeupdate"
+      @timeupdate="atTimeupdate"
+      @volumechange="atVolumechange"
+    />
+  </div>
 </template>
 <script>
 export default {
@@ -70,9 +73,9 @@ export default {
   },
 
   watch: {
-    cursor(newPosition) {
-      this.$refs.video.currentTime = newPosition
-    },
+    // cursor(newPosition) {
+    //   this.$refs.video.currentTime = newPosition
+    // },
     value(after) {
       if (after && this.$refs.video.paused) {
         this.$refs.video.play()

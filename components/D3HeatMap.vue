@@ -23,19 +23,18 @@ export default {
       width: 700,
     }
   },
+  computed: {
+    localCursor: {
+      set() {},
+      get() {
+        return this.cursor
+      },
+    },
+  },
   watch: {
     features: {
       handler(newval, oldval) {
         this.updateChart()
-      },
-    },
-  },
-  computed: {
-    localCursor: {
-      set() {
-      },
-      get() {
-        return this.cursor
       },
     },
   },
@@ -242,7 +241,7 @@ export default {
         .call(dragHandler(this))
 
       this.svg.call(zoomHandler(this))
-    }
-  }
+    },
+  },
 }
 </script>
