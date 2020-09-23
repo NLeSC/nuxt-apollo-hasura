@@ -1,6 +1,5 @@
 <template>
   <div>
-    {{ cursor }}
     <div id="chart"></div>
   </div>
 </template>
@@ -27,6 +26,9 @@ export default {
     }
   },
   computed: {
+    featuresNames() {
+      return this.features.map((feature) => feature.label)
+    },
     localCursor: {
       set() {},
       get() {
@@ -63,8 +65,8 @@ export default {
         this.features.forEach((varr) => {
           extracted.push({
             frame: row.min_timestamp,
-            variable: varr,
-            value: row[varr],
+            variable: varr.label,
+            value: row[varr.label],
           })
         })
       })
@@ -129,7 +131,7 @@ export default {
       const y = d3
         .scaleBand()
         .range([this.chartHeight - margin.bottom - margin.top, 0])
-        .domain(this.features)
+        .domain(this.featuresNames)
         .padding(0.01)
       const yAxis = chartGroup
         .append('g')
