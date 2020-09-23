@@ -1,21 +1,25 @@
 <template>
   <client-only>
     <div>
-      <!-- {{ getTestaggau }} -->
-      <VueApexCharts width="700" type="heatmap" :options="chartOptions" :series="getTestaggau"></VueApexCharts>
+      <VueApexCharts
+        width="700"
+        type="heatmap"
+        :options="chartOptions"
+        :series="getAggregateActionUnits"
+      ></VueApexCharts>
     </div>
   </client-only>
 </template>
 
 <script>
-import testaggau from '~/apollo/action_units'
+import aggregate_features from '~/apollo/action_units'
 export default {
   components: {
     VueApexCharts: () => import('vue-apexcharts'),
   },
   data() {
     return {
-      testaggau: [],
+      aggregate_features: [],
       myVars: [
         'au01r',
         'au01c',
@@ -85,11 +89,11 @@ export default {
     }
   },
   computed: {
-    getTestaggau() {
+    getAggregateActionUnits() {
       const extracted = []
       this.myVars.forEach((varr) => {
         const data = []
-        this.testaggau.forEach((row) => {
+        this.aggregate_features.forEach((row) => {
           data.push({
             x: row.min_timestamp,
             y: row[varr],
@@ -122,9 +126,9 @@ export default {
     },
   },
   apollo: {
-    testaggau: {
+    aggregate_features: {
       // graphql query
-      query: testaggau,
+      query: aggregate_features,
       error(error) {
         this.error = JSON.stringify(error.message)
       },

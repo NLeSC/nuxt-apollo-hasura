@@ -1,8 +1,9 @@
 # Nuxt Apollo Hasura Example
 
- See project: https://github.com/NLeSC/full-stack-recipes
+See project: https://github.com/NLeSC/full-stack-recipes
 
 ## Setup
+
 Requirements locally: docker and Yarn.
 
 ```bash
@@ -15,9 +16,11 @@ $ yarn dev
 ```
 
 ### First time setup database schema and data
+
 This section is only needed the first time running the application.
 
 First start the docker stack and load the sql dump
+
 ```
 $ docker-compose up -d
 $ docker exec -i emo-spectre_postgres_1 psql --username postgres postgres < ./dump.sql
@@ -31,18 +34,21 @@ you can find out which containers are running with
 ```
 $ docker images
 ```
+
 change `emo-spectre_postgres_1` in the docker exec command with the container name that runs postgres
 
-### Build the  application and launch server
+### Build the application and launch server
+
 ```
 $ yarn build
 $ yarn serve
 ```
 
 ### First time setup
-The following also  needs to be done the first time you run the application
+
+The following also needs to be done the first time you run the application
 
 Go to the hasura console at http://localhost:4000/console/
-In the `Data` tab make sure that the query testaggau is tracked.
+In the `Data` tab make sure that the query aggregate_features is tracked.
 
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).

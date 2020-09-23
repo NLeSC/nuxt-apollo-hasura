@@ -4,7 +4,7 @@
 
 <script>
 import * as d3 from 'd3'
-import testaggau from '~/apollo/action_units'
+import aggregate_features from '~/apollo/action_units'
 
 export default {
   props: {
@@ -39,8 +39,8 @@ export default {
   },
   methods: {
     updateChart() {
-      this.$apollo.queries.testaggau.refetch().then((results) => {
-        this.chartData = this.longify(results.data.testaggau)
+      this.$apollo.queries.aggregate_features.refetch().then((results) => {
+        this.chartData = this.longify(results.data.aggregate_features)
         this.drawChart()
       })
     },
@@ -57,11 +57,11 @@ export default {
       })
       return extracted
     },
-    // getTestaggau() {
+    // getAggregateFeatures() {
     //   const extracted = []
     //   this.features.forEach((varr) => {
     //     const data = []
-    //     this.testaggau.forEach((row) => {
+    //     this.aggregate_features.forEach((row) => {
     //       data.push({
     //         x: row.min_timestamp,
     //         y: row[varr],
@@ -184,9 +184,9 @@ export default {
   },
 
   apollo: {
-    testaggau: {
+    aggregate_features: {
       // graphql query
-      query: testaggau,
+      query: aggregate_features,
       error(error) {
         this.error = JSON.stringify(error.message)
       },

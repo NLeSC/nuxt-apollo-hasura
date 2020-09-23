@@ -41,7 +41,8 @@ export default {
   },
   mounted() {
     this.$apollo.queries.retrieveColumnNames.refetch().then((results) => {
-      this.feature_names = results.data.retrieveColumnNames.fields
+      console.log(results)
+      this.feature_names = results.data.action_units.fields
         .map((field) => {
           return field.name
         })
