@@ -37,5 +37,7 @@ query aggregate_features {
     au45r
     grouped_seconds
     min_timestamp
+    success
+    topic
   }
 }

@@ -189,7 +189,8 @@ export default {
         })
       // Build color scale
       const myColor = d3.scaleSequential().domain([0, 4]).interpolator(d3.interpolateInferno)
-
+      const topicColor = d3.scaleOrdinal(d3.schemeCategory10)
+      const successColor = d3.scaleSequential().domain([0, 1]).interpolator(d3.interpolateRdYlGn);
       /**
        * Cursor
        */
@@ -266,7 +267,13 @@ export default {
         .attr('width', this.x.bandwidth())
         .attr('height', this.y.bandwidth())
         .style('fill', (d) => {
-          if (d.variable.endsWith('c')) {
+          if (d.variable == 'topic') {
+            return topicColor(d.value)
+          }
+          else if (d.variable == 'success') {
+            return successColor(d.value)
+          }
+          else if (d.variable.endsWith('c')) {
             return myColor(d.value * 4)
           }
           return myColor(d.value)
