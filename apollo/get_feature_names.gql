@@ -2,6 +2,7 @@ query get_feature_names {
   get_feature_names: __type(name: "agg_result") {
     fields {
       name
+      description
     }
   }
 }
