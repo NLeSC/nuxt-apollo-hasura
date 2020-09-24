@@ -79,6 +79,7 @@ export default {
         .map((field) => ({
           label: field.name,
           active: this.defaultEnabledFeatures.includes(field.name),
+          description: field.description,
         }))
         .filter((filed) => {
           return filed.label !== 'grouped_seconds' && filed.label !== 'min_timestamp'
