@@ -3,15 +3,15 @@
     <v-row>
       <v-col sm="3" style="background-color: #eee; column-count: 2">
         <v-switch
-          style="display: inline-block"
           v-for="feature in feature_names"
           :key="feature.label"
           v-model="feature.active"
           :label="feature.label"
-          @change="updateFeatures(feature)"
           dense
           flat
           inset
+          style="display: inline-block"
+          @change="updateFeatures(feature)"
         >
           {{ feature.label }}
         </v-switch>

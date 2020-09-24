@@ -24,8 +24,8 @@ export default {
       yAxis: null,
       xAxis: null,
       cursorWidth: 5,
+      endTime: 0,
       startTime: 0,
-      endTime: 420, // todo get the video length dynamically
       resolution: 1,
       chartData: [],
       height: 500,
@@ -53,6 +53,9 @@ export default {
     features() {
       this.updateChart()
     },
+    endTime() {
+      this.updateChart()
+    },
   },
   apollo: {
     aggregate_features: {
@@ -77,12 +80,8 @@ export default {
   },
   mounted() {
     this.$apollo.queries.end_time.refetch().then((results) => {
-      console.log(results)
       this.endTime = results.data.end_time.aggregate.max.timestamp
-      this.updateChart()
     })
-  },
-  mounted() {
     this.updateChart()
   },
   methods: {
