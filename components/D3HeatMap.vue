@@ -53,9 +53,6 @@ export default {
     features() {
       this.updateChart()
     },
-    endTime() {
-      this.updateChart()
-    },
   },
   apollo: {
     aggregate_features: {
@@ -78,15 +75,16 @@ export default {
       },
     },
   },
-  mounted() {
-    this.$apollo.queries.end_time.refetch().then((results) => {
-      this.endTime = results.data.end_time.aggregate.max.timestamp
-    })
+  async mounted() {
+    console.log('Mounting!')
+    const results = await this.$apollo.queries.end_time.refetch()
+
+    this.endTime = Math.ceil(results.data.end_time.aggregate.max.timestamp)
     this.updateChart()
   },
   methods: {
     updateChart() {
-      console.log('Updating chart!')
+      console.log('Updating chart! end time: ', this.endTime)
       this.$apollo.queries.aggregate_features.refetch().then((results) => {
         console.log(results)
         this.chartData = this.longify(results.data.aggregate_features)
