@@ -71,25 +71,10 @@ export default {
       miniVariant: false,
       items: [
         {
-          icon: mdiHomeOutline,
-          title: 'Home',
+          icon: mdiMovieFilterOutline,
+          title: 'Videos',
           to: '/',
         },
-        {
-          icon: mdiMovieFilterOutline,
-          title: 'Home',
-          to: '/videos',
-        },
-        // {
-        //   icon: mdiDatabaseSync,
-        //   title: 'CRUD Database',
-        //   to: '/crud',
-        // },
-        // {
-        //   icon: mdiFileLockOutline,
-        //   title: 'Secret Page',
-        //   to: '/secure',
-        // },
       ],
       title: 'EMO Spectre',
     }

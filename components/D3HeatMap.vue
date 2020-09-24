@@ -12,36 +12,46 @@ import end_time from '~/apollo/end_time'
 export default {
   props: {
     features: { type: Array, required: true },
-    cursor: { required: false, type: Number, default: 0 },
   },
   data() {
     return {
       svg: null,
+      cursorLine: null,
+      cells: null,
+      defs: null,
+      y: null,
+      x: null,
+      yAxis: null,
+      xAxis: null,
       cursorWidth: 5,
       startTime: 0,
-      endTime: 420,
+      endTime: 420, // todo get the video length dynamically
       resolution: 1,
       chartData: [],
       height: 500,
       width: 700,
+      localCursor: 0,
     }
   },
   computed: {
+    cursor() {
+      return this.$store.state.cursor.position
+    },
     featuresNames() {
       return this.features.map((feature) => feature.label)
     },
-    localCursor: {
-      set() {},
-      get() {
-        return this.cursor
-      },
-    },
   },
   watch: {
-    features: {
-      handler(newval, oldval) {
-        this.updateChart()
-      },
+    cursor(newPosition) {
+      // Set new data (it must be an integer number)
+      this.cursorLine.data([newPosition]).enter()
+      // Update attribute
+      this.cursorLine.attr('x', (d) => {
+        return this.x(d)
+      })
+    },
+    features() {
+      this.updateChart()
     },
   },
   apollo: {
@@ -72,6 +82,9 @@ export default {
       this.updateChart()
     })
   },
+  mounted() {
+    this.updateChart()
+  },
   methods: {
     updateChart() {
       console.log('Updating chart!')
@@ -81,6 +94,9 @@ export default {
         this.drawChart()
       })
     },
+    /**
+     * Format data for the graph
+     */
     longify(rows) {
       const extracted = []
       rows.forEach((row) => {
@@ -106,8 +122,8 @@ export default {
       const chartGroup = this.svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
       // Clipping
-      const defs = chartGroup.append('defs')
-      defs
+      this.defs = chartGroup.append('defs')
+      this.defs
         .append('clipPath')
         .attr('id', 'clip')
         .append('rect')
@@ -115,8 +131,7 @@ export default {
         .attr('y', 0)
         .attr('width', this.chartWidth - margin.left - margin.right)
         .attr('height', this.chartHeight - margin.top - margin.bottom)
-
-      defs
+      this.defs
         .append('clipPath')
         .attr('id', 'clipx')
         .append('rect')
@@ -124,8 +139,7 @@ export default {
         .attr('y', this.chartHeight - margin.top - margin.bottom)
         .attr('width', this.chartWidth - margin.left - margin.right)
         .attr('height', margin.bottom)
-
-      defs
+      this.defs
         .append('clipPath')
         .attr('id', 'clipy')
         .append('rect')
@@ -140,58 +154,58 @@ export default {
       const formatDuration = (d) => new Date(1000 * d).toISOString().substr(14, 5)
 
       // Build X scales and axis:
-      const x = d3.scaleBand().range([0, this.chartWidth]).domain(timeBins).padding(0.01)
-      const xAxis = chartGroup
+      this.x = d3.scaleBand().range([0, this.chartWidth]).domain(timeBins).padding(0.01)
+      this.xAxis = chartGroup
         .append('g')
         .attr('clip-path', 'url(#clipx)')
         .append('g')
         .attr('class', 'axis axis--x')
         .attr('transform', 'translate(0,' + (this.chartHeight - margin.bottom) + ')')
-        .call(d3.axisBottom(x).tickValues(tickValues).tickFormat(formatDuration))
+        .call(d3.axisBottom(this.x).tickValues(tickValues).tickFormat(formatDuration))
 
       // Build Y scales and axis:
-      const y = d3
+      this.y = d3
         .scaleBand()
         .range([this.chartHeight - margin.bottom - margin.top, 0])
         .domain(this.featuresNames)
         .padding(0.01)
-      const yAxis = chartGroup
+      this.yAxis = chartGroup
         .append('g')
         .attr('clip-path', 'url(#clipy)')
         .append('g')
         .attr('class', 'axis axis--y')
-        .call(d3.axisLeft(y))
+        .call(d3.axisLeft(this.y))
 
       // Build color scale
       const myColor = d3.scaleSequential().domain([0, 4]).interpolator(d3.interpolateInferno)
 
-      // Cursor
+      /**
+       * Cursor
+       */
       let deltaX
-
       function dragHandler(that) {
         function dragstarted(event) {
-          deltaX = cursorLine.attr('x') - event.x
-        }
+          that.$store.commit('cursor/SEEKING', true)
 
+          deltaX = that.cursorLine.attr('x') - event.x
+        }
         function dragged(event) {
           let newX = event.x + deltaX
           const maxValue = that.chartWidth - margin.left - margin.right
-
           if (newX < 0) newX = 0
           if (newX > maxValue) newX = maxValue
 
-          const eachBand = x.step()
+          const eachBand = that.x.step()
           const index = Math.round(newX / eachBand)
-          const cursor = x.domain()[index]
+          const cursor = that.x.domain()[index]
 
-          cursorLine.attr('x', newX)
-          that.$emit('onCursorUpdate', cursor)
+          that.cursorLine.attr('x', newX)
+          that.$store.commit('cursor/UPDATE_CURSOR_POSITION', cursor)
         }
-
         function dragended(event) {
+          that.$store.commit('cursor/SEEKING', false)
           deltaX = 0
         }
-
         return d3.drag().on('start', dragstarted).on('drag', dragged).on('end', dragended)
       }
 
@@ -199,16 +213,16 @@ export default {
       function zoomHandler(that) {
         function zoomed(event) {
           const t = event.transform
-          cells.attr('transform', t)
-          cursorLine.attr('transform', t)
+          that.cells.attr('transform', t)
+          that.cursorLine.attr('transform', t)
 
-          xAxis.attr('transform', d3.zoomIdentity.translate(t.x, that.chartHeight - margin.bottom).scale(t.k))
-          xAxis.selectAll('text').attr('transform', d3.zoomIdentity.scale(1 / t.k))
-          xAxis.selectAll('line').attr('transform', d3.zoomIdentity.scale(1 / t.k))
+          that.xAxis.attr('transform', d3.zoomIdentity.translate(t.x, that.chartHeight - margin.bottom).scale(t.k))
+          that.xAxis.selectAll('text').attr('transform', d3.zoomIdentity.scale(1 / t.k))
+          that.xAxis.selectAll('line').attr('transform', d3.zoomIdentity.scale(1 / t.k))
 
-          yAxis.attr('transform', d3.zoomIdentity.translate(0, t.y).scale(t.k))
-          yAxis.selectAll('text').attr('transform', d3.zoomIdentity.scale(1 / t.k))
-          yAxis.selectAll('line').attr('transform', d3.zoomIdentity.scale(1 / t.k))
+          that.yAxis.attr('transform', d3.zoomIdentity.translate(0, t.y).scale(t.k))
+          that.yAxis.selectAll('text').attr('transform', d3.zoomIdentity.scale(1 / t.k))
+          that.yAxis.selectAll('line').attr('transform', d3.zoomIdentity.scale(1 / t.k))
         }
 
         return d3
@@ -226,7 +240,7 @@ export default {
       }
 
       // Group for main content
-      const cells = chartGroup
+      this.cells = chartGroup
         .append('g')
         .attr('clip-path', 'url(#clip)')
         .selectAll('.cell')
@@ -235,28 +249,32 @@ export default {
         .append('rect')
         .attr('class', 'cell')
         .attr('x', (d) => {
-          return x(d.frame)
+          return this.x(d.frame)
         })
-        .attr('y', (d) => y(d.variable))
-        .attr('width', x.bandwidth())
-        .attr('height', y.bandwidth())
+        .attr('y', (d) => this.y(d.variable))
+        .attr('width', this.x.bandwidth())
+        .attr('height', this.y.bandwidth())
         .style('fill', (d) => {
           if (d.variable.endsWith('c')) {
             return myColor(d.value * 4)
           }
           return myColor(d.value)
         })
-      cells.exit().remove()
-
-      const cursorLineGroup = chartGroup.append('g').attr('clip-path', 'url(#clip)')
-
-      const cursorLine = cursorLineGroup
+      this.cells.exit().remove()
+      /**
+       * Draw cursor
+       */
+      this.cursorLine = chartGroup
+        .append('g')
+        .attr('clip-path', 'url(#clip)')
         .selectAll('.cursorline')
-        .data([this.cursor])
+        .data([this.cursor]) // this doesn't give two way data binding
         .enter()
         .append('rect')
         .attr('class', 'cursorline')
-        .attr('x', (d) => x(d) - this.cursorWidth / 2)
+        .attr('x', (d) => {
+          return this.x(d)
+        })
         .attr('y', 0)
         .attr('width', this.cursorWidth)
         .attr('height', this.chartHeight - margin.bottom)
@@ -268,3 +286,8 @@ export default {
   },
 }
 </script>
+<style>
+#chart {
+  overscroll-behavior: contain;
+}
+</style>
