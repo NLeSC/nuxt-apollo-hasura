@@ -90,8 +90,7 @@ export default {
     },
     drawChart() {
       // remove old chart if its there
-      d3.select('#chart > *').remove()
-
+      d3.select('#chart').selectAll('*').remove()
       const margin = { top: 0, right: 0, bottom: 50, left: 50 }
       this.chartWidth = this.width - margin.left - margin.right
       this.chartHeight = this.height - margin.top - margin.bottom
@@ -153,7 +152,41 @@ export default {
         .append('g')
         .attr('class', 'axis axis--y')
         .call(d3.axisLeft(this.y))
+      // Tooltip
+      const tooltip = d3
+        .select('#chart')
+        .append('div')
+        .style('opacity', 0)
+        .attr('class', 'tooltip')
+        .style('position', 'absolute')
+        .style('background-color', 'white')
+        .style('border', 'solid')
+        .style('border-width', '2px')
+        .style('border-radius', '5px')
+        .style('padding', '5px')
 
+      this.yAxis
+        .selectAll('.tick')
+        .style('cursor', 'pointer')
+        .data(this.features)
+        ._groups[0].forEach((d) => {
+          d3.select(d)
+            .on('mousemove', function (event, data) {
+              tooltip.transition().duration(200).style('opacity', 0.9)
+              tooltip
+                .html(data.description)
+                .style('left', event.layerX + 70 + 'px')
+                .style('top', event.layerY + 'px')
+            })
+            .on('mouseleave', function (event, d) {
+              tooltip.style('opacity', 0)
+              d3.select(this).style('stroke', 'none').style('opacity', 0.8)
+            })
+            .on('mouseover', function (event, d) {
+              tooltip.style('opacity', 1)
+              d3.select(this).style('stroke', 'black').style('opacity', 1)
+            })
+        })
       // Build color scale
       const myColor = d3.scaleSequential().domain([0, 4]).interpolator(d3.interpolateInferno)
 
