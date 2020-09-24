@@ -1,8 +1,9 @@
 <template>
   <v-container>
     <v-row>
-      <v-col sm="3" style="background-color: #eee">
+      <v-col sm="3" style="background-color: #eee; column-count: 2">
         <v-switch
+          style="display: inline-block"
           v-for="feature in feature_names"
           :key="feature.label"
           v-model="feature.active"
@@ -18,14 +19,9 @@
       <v-col sm="9" style="background-color: #ddd">
         <v-row justify="center">
           <div style="width: 600px">
-            <video-player :video-src="'videos/' + $route.query.video" :cursor="cursor" @onTimeupdate="timeupdate" />
+            <video-player :video-src="'videos/' + $route.query.video" />
             <br />
-            <D3HeatMap
-              :features="selected_features"
-              style="transform: translateX(-50px)"
-              :cursor="cursor"
-              @onCursorUpdate="onCursorUpdate"
-            />
+            <D3HeatMap :features="selected_features" style="transform: translateX(-50px)" />
           </div>
         </v-row>
       </v-col>
@@ -83,12 +79,6 @@ export default {
     stop() {
       this.$refs.myvideo.pause()
       this.isPlaying = false
-    },
-    timeupdate(cursorPosition) {
-      this.cursor = cursorPosition
-    },
-    onCursorUpdate(cursor) {
-      this.cursor = cursor
     },
   },
 }
