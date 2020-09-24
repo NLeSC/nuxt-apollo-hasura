@@ -45,6 +45,8 @@ export default {
       cursor: 0,
       feature_names: [],
       defaultEnabledFeatures: [
+        'success',
+        'topic',
         'au01r',
         'au01c',
         'au04r',
