@@ -7,6 +7,7 @@
 <script>
 import * as d3 from 'd3'
 import aggregate_features from '~/apollo/aggregate_features'
+import end_time from '~/apollo/end_time'
 
 export default {
   props: {
@@ -47,14 +48,35 @@ export default {
     aggregate_features: {
       // graphql query
       query: aggregate_features,
+      variables() {
+        console.log('Calling function with duration: ', this.endTime)
+        return {
+          duration: this.endTime,
+        }
+      },
+      error(error) {
+        this.error = JSON.stringify(error.message)
+      },
+    },
+    end_time: {
+      query: end_time,
       error(error) {
         this.error = JSON.stringify(error.message)
       },
     },
   },
+  mounted() {
+    this.$apollo.queries.end_time.refetch().then((results) => {
+      console.log(results)
+      this.endTime = results.data.end_time.aggregate.max.timestamp
+      this.updateChart()
+    })
+  },
   methods: {
     updateChart() {
+      console.log('Updating chart!')
       this.$apollo.queries.aggregate_features.refetch().then((results) => {
+        console.log(results)
         this.chartData = this.longify(results.data.aggregate_features)
         this.drawChart()
       })

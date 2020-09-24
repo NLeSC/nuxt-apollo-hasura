@@ -45,7 +45,6 @@ export default {
       started: false,
       loading: false,
       time: 0,
-      duration: 0,
       volumeInternal: 1,
       fullscreenInternal: false,
     }
@@ -70,7 +69,6 @@ export default {
       },
     },
   },
-
   watch: {
     // cursor(newPosition) {
     //   this.$refs.video.currentTime = newPosition
