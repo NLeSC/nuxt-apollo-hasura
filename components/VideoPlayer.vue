@@ -1,10 +1,6 @@
 <!-- Description of the Component-->
 <template>
   <div>
-    cursor store: {{ $store.state.cursor.position }} <br />
-    graph seeking: {{ $store.state.cursor.seeking }} <br />
-    Video playing: {{ this.playing }} <br />
-    Was PLaying: {{ wasPlaying }}
     <video
       ref="video"
       class="video"
