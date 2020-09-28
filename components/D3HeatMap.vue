@@ -64,6 +64,13 @@ export default {
           duration: this.endTime,
         }
       },
+      update(data) {
+        if (data) this.updateChart()
+        return data
+      },
+      result({ data, loading, networkStatus }) {
+        console.log('results in apollo', loading)
+      },
       error(error) {
         this.error = JSON.stringify(error.message)
       },
@@ -76,17 +83,13 @@ export default {
     },
   },
   async mounted() {
-    console.log('Mounting!')
     const results = await this.$apollo.queries.end_time.refetch()
-
     this.endTime = Math.ceil(results.data.end_time.aggregate.max.timestamp)
-    this.updateChart()
   },
   methods: {
     updateChart() {
       console.log('Updating chart! end time: ', this.endTime)
       this.$apollo.queries.aggregate_features.refetch().then((results) => {
-        console.log(results)
         this.chartData = this.longify(results.data.aggregate_features)
         this.drawChart()
       })
@@ -95,6 +98,7 @@ export default {
      * Format data for the graph
      */
     longify(rows) {
+      console.log('lognify')
       const extracted = []
       rows.forEach((row) => {
         this.features.forEach((varr) => {
@@ -108,6 +112,7 @@ export default {
       return extracted
     },
     drawChart() {
+      console.log('drawChart')
       // remove old chart if its there
       d3.select('#chart').selectAll('*').remove()
       const margin = { top: 0, right: 0, bottom: 50, left: 50 }
