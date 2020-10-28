@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "sanitize-mail": "^1.0.0"
+  }
+}
