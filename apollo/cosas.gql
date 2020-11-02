@@ -1,0 +1,6 @@
+query cosas {
+  cosas {
+    id
+    title
+  }
+}

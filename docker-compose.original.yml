@@ -1,0 +1,58 @@
+version: '3.8'
+services:
+  postgres:
+    container_name: postgres-container
+    image: postgres:12
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - hasura_db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: postgrespassword
+
+  graphql-engine:
+    container_name: hasura-graphql-engine
+    restart: always
+    # this image auto-apply migrations/metadata before the server starts
+    image: hasura/graphql-engine:latest.cli-migrations
+    ports:
+      - "4000:8080"
+    depends_on:
+      - "postgres"
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:postgrespassword@postgres:5432/postgres
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "false" # set to "false" to disable console
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+      HASURA_GRAPHQL_UNAUTHORIZED_ROLE: public
+      HASURA_GRAPHQL_ADMIN_SECRET: adminpassword # Admin secret must be defined for Hasura JWT mode to be enabled
+#     HASURA_GRAPHQL_JWT_SECRET: '{"type": "RS512", "key": "<AUTH_PUBLIC_KEY>"}'
+      HASURA_GRAPHQL_JWT_SECRET: '{"type": "RS512", "key": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1AyjyemplP/W9j+11Vj8\n1/kNiaAe1jnceql6T99383MkNhIOF43k7Frmy+WYwZt1ghNH5ks++7sEo8WEH/gj\nPVkrC0y1MnsUmQXcujEmqSjZKzDTQFOdXSbqaF1heZJzAo7mnP3y10QSATGrpsBK\nMClMo+TINVo9rO2FOHRM+xKQl2/BG+vBlMUJ8Dil1OUfvUEkLXitp398GVL4A2k9\nghmzgZXuMe4g8fja5NZjbDN6s6wikORxKSY5aN6nhoNgqUGji/eV+QBls589PzWC\ne9A+VBLvzV5WPE7Z4+uTVdCY5BY726zGenujU0VZS44w2bwYM3WqtfzZzxfymk8f\nZQIDAQAB\n-----END PUBLIC KEY-----\n"}'
+      HASURA_GRAPHQL_NO_OF_RETRIES: 10
+#    command:
+#      - graphql-engine
+#      - serve
+    volumes:
+      - "./hasura/migrations:/hasura-migrations"
+      - "./hasura/metadata:/hasura-metadata"
+
+## Uncomment to have a version of pg_admin
+#  pgadmin:
+#    container_name: pgadmin_container
+#    image: dpage/pgadmin4:latest
+#    restart: always
+#    environment:
+#      PGADMIN_DEFAULT_EMAIL: admin
+#      PGADMIN_DEFAULT_PASSWORD: admin
+#      PGADMIN_LISTEN_PORT: 80
+#    volumes:
+#      - hasura_pgadmin:/var/lib/pgadmin
+#      - ./hasura:/var/lib/pgadmin/storage/admin/application
+#    ports:
+#      - "5050:80"
+#    links:
+#        - "postgres:pgsql-server"
+
+volumes:
+  hasura_db_data:
+#  hasura_pgadmin:
