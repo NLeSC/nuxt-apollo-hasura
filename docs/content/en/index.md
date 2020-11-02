@@ -1,13 +1,15 @@
+---
+title: Home
+description: This is my homepage.
+category: installation
+---
 ## Steps and notes
 
 Set up Authentication and Authorization
 Hasura documentation doesn't cover the details to make it work with Auth).
 
 Steps:
-- **Create account in Auth0**
-  - Create two applications (production and localhost)
-  - Create rules (2 for production, and 1 for localhost)
-  - Create custom api
+
 - **Nuxt**
   - Install all modules (@nuxt/apollo, @nuxt/axios and @nuxt/auth)
   - Config Nuxt Auth module
