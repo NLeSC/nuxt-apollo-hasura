@@ -46,9 +46,7 @@
         </v-card-title>
 
         <v-card-text class="body-2">
-          <h4>
-            Somewhere, something incredible is waiting to be known.
-          </h4>
+          <h4>Somewhere, something incredible is waiting to be known.</h4>
           <h5>Carl Sagan</h5>
         </v-card-text>
 
@@ -56,7 +54,7 @@
           <v-row v-if="!showEmailLinkBox && !linkSent" no-gutters>
             <v-col class="pb-2 pr-2">
               <v-btn
-                style="width: 100%;"
+                style="width: 100%"
                 rounded
                 depressed
                 @click="loginWithGoogle"
@@ -67,7 +65,7 @@
             </v-col>
             <v-col>
               <v-btn
-                style="width: 100%;"
+                style="width: 100%"
                 rounded
                 depressed
                 @click="loginWithGithub"

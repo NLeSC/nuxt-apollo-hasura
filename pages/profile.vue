@@ -33,9 +33,7 @@
             </div>
           </div>
           <v-card-actions>
-            <v-btn depressed @click="$auth.logout()">
-              LOG OUT
-            </v-btn>
+            <v-btn depressed @click="$auth.logout()"> LOG OUT </v-btn>
           </v-card-actions>
         </v-card>
       </v-row>

@@ -15,7 +15,20 @@
 
       <v-card-text>
         <v-icon>{{ mdiDatabase }}</v-icon> Database:
-        <a :href="dbUrl" target="_blank" class="link">Hasura console</a>
+        <a :href="dbUrl" target="_blank" class="link"
+          >Hasura console {{ dbUrl }}</a
+        >
+        <br />
+        <v-icon>{{ mdiFileDocumentMultiple }}</v-icon> Documentation:
+        <a :href="docsUrl" target="_blank" class="link">
+          teamplate Documentation {{ docsUrl }}
+        </a>
+        <br />
+        <v-icon>{{ mdiSecurity }}</v-icon> Auth Server:
+        <a href="http://localhost:5000" target="_blank" class="link">
+          Auth server: http://localhost:5000
+        </a>
+
         <hr class="my-3" />
         <v-row>
           <v-col sm="6" cols="12" class="mb-4"
@@ -43,9 +56,7 @@
 
       <v-card-actions>
         <v-spacer />
-        <v-btn color="primary" nuxt to="/crud">
-          CRUD and Subscriptions
-        </v-btn>
+        <v-btn color="primary" nuxt to="/crud"> CRUD and Subscriptions </v-btn>
       </v-card-actions>
     </v-card>
     User status:
@@ -54,12 +65,19 @@
 </template>
 
 <script>
-import { mdiDatabase, mdiLink } from '@mdi/js'
+import {
+  mdiDatabase,
+  mdiLink,
+  mdiFileDocumentMultiple,
+  mdiSecurity,
+} from '@mdi/js'
 export default {
   name: 'Home',
   data() {
     return {
       mdiDatabase,
+      mdiFileDocumentMultiple,
+      mdiSecurity,
       mdiLink,
       links: [
         {
@@ -98,6 +116,9 @@ export default {
   computed: {
     dbUrl() {
       return process.env.dbUrl
+    },
+    docsUrl() {
+      return process.env.docsUrl
     },
   },
 }

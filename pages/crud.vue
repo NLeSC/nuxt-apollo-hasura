@@ -2,9 +2,7 @@
   <div>
     <h2>CRUD Example with realtime Subscriptions</h2>
     <p>
-      <a :href="dbUrl" target="_blank">
-        DB Console
-      </a>
+      <a :href="dbUrl" target="_blank"> DB Console </a>
     </p>
     <v-row>
       <v-col sm="6" cols="12">

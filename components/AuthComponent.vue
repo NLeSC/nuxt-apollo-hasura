@@ -1,9 +1,7 @@
 <template>
   <div>
     <div v-if="!$auth.loggedIn">
-      <div>
-        Login to see this component
-      </div>
+      <div>Login to see this component</div>
       <v-btn outlined @click="toggleDialogLogin">Login</v-btn>
     </div>
     <div v-else>

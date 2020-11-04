@@ -1,7 +1,8 @@
 ---
-title: Minio
+title: File Uploader
 description: This is my homepage.
-position: 0
-category: information
+position: 2
+category: Usage
 ---
-# Minio datafiles server 
+Minio datafiles server 
+

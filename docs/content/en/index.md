@@ -2,6 +2,7 @@
 title: Home
 description: This is my homepage.
 category: installation
+position: 0
 ---
 ## Steps and notes
 

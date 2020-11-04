@@ -31,8 +31,10 @@ export default {
     },
   },
   mounted() {
-    this.role = localStorage['auth.role'] || ''
-    this.token = localStorage['auth._token_local'] || ''
+    if (process.browser) {
+      this.role = localStorage['auth.role'] || ''
+      this.token = localStorage['auth._token_local'] || ''
+    }
   },
 }
 </script>

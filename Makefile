@@ -13,21 +13,21 @@ install:
 	$(MAKE) serve
 
 serve:
-	#$(MAKE) up
-	cd client && yarn serve
+	$(MAKE) up
+	yarn serve
 
 
 # Node modules
 # ----------------------------------------------------------------
 install_node_modules:
+	yarn
 	cd hasura && yarn
-	cd client && yarn
 	cd auth-server && yarn
 
 # Docker compose
 # ----------------------------------------------------------------
 up:
-	docker-compose up --remove-orphans #-d
+	docker-compose up --remove-orphans -d
 #	sleep 10 # wait for the volumens and the container to be created
 
 stop:

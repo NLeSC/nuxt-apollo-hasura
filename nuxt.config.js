@@ -2,32 +2,30 @@ const colors = require('vuetify/es5/util/colors').default
 
 // Check if we need to run Nuxt in development mode
 const isDev = process.env.NODE_ENV !== 'production'
-const DB_URL = 'nuxt-apollo-hasura.herokuapp.com'
+const DB_URL = 'production-base-url'
+const DOCS_URL = 'production-base-url'
 
 /* nuxt.config.js */
 // only add `router.base = '/<repository-name>/'` if `DEPLOY_ENV` is `GH_PAGES`
 const routerBase =
-  process.env.DEPLOY_ENV === 'GH_PAGES'
-    ? {
-        base: '/nuxt-apollo-hasura/',
-      }
-    : {}
+  process.env.DEPLOY_ENV === 'GH_PAGES' ? { base: '/nuxt-apollo-hasura/' } : {}
 
-module.exports = {
+export default {
   // Auto import components with @nuxt/components
   components: true,
+  ssr: false,
 
   // Nuxt telemetry questions
   telemetry: false,
 
   env: {
-    dbUrl: isDev ? 'http://localhost:9695' : `https://${DB_URL}`,
+    dbUrl: isDev ? 'http://localhost:4000' : `https://${DB_URL}`,
+    docsUrl: isDev ? 'http://localhost:2000' : `https://${DOCS_URL}`,
     baseUriHasura: isDev
       ? 'http://localhost:4000/v1/graphql'
       : `https://${DB_URL}`,
     baseWsHasura: isDev ? 'ws://localhost:4000/v1/graphql' : `wss://${DB_URL}`,
   },
-  mode: 'spa', // "spa" | "universal"
   /*
    ** Headers of the page
    */

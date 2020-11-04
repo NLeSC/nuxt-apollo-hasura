@@ -61,7 +61,7 @@
               <v-select
                 label="Outlined style"
                 solo
-                style="width: 130px;"
+                style="width: 130px"
                 class="mr-4 mb-0"
                 hide-details
                 dense
