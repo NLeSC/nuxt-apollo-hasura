@@ -2,7 +2,7 @@
   <v-app>
     <v-navigation-drawer
       v-model="drawer"
-      :mini-variant="true"
+      :mini-variant="miniVariant"
       :clipped="clipped"
       fixed
       app
