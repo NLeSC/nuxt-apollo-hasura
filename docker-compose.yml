@@ -6,7 +6,7 @@ version: '3.6'
 services:
   postgres:
     container_name: erd-postgres
-    image: postgres:latest
+    image: postgres:12
     restart: always
     volumes:
       - db_data:/var/lib/postgresql/data

@@ -61,25 +61,14 @@ There are three services that run with docker-compose:
 - Postgres: Database
 - hasura: GraphQL API
 
-The videos folder for production is /videos, instead of static/videos.
+** 🚨 ===>The videos folder for production is /videos, instead of static/videos.**
 
 Steps:
 
-1. Build locally nuxt: `yarn generate`
-2. Create the image:
-
+1. Build and run: 
 ```shell
-$ docker-compose -f docker-compose.yml -f docker-compose-production.yml build
+$ docker-compose -f docker-compose.yml -f docker-compose-production.yml up -d
 ```
-
-3. Copy videos to ./videos
-4. Add data to DB. Use the dump.sql - -
-
-## TODO:
-
-2.```shell
-\$ docker-compose -f docker-compose.yml -f docker-compose-production.yml up -d
-
-```
-
-```
+   
+2. Upload videos to the `./videos` in the root.
+3. Import database.

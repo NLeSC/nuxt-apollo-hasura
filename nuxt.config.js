@@ -22,9 +22,9 @@ export default {
   },
 
   /*
-   * Mode
+   * Mode server side rendering
    */
-  ssr: false,
+  ssr: true,
 
   /*
    ** Headers of the page

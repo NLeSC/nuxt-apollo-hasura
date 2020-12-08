@@ -4,10 +4,12 @@
 version: '3.6'
 services:
   app:
-    container_name: erd-app
     build: ./
-    restart: always
-    ports:
-      - '9696:80'
+    container_name: erd-app
+    working_dir: /usr/src/app
     volumes:
-      - ./videos:/usr/share/nginx/html/static/videos
+      - ./videos:/usr/src/app/static/videos
+    ports:
+      - '9696:3000'
+    environment:
+      HOST: 0.0.0.0

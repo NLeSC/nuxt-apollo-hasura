@@ -1,5 +1,5 @@
-# node_modules
-# */node_modules
-# .nuxt
-# .idea
-# static/videos/*.mp4
+node_modules
+*/node_modules
+.nuxt
+.idea
+static/videos/*.mp4

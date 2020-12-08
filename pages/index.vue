@@ -70,8 +70,10 @@ export default {
     }
   },
   mounted() {
-    if (localStorage.videos) {
-      this.videos = JSON.parse(localStorage.videos)
+    if (process.browser) {
+      if (localStorage.videos) {
+        this.videos = JSON.parse(localStorage.videos)
+      }
     }
   },
   methods: {
@@ -87,12 +89,16 @@ export default {
       }
 
       this.files = []
-      localStorage.videos = JSON.stringify(this.videos)
+      if (process.browser) {
+        localStorage.videos = JSON.stringify(this.videos)
+      }
     },
     removeVideo(name) {
       if (name in this.videos) {
         this.$delete(this.videos, name)
-        localStorage.videos = JSON.stringify(this.videos)
+        if (process.browser) {
+          localStorage.videos = JSON.stringify(this.videos)
+        }
       }
     },
   },
