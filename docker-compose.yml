@@ -1,16 +1,12 @@
-##
-## UNDER DEVELOPMENT
-##
-
 # Variables:
 #vars:
 #  firebase-project-id: "nuxt-apollo-hasura"
 
 version: '3.6'
-#services:
 services:
   postgres:
-    image: postgres:12
+    container_name: erd-postgres
+    image: postgres:latest
     restart: always
     volumes:
       - db_data:/var/lib/postgresql/data
@@ -18,15 +14,16 @@ services:
       POSTGRES_PASSWORD: postgrespassword
 
   graphql-engine:
-    image: hasura/graphql-engine:v1.2.2
+    container_name: erd-hasura
+    image: hasura/graphql-engine:v1.3.3
     ports:
-      - "4000:8080"
+      - '4000:8080'
     depends_on:
-      - "postgres"
+      - 'postgres'
     restart: always
     environment:
       HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:postgrespassword@postgres:5432/postgres
-      HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # set to "false" to disable console
+      HASURA_GRAPHQL_ENABLE_CONSOLE: 'true' # set to "false" to disable console
       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
       #AUTH 0, admin secret must be defined for Hasura JWT mode be enabled
       HASURA_GRAPHQL_UNAUTHORIZED_ROLE: public
@@ -35,4 +32,3 @@ services:
 
 volumes:
   db_data:
-

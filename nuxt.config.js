@@ -20,7 +20,12 @@ export default {
     baseUriHasura: isDev ? 'http://localhost:4000/v1/graphql' : `https://${DB_URL}`,
     baseWsHasura: isDev ? 'ws://localhost:4000/v1/graphql' : `wss://${DB_URL}`,
   },
-  mode: 'spa', // "spa" | "universal"
+
+  /*
+   * Mode
+   */
+  ssr: false,
+
   /*
    ** Headers of the page
    */

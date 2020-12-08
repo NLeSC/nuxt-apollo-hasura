@@ -1,0 +1,13 @@
+#  Run in production with
+#  $ docker-compose -f docker-compose.yml -f docker-compose-production.yml up -d
+
+version: '3.6'
+services:
+  app:
+    container_name: erd-app
+    build: ./
+    restart: always
+    ports:
+      - '9696:80'
+    volumes:
+      - ./videos:/usr/share/nginx/html/static/videos

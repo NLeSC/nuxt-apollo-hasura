@@ -52,3 +52,34 @@ Go to the hasura console at http://localhost:4000/console/
 In the `Data` tab make sure that the query aggregate_features is tracked.
 
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+
+# Running in production
+
+There are three services that run with docker-compose:
+
+- http-server: Static Nuxt application (SPA)
+- Postgres: Database
+- hasura: GraphQL API
+
+The videos folder for production is /videos, instead of static/videos.
+
+Steps:
+
+1. Build locally nuxt: `yarn generate`
+2. Create the image:
+
+```shell
+$ docker-compose -f docker-compose.yml -f docker-compose-production.yml build
+```
+
+3. Copy videos to ./videos
+4. Add data to DB. Use the dump.sql - -
+
+## TODO:
+
+2.```shell
+\$ docker-compose -f docker-compose.yml -f docker-compose-production.yml up -d
+
+```
+
+```
