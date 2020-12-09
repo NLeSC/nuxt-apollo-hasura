@@ -1,4 +1,4 @@
-# Nuxt Apollo Hasura Example
+# Emotion Recognition Dementia
 
 See project: https://github.com/NLeSC/full-stack-recipes
 
@@ -12,7 +12,7 @@ Requirements locally: docker and Yarn.
 $ yarn install
 
 # serve with hot reload at localhost:3000
-$ yarn dev
+$ yarn serve
 ```
 
 ### First time setup database schema and data
@@ -65,9 +65,13 @@ There are three services that run with docker-compose:
 
 Steps:
 
-1. Build and run: 
+1. Build and run (with default environment variables or from system environment variables):
 ```shell
 $ docker-compose -f docker-compose.yml -f docker-compose-production.yml up -d
+```
+To use `.env` locally you can specify the `.local.env` file with: 
+```shell
+$ docker-compose -f docker-compose.yml -f docker-compose-production.yml --env-file=.local.env up -d --build
 ```
    
 2. Upload videos to the `./videos` in the root.

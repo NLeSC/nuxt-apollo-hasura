@@ -11,7 +11,7 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
     environment:
-      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_PASSWORD: ${PRODUCTION_PRORGES_PASSWORD:-postgrespassword}
 
   graphql-engine:
     container_name: erd-hasura
@@ -22,13 +22,11 @@ services:
       - 'postgres'
     restart: always
     environment:
-      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:postgrespassword@postgres:5432/postgres
+      HASURA_GRAPHQL_DATABASE_URL: postgres://${PRODUCTION_PRORGES_USER:-postgres}:${PRODUCTION_PRORGES_PASSWORD:-postgrespassword}@postgres:5432/postgres
       HASURA_GRAPHQL_ENABLE_CONSOLE: 'true' # set to "false" to disable console
       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
-      #AUTH 0, admin secret must be defined for Hasura JWT mode be enabled
       HASURA_GRAPHQL_UNAUTHORIZED_ROLE: public
-      HASURA_GRAPHQL_ADMIN_SECRET: adminpassword
-      HASURA_GRAPHQL_JWT_SECRET: '{"type": "RS512", "key": "-----BEGIN CERTIFICATE-----\nMIIDGTCCAgGgAwIBAgIJGTOYY/aBd9FyMA0GCSqGSIb3DQEBCwUAMCoxKDAmBgNV\nBAMTH251eHQtYXBvbGxvLWhhc3VyYS5ldS5hdXRoMC5jb20wHhcNMjAwNTIzMTIx\nOTIxWhcNMzQwMTMwMTIxOTIxWjAqMSgwJgYDVQQDEx9udXh0LWFwb2xsby1oYXN1\ncmEuZXUuYXV0aDAuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA\n6p03oPR4lJArnmFK4boShye8zMDkWWpAT1XmyZOugdHSvX7CDk2mJJq1LEzITvn1\npagKS3BZ8RhejDphaOjmdrQpxV16Aa+VW12dIHWAWvOaxEn94UW3/3odZSqn82O2\nUpDHo72dMhQB1FfMvHBgzTjJWdxdYAAx7mVDE8kbJCZeB+6f4+vnrp4K7OjTk8Pi\ne6TrK5kMpg6tAAV/KfXs54KI8DE6z0r90sCmUAUZVoBM9nH8gQn7D0M3XCeBXy6v\nEDrNpCnTIJl4LN7Ch+VP+XlFVOz8FY9tKvckaIqrijs4Ol1UT6p2rfflhu9MLcVF\nuFawL6hGMY+vC6S8IUJLXQIDAQABo0IwQDAPBgNVHRMBAf8EBTADAQH/MB0GA1Ud\nDgQWBBRYcsu6RU8uG8MfM2X3Oe+xpNL+xTAOBgNVHQ8BAf8EBAMCAoQwDQYJKoZI\nhvcNAQELBQADggEBADPRJ87rLNehXcYmvaB4E/EAFIB8636c0sols4zdcwiF0jbk\ni3+astCabIml599W9BIDgMeWUcC7RZMbpi+iB5z/G4GlTjQRhSxZulj47i3+V//r\njPlWN15yynR4WHFQS+8/49AmaH1TolWCvMGqIRKHUgRQpjungZYEHlhwI14TpPeg\nBtIZAqVlBli2y1SxZVNeY40ZrbDh66F3DQOnra5a/gBPq3BD8iT6rFk1pEDQJVjN\nZN43jeTBeVw09gEc+FFZbeOsQio3vQpAKK9FsUvI3la4PtFxvXKAOhsXwfOw6VoX\nTDewt6XlxlqMtZsNYivKCqeBN8N7/kfLB5J1/30=\n-----END CERTIFICATE-----"}'
+      HASURA_GRAPHQL_ADMIN_SECRET: ${PRODUCTION_HASURA_GRAPHQL_ADMIN_SECRET:-adminpassword}
 
 volumes:
   db_data:
