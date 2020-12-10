@@ -11,7 +11,7 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
     environment:
-      POSTGRES_PASSWORD: ${PRODUCTION_PRORGES_PASSWORD:-postgrespassword}
+      POSTGRES_PASSWORD: ${PRODUCTION_POSTGRES_PASSWORD:-postgrespassword}
 
   graphql-engine:
     container_name: erd-hasura
@@ -22,7 +22,7 @@ services:
       - 'postgres'
     restart: always
     environment:
-      HASURA_GRAPHQL_DATABASE_URL: postgres://${PRODUCTION_PRORGES_USER:-postgres}:${PRODUCTION_PRORGES_PASSWORD:-postgrespassword}@postgres:5432/postgres
+      HASURA_GRAPHQL_DATABASE_URL: postgres://${PRODUCTION_POSTGRES_USER:-postgres}:${PRODUCTION_POSTGRES_PASSWORD:-postgrespassword}@postgres:5432/postgres
       HASURA_GRAPHQL_ENABLE_CONSOLE: 'true' # set to "false" to disable console
       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
       HASURA_GRAPHQL_UNAUTHORIZED_ROLE: public
