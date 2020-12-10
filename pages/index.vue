@@ -42,6 +42,11 @@
               <li>Responsive UI</li>
               <li>One dev command with Docker</li>
               <li>Deploy to Github pages</li>
+              <li>
+                <nuxt-link to="native-file-system">
+                  📁 File System Native API
+                </nuxt-link>
+              </li>
             </ul>
           </v-col>
           <v-col sm="6" cols="12"
