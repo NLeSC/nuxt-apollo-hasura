@@ -1,4 +1,4 @@
-# Nuxt Apollo Hasura Example
+# Emotion Recognition in Dementia
 
 See project: https://github.com/NLeSC/full-stack-recipes
 
@@ -12,7 +12,7 @@ Requirements locally: docker and Yarn.
 $ yarn install
 
 # serve with hot reload at localhost:3000
-$ yarn dev
+$ yarn serve
 ```
 
 ### First time setup database schema and data
@@ -52,3 +52,31 @@ Go to the hasura console at http://localhost:4000/console/
 In the `Data` tab make sure that the query aggregate_features is tracked.
 
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+
+# Running in production
+
+There are three services that run with docker-compose:
+
+- http-server: Static Nuxt application
+- Postgres: Database
+- hasura: GraphQL API
+
+** 🚨 ===>The videos folder for production is /videos, instead of static/videos.**
+
+Steps:
+
+1. Build and run (with default environment variables or from system environment variables):
+```shell
+$ docker-compose -f docker-compose.yml -f docker-compose-production.yml up -d
+```
+To use `.env` locally you can specify the `.local.env` file with: 
+```shell
+$ docker-compose -f docker-compose.yml -f docker-compose-production.yml --env-file=.local.env up -d --build
+```
+   
+2. Upload videos to the `./videos` in the root.
+3. Import database.
+   ```shell
+   docker exec -i erd-postgres psql --username postgres postgres < ./dump.sql
+   ```
+4. Migrate hasura schema.
