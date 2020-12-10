@@ -1,4 +1,4 @@
-# Emotion Recognition Dementia
+# Emotion Recognition in Dementia
 
 See project: https://github.com/NLeSC/full-stack-recipes
 
@@ -57,7 +57,7 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 
 There are three services that run with docker-compose:
 
-- http-server: Static Nuxt application (SPA)
+- http-server: Static Nuxt application
 - Postgres: Database
 - hasura: GraphQL API
 
