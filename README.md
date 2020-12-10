@@ -76,3 +76,7 @@ $ docker-compose -f docker-compose.yml -f docker-compose-production.yml --env-fi
    
 2. Upload videos to the `./videos` in the root.
 3. Import database.
+   ```shell
+   docker exec -i erd-postgres psql --username postgres postgres < ./dump.sql
+   ```
+4. Migrate hasura schema.
