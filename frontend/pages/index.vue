@@ -8,6 +8,8 @@
       :aspect-ratio="255 / 122"
     />
 
+    <v-btn @click="signup">signup </v-btn>
+
     <v-card max-width="700" width="100%" class="mt-4" outlined>
       <v-card-title class="headline">
         NuxtJs + Apollo + Hasura + Postgres template
@@ -124,6 +126,16 @@ export default {
     },
     docsUrl() {
       return process.env.docsUrl
+    },
+  },
+  methods: {
+    signup() {
+      this.$axios.post('http://localhost:5000/signup', {
+        email: 'ctw@ctwhome.com',
+        username: 'test123',
+        password: 'test123',
+        confirmPassword: 'test123',
+      })
     },
   },
 }
