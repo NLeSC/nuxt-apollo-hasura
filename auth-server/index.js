@@ -1,4 +1,5 @@
 const express = require('express')
+const expressValidator = require('express-validator')
 const bodyParser = require('body-parser')
 const consola = require('consola')
 const cors = require('cors')
@@ -9,6 +10,7 @@ const authRoutes = require('./auth-routes')
 const app = express()
 // support parsing of application/json type post data
 app.use(bodyParser.json())
+// app.use(expressValidator)
 app.use(
   cors()
   /*
