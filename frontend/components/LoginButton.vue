@@ -21,7 +21,6 @@
           <v-list-item-icon
             ><v-icon> {{ mdiAccount }}</v-icon></v-list-item-icon
           >
-
           <v-list-item-title>Profile</v-list-item-title>
         </v-list-item>
         <v-list-item @click="logout">
@@ -209,7 +208,7 @@ export default {
     ...mapState('user', ['user', 'loggedIn']),
     // Open this login dialog from every part of the application
     isAdmin() {
-      if (process.client) {
+      if (process.browser) {
         return localStorage['auth.role'] === 'admin'
       } else {
         return false

@@ -1,3 +1,4 @@
+.PHONY: dev-docs dev-frontend
 ##
 ## Note:
 ## Hasura commands require the flag --admin-secret defined in the .env file
@@ -8,21 +9,30 @@
 # ----------------------------------------------------------------
 install:
 	$(MAKE) install_node_modules
-	$(MAKE) up
-	$(MAKE) hasura-restore
-	$(MAKE) serve
 
-serve:
+dev:
 	$(MAKE) up
-	yarn serve
+	# Run concurrently
+	make -j 2 dev-docs dev-frontend
+
+dev-docs:
+	cd docs && yarn dev
+
+dev-frontend:
+	cd frontend && yarn dev
+
+dev-auth-server:
+	echo "Runing auth server"
+
 
 
 # Node modules
 # ----------------------------------------------------------------
 install_node_modules:
-	yarn
+	cd frontend && yarn
 	cd hasura && yarn
 	cd auth-server && yarn
+	cd docs && yarn
 
 # Docker compose
 # ----------------------------------------------------------------
@@ -63,6 +73,7 @@ hasura-dump:
 FILE=db/hasura_schema.json
 SCHEMA=`cd client && npx json-minify ../$(FILE)`
 hasura-restore:
+	$(MAKE) up
 	# The order is very important!
 	# cat db/dev.dump.sql | docker exec -i postgres-container psql -U postgres -d postgres < db/dev.dump.sql
 	 cat db/dev_inserts.dump.sql | docker exec -i postgres-container psql -U postgres -d postgres < db/dev_inserts.dump.sql

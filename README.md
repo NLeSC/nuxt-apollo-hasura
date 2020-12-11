@@ -15,13 +15,25 @@ ChangeLog: [Changelog](https://github.com/NLeSC/nuxt-apollo-hasura/blob/master/C
 Tech Stack: Nuxt.js, Vuetify, Hasura, Postgres, Passport.js.
 
 Features list: 
-- [x] Authotization with PassportJs (with Google) -> JWT -> Hasura
 - [x] CRUD example with Subscriptions
-- [x] Roles definitions
-- [x] Federated login with Google
-- [ ] Federated login with Github
-- [x] Deploy to Firebase Hosting and Github pages
+- [ ] Roles definitions
+- [ ] Authorization with PassportJs (with Google) -> JWT -> Hasura
+- [ ] Federated-login with Google
+- [ ] Federated-login with Github
 - [ ] DB migrations between environments 
+- [x] Deploy to Firebase Hosting and Github pages
+- [x] Docs with Nuxt content (New)
+
+# Developing
+`Eslint fix on save`
+For Webstorm enable it manually from `settings -> Languages and frameworks -> javascript-> code and quality tools -> ESLint: run eslint --fix on save`
+
+# Run locally
+```bash
+$ make install
+# $ make data-restore   #Work in progress
+$ make dev
+```
 
 
 ## Template setup
@@ -50,12 +62,3 @@ $ git push --origin master
 $ git remote add template https://github.com/NLeSC/nuxt-apollo-hasura
 ```
 
-# Run locally
-```bash
-$ make install
-$ cd client
-$ yarn serve
-
-# on another terminal:
-
-```

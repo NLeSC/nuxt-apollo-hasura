@@ -13,7 +13,11 @@ const routerBase =
 export default {
   // Auto import components with @nuxt/components
   components: true,
-  ssr: false,
+
+  //
+  ssr: true,
+
+  // Target: static
 
   // Nuxt telemetry questions
   telemetry: false,

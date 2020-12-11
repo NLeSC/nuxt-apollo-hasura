@@ -20,7 +20,7 @@ const getToken = () => {
  * Runs once after the user is logged (or the app starts and the user exists)
  */
 const getHeaders = () => {
-  if (process.client) {
+  if (process.browser) {
     const headers = {
       'x-hasura-role': localStorage['auth.role'],
     }

@@ -12,10 +12,12 @@ export default function ({ $auth, $axios, $apolloHelpers }) {
     console.log('🎹 New user value', newValue)
   })
 
-  if (!$auth.loggedIn) {
-    localStorage.removeItem('auth._token_local')
-    localStorage.removeItem('auth.role')
-    return
+  if (process.browser) {
+    if (!$auth.loggedIn) {
+      localStorage.removeItem('auth._token_local')
+      localStorage.removeItem('auth.role')
+      return
+    }
   }
   //
   // Enters every time the user is logged in
