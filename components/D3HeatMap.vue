@@ -64,7 +64,6 @@ export default {
         }
       },
       result({ data, loading, networkStatus }) {
-        console.log('results in apollo', loading)
         this.updateChart(data)
       },
       error(error) {
