@@ -64,12 +64,9 @@ export default {
           duration: this.endTime,
         }
       },
-      update(data) {
-        if (data) this.updateChart()
-        return data
-      },
       result({ data, loading, networkStatus }) {
         console.log('results in apollo', loading)
+        this.updateChart(data)
       },
       error(error) {
         this.error = JSON.stringify(error.message)
@@ -87,12 +84,13 @@ export default {
     this.endTime = Math.ceil(results.data.end_time.aggregate.max.timestamp)
   },
   methods: {
-    updateChart() {
+    updateChart(data) {
       console.log('Updating chart! end time: ', this.endTime)
-      this.$apollo.queries.aggregate_features.refetch().then((results) => {
-        this.chartData = this.longify(results.data.aggregate_features)
+      console.log(data)
+      if (data?.aggregate_features) {
+        this.chartData = this.longify(data.aggregate_features)
         this.drawChart()
-      })
+      }
     },
     /**
      * Format data for the graph
