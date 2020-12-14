@@ -72,14 +72,15 @@ export default {
     },
     end_time: {
       query: end_time,
+      result({ data, loading, networkStatus }) {
+        if (data) {
+          this.endTime = Math.ceil(data.end_time.aggregate.max.timestamp)
+        }
+      },
       error(error) {
         this.error = JSON.stringify(error.message)
       },
     },
-  },
-  async mounted() {
-    const results = await this.$apollo.queries.end_time.refetch()
-    this.endTime = Math.ceil(results.data.end_time.aggregate.max.timestamp)
   },
   methods: {
     updateChart(data) {
