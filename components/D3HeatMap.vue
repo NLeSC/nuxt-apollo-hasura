@@ -51,7 +51,7 @@ export default {
       })
     },
     features() {
-      this.updateChart()
+      this.$apollo.queries.aggregate_features.refetch()
     },
   },
   apollo: {
@@ -64,7 +64,10 @@ export default {
         }
       },
       result({ data, loading, networkStatus }) {
-        this.updateChart(data)
+        if (data) {
+          this.chartData = this.longify(data.aggregate_features)
+          this.updateChart()
+        }
       },
       error(error) {
         this.error = JSON.stringify(error.message)
@@ -83,9 +86,8 @@ export default {
     },
   },
   methods: {
-    updateChart(data) {
-      if (data?.aggregate_features) {
-        this.chartData = this.longify(data.aggregate_features)
+    updateChart() {
+      if (this.chartData && this.chartData.length > 0) {
         this.drawChart()
       }
     },
