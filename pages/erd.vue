@@ -68,23 +68,23 @@ export default {
   apollo: {
     get_feature_names: {
       query: get_feature_names,
+      result({ data, loading, networkStatus }) {
+        if (data) {
+          this.feature_names = data.get_feature_names.fields
+            .map((field) => ({
+              label: field.name,
+              active: this.defaultEnabledFeatures.includes(field.name),
+              description: field.description,
+            }))
+            .filter((filed) => {
+              return filed.label !== 'grouped_seconds' && filed.label !== 'min_timestamp'
+            })
+        }
+      },
       error(error) {
         this.error = JSON.stringify(error.message)
       },
     },
-  },
-  mounted() {
-    this.$apollo.queries.get_feature_names.refetch().then((results) => {
-      this.feature_names = results.data.get_feature_names.fields
-        .map((field) => ({
-          label: field.name,
-          active: this.defaultEnabledFeatures.includes(field.name),
-          description: field.description,
-        }))
-        .filter((filed) => {
-          return filed.label !== 'grouped_seconds' && filed.label !== 'min_timestamp'
-        })
-    })
   },
   methods: {
     updateFeatures(feature) {
