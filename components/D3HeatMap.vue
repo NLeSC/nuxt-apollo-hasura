@@ -7,6 +7,7 @@
 <script>
 import * as d3 from 'd3'
 import aggregate_features from '~/apollo/aggregate_features'
+import end_time from '~/apollo/end_time'
 
 export default {
   props: {
@@ -23,8 +24,8 @@ export default {
       yAxis: null,
       xAxis: null,
       cursorWidth: 5,
+      endTime: 0,
       startTime: 0,
-      endTime: 420, // todo get the video length dynamically
       resolution: 1,
       chartData: [],
       height: 500,
@@ -50,27 +51,45 @@ export default {
       })
     },
     features() {
-      this.updateChart()
+      this.$apollo.queries.aggregate_features.refetch()
     },
   },
   apollo: {
     aggregate_features: {
       // graphql query
       query: aggregate_features,
+      variables() {
+        return {
+          duration: this.endTime,
+        }
+      },
+      result({ data, loading, networkStatus }) {
+        if (data) {
+          this.chartData = this.longify(data.aggregate_features)
+          this.updateChart()
+        }
+      },
+      error(error) {
+        this.error = JSON.stringify(error.message)
+      },
+    },
+    end_time: {
+      query: end_time,
+      result({ data, loading, networkStatus }) {
+        if (data) {
+          this.endTime = Math.ceil(data.end_time.aggregate.max.timestamp)
+        }
+      },
       error(error) {
         this.error = JSON.stringify(error.message)
       },
     },
   },
-  mounted() {
-    this.updateChart()
-  },
   methods: {
     updateChart() {
-      this.$apollo.queries.aggregate_features.refetch().then((results) => {
-        this.chartData = this.longify(results.data.aggregate_features)
+      if (this.chartData && this.chartData.length > 0) {
         this.drawChart()
-      })
+      }
     },
     /**
      * Format data for the graph
@@ -171,20 +190,17 @@ export default {
         .data(this.features)
         ._groups[0].forEach((d) => {
           d3.select(d)
-            .on('mousemove', function (event, data) {
+            .on('mouseover', function (event, data) {
               tooltip.transition().duration(200).style('opacity', 0.9)
               tooltip
                 .html(data.description)
                 .style('left', event.layerX + 70 + 'px')
                 .style('top', event.layerY + 'px')
+                .style('opacity', 1)
             })
             .on('mouseleave', function (event, d) {
               tooltip.style('opacity', 0)
               d3.select(this).style('stroke', 'none').style('opacity', 0.8)
-            })
-            .on('mouseover', function (event, d) {
-              tooltip.style('opacity', 1)
-              d3.select(this).style('stroke', 'black').style('opacity', 1)
             })
         })
       // Build color scale

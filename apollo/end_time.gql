@@ -1,0 +1,9 @@
+query end_time {
+  end_time: data_aggregate {
+    aggregate {
+      max {
+        timestamp
+      }
+    }
+  }
+}
