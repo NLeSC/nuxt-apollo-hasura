@@ -1,6 +1,6 @@
 <!-- Description of the Component-->
 <template>
-  <div>
+  <div style="width: 100%">
     <video
       ref="video"
       class="video"
@@ -13,6 +13,7 @@
       @seeking="timeUpdate"
       @timeupdate="timeUpdate"
       @volumechange="atVolumechange"
+      height="350"
     />
   </div>
 </template>
