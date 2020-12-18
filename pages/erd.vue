@@ -43,6 +43,9 @@ export default {
       defaultEnabledFeatures: [
         'success',
         'topic',
+        'silence',
+        'pitch',
+        'intensity',
         'au01r',
         'au01c',
         'au04r',

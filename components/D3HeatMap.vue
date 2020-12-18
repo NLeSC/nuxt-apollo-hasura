@@ -207,6 +207,10 @@ export default {
       const myColor = d3.scaleSequential().domain([0, 4]).interpolator(d3.interpolateInferno)
       const topicColor = d3.scaleOrdinal(d3.schemeCategory10)
       const successColor = d3.scaleSequential().domain([0, 1]).interpolator(d3.interpolateRdYlGn)
+      const pitchColor = d3.scaleSequential().domain([0, 255]).interpolator(d3.interpolateViridis)
+      const intensityColor = d3.scaleSequential().domain([0, 100]).interpolator(d3.interpolatePlasma)
+      const silenceColor = d3.scaleOrdinal(d3.schemeSet1)
+
       /**
        * Cursor
        */
@@ -289,6 +293,12 @@ export default {
             return successColor(d.value)
           } else if (d.variable.endsWith('c')) {
             return myColor(d.value * 4)
+          } else if (d.variable === 'pitch') {
+            return pitchColor(d.value)
+          } else if (d.variable === 'intensity') {
+            return intensityColor(d.value)
+          } else if (d.variable === 'silence') {
+            return silenceColor(d.value)
           }
           return myColor(d.value)
         })
