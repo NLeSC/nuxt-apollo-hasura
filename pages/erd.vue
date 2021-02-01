@@ -17,10 +17,17 @@
               <v-btn text color="teal accent-4" @click="reveal = true"> Show Features </v-btn>
             </v-card-actions>
             <v-expand-transition>
-              <v-card v-if="reveal" class="transition-fast-in-fast-out v-card--reveal" style="height: 100%">
+              <v-card v-if="reveal" class="transition-fast-in-fast-out v-card--reveal featuresPanel">
                 <v-card-text class="pb-0">
                   <v-chip-group v-model="selected_features" column multiple>
-                    <v-chip v-for="feature in feature_names" :value="feature.active" :key="feature">
+                    <v-chip
+                      v-for="(feature, index) in feature_names"
+                      :key="index"
+                      v-model="feature.active"
+                      :value="feature"
+                      filter
+                      outlined
+                    >
                       {{ feature.label }}
                     </v-chip>
                   </v-chip-group>
@@ -32,19 +39,6 @@
             </v-expand-transition>
           </v-card>
         </template>
-        <!-- <v-switch
-          style="display: inline-block"
-          v-for="feature in feature_names"
-          :key="feature.label"
-          v-model="feature.active"
-          :label="feature.label"
-          @change="updateFeatures(feature)"
-          dense
-          flat
-          inset
-        >
-          {{ feature.label }}
-        </v-switch> -->
       </v-col>
       <v-col sm="8">
         <video-player :video-src="'videos/' + $route.query.video" />
@@ -89,8 +83,13 @@ export default {
     }
   },
   computed: {
-    selected_features() {
-      return this.feature_names.filter((filed) => filed.active)
+    selected_features: {
+      get() {
+        return this.feature_names.filter((filed) => filed.active)
+      },
+      set() {
+        return this.feature_names.filter((filed) => filed.active)
+      },
     },
   },
   apollo: {
@@ -115,9 +114,6 @@ export default {
     })
   },
   methods: {
-    updateFeatures(feature) {
-      this.selected_features.findIndex((feat) => feat.label === feature.label)
-    },
     play() {
       this.$refs.myvideo.play()
       this.isPlaying = true
@@ -130,6 +126,10 @@ export default {
 }
 </script>
 <style>
+.featuresPanel {
+  height: 100%;
+  overflow-y: scroll;
+}
 .v-messages {
   display: none;
 }
