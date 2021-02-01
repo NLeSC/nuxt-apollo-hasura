@@ -1,8 +1,38 @@
 <template>
   <v-container>
     <v-row>
-      <v-col sm="3" style="background-color: #eee; column-count: 2">
-        <v-switch
+      <v-col sm="4">
+        <template>
+          <v-card style="height: 350px; overflow-y: scroll">
+            <v-card-title>Title</v-card-title>
+            <v-card-text>
+              <div class="subtitle-1">subtitle</div>
+              <div>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum dapibus ex sit amet ligula egestas,
+                ut volutpat eros posuere. Etiam sed magna lectus. In id ornare velit. Praesent accumsan, elit non mattis
+                facilisis, lorem sapien ultricies lacus, vitae sollicitudin lacus erat fermentum arcu. Quisque pretium
+              </div>
+            </v-card-text>
+            <v-card-actions>
+              <v-btn text color="teal accent-4" @click="reveal = true"> Show Features </v-btn>
+            </v-card-actions>
+            <v-expand-transition>
+              <v-card v-if="reveal" class="transition-fast-in-fast-out v-card--reveal" style="height: 100%">
+                <v-card-text class="pb-0">
+                  <v-chip-group v-model="selected_features" column multiple>
+                    <v-chip v-for="feature in feature_names" :value="feature.active" :key="feature">
+                      {{ feature.label }}
+                    </v-chip>
+                  </v-chip-group>
+                </v-card-text>
+                <v-card-actions class="pt-0">
+                  <v-btn text color="teal accent-4" @click="reveal = false"> Close </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-expand-transition>
+          </v-card>
+        </template>
+        <!-- <v-switch
           style="display: inline-block"
           v-for="feature in feature_names"
           :key="feature.label"
@@ -14,17 +44,14 @@
           inset
         >
           {{ feature.label }}
-        </v-switch>
+        </v-switch> -->
       </v-col>
-      <v-col sm="9" style="background-color: #ddd">
-        <v-row justify="center">
-          <div style="width: 600px">
-            <video-player :video-src="'videos/' + $route.query.video" />
-            <br />
-            <D3HeatMap :features="selected_features" style="transform: translateX(-50px)" />
-          </div>
-        </v-row>
+      <v-col sm="8">
+        <video-player :video-src="'videos/' + $route.query.video" />
       </v-col>
+    </v-row>
+    <v-row>
+      <D3HeatMap :features="selected_features" style="transform: translateX(-50px)" />
     </v-row>
   </v-container>
 </template>
@@ -37,6 +64,7 @@ export default {
 
   data() {
     return {
+      reveal: false,
       isPlaying: false,
       cursor: 0,
       feature_names: [],
@@ -107,5 +135,11 @@ export default {
 }
 .v-input--selection-controls {
   margin-top: 0 !important;
+}
+.v-card--reveal {
+  bottom: 0;
+  opacity: 1 !important;
+  position: absolute;
+  width: 100%;
 }
 </style>
