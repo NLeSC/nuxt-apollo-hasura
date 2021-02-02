@@ -1,24 +1,24 @@
 <template>
   <v-container>
     <v-row>
-      <v-col sm="4">
+      <v-col lg="4">
         <template>
-          <v-card style="height: 350px; overflow-y: scroll">
+          <v-card class="descContainer">
             <v-card-title>Title</v-card-title>
             <v-card-text>
               <div class="subtitle-1">subtitle</div>
-              <div>
+              <div class="desc">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum dapibus ex sit amet ligula egestas,
                 ut volutpat eros posuere. Etiam sed magna lectus. In id ornare velit. Praesent accumsan, elit non mattis
                 facilisis, lorem sapien ultricies lacus, vitae sollicitudin lacus erat fermentum arcu. Quisque pretium
               </div>
             </v-card-text>
-            <v-card-actions>
+            <v-card-actions class="bottom">
               <v-btn text color="teal accent-4" @click="reveal = true"> Show Features </v-btn>
             </v-card-actions>
             <v-expand-transition>
-              <v-card v-if="reveal" class="transition-fast-in-fast-out v-card--reveal featuresPanel">
-                <v-card-text class="pb-0">
+              <v-card v-if="reveal" class="transition-fast-in-fast-out v-card--reveal">
+                <v-card-text class="pb-0 featuresPanel">
                   <v-chip-group v-model="selected_features" column multiple>
                     <v-chip
                       v-for="(feature, index) in feature_names"
@@ -32,7 +32,7 @@
                     </v-chip>
                   </v-chip-group>
                 </v-card-text>
-                <v-card-actions class="pt-0">
+                <v-card-actions class="pt-0 justify-end">
                   <v-btn text color="teal accent-4" @click="reveal = false"> Close </v-btn>
                 </v-card-actions>
               </v-card>
@@ -40,7 +40,7 @@
           </v-card>
         </template>
       </v-col>
-      <v-col sm="8">
+      <v-col lg="8">
         <video-player :video-src="'videos/' + $route.query.video" />
       </v-col>
     </v-row>
@@ -126,9 +126,24 @@ export default {
 }
 </script>
 <style>
+.descContainer {
+  height: 350px;
+  overflow-y: scroll;
+  position: relative;
+}
+.desc {
+  height: 100%;
+  max-height: 200px;
+  overflow-y: scroll;
+}
+.bottom {
+  position: absolute;
+  bottom: 0;
+}
 .featuresPanel {
   height: 100%;
-  overflow-y: scroll;
+  max-height: 320px;
+  overflow: scroll;
 }
 .v-messages {
   display: none;
