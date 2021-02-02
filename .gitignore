@@ -1,5 +1,9 @@
 # Created by .ignore support plugin (hsz.mobi)
 ### Node template
+
+#data
+*.sql
+*-lock.json
 # Logs
 /logs
 *.log

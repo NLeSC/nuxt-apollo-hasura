@@ -29,7 +29,7 @@ export default {
       resolution: 1,
       chartData: [],
       height: 500,
-      width: 700,
+      width: window.innerWidth,
       localCursor: 0,
     }
   },
@@ -52,6 +52,11 @@ export default {
     },
     features() {
       this.$apollo.queries.aggregate_features.refetch()
+    },
+    width(oldWidth, newWidth) {
+      if (oldWidth !== newWidth) {
+        this.drawChart()
+      }
     },
   },
   apollo: {
@@ -85,7 +90,17 @@ export default {
       },
     },
   },
+  mounted() {
+    // this.updateChart()
+    window.addEventListener('resize', this.onResize)
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.onResize)
+  },
   methods: {
+    onResize() {
+      this.width = window.innerWidth
+    },
     updateChart() {
       if (this.chartData && this.chartData.length > 0) {
         this.drawChart()
@@ -110,7 +125,7 @@ export default {
     drawChart() {
       // remove old chart if its there
       d3.select('#chart').selectAll('*').remove()
-      const margin = { top: 0, right: 0, bottom: 50, left: 50 }
+      const margin = { top: 0, right: 50, bottom: 50, left: 50 }
       this.chartWidth = this.width - margin.left - margin.right
       this.chartHeight = this.height - margin.top - margin.bottom
 
