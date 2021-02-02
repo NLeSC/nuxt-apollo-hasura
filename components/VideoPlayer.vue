@@ -46,7 +46,6 @@ export default {
       started: false,
       loading: false,
       time: 0,
-      duration: 0,
       volumeInternal: 1,
       fullscreenInternal: false,
     }
@@ -54,7 +53,6 @@ export default {
   computed: {
     ...mapState('cursor', ['position', 'seeking']),
   },
-
   watch: {
     seeking() {
       // start seeking
