@@ -52,7 +52,6 @@
 
 <script>
 import get_feature_names from '~/apollo/get_feature_names'
-import get_video_metadata from '~/apollo/videos'
 export default {
   name: 'Erd',
 
@@ -85,9 +84,6 @@ export default {
       ],
     }
   },
-  mounted() {
-    console.log('params', this.db_video)
-  },
   computed: {
     selected_features: {
       get() {
@@ -119,14 +115,6 @@ export default {
       },
       error(error) {
         this.error = JSON.stringify(error.message)
-      },
-    },
-    videos: {
-      query: get_video_metadata,
-      result({ data }) {
-        if (data) {
-          console.log('data', data)
-        }
       },
     },
   },
