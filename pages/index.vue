@@ -66,6 +66,7 @@ export default {
       mdiPlus,
       mdiDelete,
       localVideos: {},
+      videos: [],
       files: [],
     }
   },
@@ -81,7 +82,7 @@ export default {
       query: get_video_metadata,
       result({ data }) {
         if (data) {
-          console.log('data', data)
+          this.videos = data.videos
         }
       },
     },
