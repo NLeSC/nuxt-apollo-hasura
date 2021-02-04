@@ -20,16 +20,19 @@
               <v-card v-if="reveal" class="transition-fast-in-fast-out v-card--reveal">
                 <v-card-text class="pb-0 featuresPanel">
                   <v-chip-group v-model="selected_features" column multiple>
-                    <v-chip
-                      v-for="(feature, index) in feature_names"
-                      :key="index"
-                      v-model="feature.active"
-                      :value="feature"
-                      filter
-                      outlined
-                    >
-                      {{ feature.label }}
-                    </v-chip>
+                    <div v-for="(feature, index) in feature_names" :key="index">
+                      <v-tooltip bottom lazy v-if="feature.description">
+                        <template #activator="{ on }">
+                          <v-chip v-model="feature.active" :value="feature" v-on="on" filter outlined>
+                            {{ feature.label }}
+                          </v-chip>
+                        </template>
+                        <span>{{ feature.description }}</span>
+                      </v-tooltip>
+                      <v-chip v-else v-model="feature.active" :value="feature" v-on="on" filter outlined>
+                        {{ feature.label }}
+                      </v-chip>
+                    </div>
                   </v-chip-group>
                 </v-card-text>
                 <v-card-actions class="pt-0 justify-end">
