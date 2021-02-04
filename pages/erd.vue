@@ -4,13 +4,13 @@
       <v-col lg="4">
         <template>
           <v-card class="descContainer">
-            <v-card-title>Title</v-card-title>
+            <v-card-title>Participant {{ db_video.participant }}</v-card-title>
             <v-card-text>
-              <div class="subtitle-1">subtitle</div>
+              <div class="subtitle-1">study: {{ db_video.study }}</div>
               <div class="desc">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum dapibus ex sit amet ligula egestas,
-                ut volutpat eros posuere. Etiam sed magna lectus. In id ornare velit. Praesent accumsan, elit non mattis
-                facilisis, lorem sapien ultricies lacus, vitae sollicitudin lacus erat fermentum arcu. Quisque pretium
+                <p>Session: {{ db_video.session }}</p>
+                <p>Memory Type: {{ db_video.memory_type }}</p>
+                <p>Memory Index: {{ db_video.memory_index }}</p>
               </div>
             </v-card-text>
             <v-card-actions class="bottom">
@@ -52,7 +52,6 @@
 
 <script>
 import get_feature_names from '~/apollo/get_feature_names'
-
 export default {
   name: 'Erd',
 
@@ -93,6 +92,9 @@ export default {
       set() {
         return this.feature_names.filter((filed) => filed.active)
       },
+    },
+    db_video() {
+      return this.$route.params.db_videos
     },
   },
   apollo: {

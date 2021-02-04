@@ -1,0 +1,16 @@
+# query get_video_metadata {
+#   get_video_metadata:{
+#       id,
+#       session
+#   }
+# }
+query get_video_metadata {
+  videos {
+    id
+    participant
+    session
+    study
+    memory_type
+    memory_index
+  }
+}

@@ -33,15 +33,15 @@
       <v-col cols="12">
         <v-card id="video-list" outlined>
           <v-card-title class="headline">Videos</v-card-title>
-          <v-container v-if="videos">
-            <v-row v-for="(path, name) in videos" :key="name" class="video">
+          <v-container v-if="localVideos">
+            <v-row v-for="(path, name) in localVideos" :key="name" class="video">
               <v-col md="3" sm="4">
                 {{ name }}
                 <video-player :video-src="'videos/' + name" :controls="false"></video-player>
               </v-col>
               <v-col md="8" sm="6">
                 <p>{{ name }}</p>
-                <nuxt-link :to="{ name: 'erd', query: { video: name } }">
+                <nuxt-link :to="{ name: 'erd', params: { db_videos: videos[0] }, query: { video: name } }">
                   <v-btn color="primary"> Analyze </v-btn>
                 </nuxt-link>
               </v-col>
@@ -59,22 +59,33 @@
 </template>
 <script>
 import { mdiPlus, mdiDelete } from '@mdi/js'
-
+import get_video_metadata from '~/apollo/videos'
 export default {
   data() {
     return {
       mdiPlus,
       mdiDelete,
-      videos: {},
+      localVideos: {},
+      videos: [],
       files: [],
     }
   },
   mounted() {
     if (process.browser) {
-      if (localStorage.videos) {
-        this.videos = JSON.parse(localStorage.videos)
+      if (localStorage.localVideos) {
+        this.localVideos = JSON.parse(localStorage.localVideos)
       }
     }
+  },
+  apollo: {
+    videos: {
+      query: get_video_metadata,
+      result({ data }) {
+        if (data) {
+          this.videos = data.videos
+        }
+      },
+    },
   },
   methods: {
     addVideo() {
@@ -84,20 +95,20 @@ export default {
 
       for (const video of newVideos) {
         if (!(video.name in this.videos)) {
-          this.videos[video.name] = video.webkitRelativePath
+          this.localVideos[video.name] = video.webkitRelativePath
         }
       }
 
       this.files = []
       if (process.browser) {
-        localStorage.videos = JSON.stringify(this.videos)
+        localStorage.localVideos = JSON.stringify(this.localVideos)
       }
     },
     removeVideo(name) {
-      if (name in this.videos) {
-        this.$delete(this.videos, name)
+      if (name in this.localVideos) {
+        this.$delete(this.localVideos, name)
         if (process.browser) {
-          localStorage.videos = JSON.stringify(this.videos)
+          localStorage.localVideos = JSON.stringify(this.localVideos)
         }
       }
     },
