@@ -36,7 +36,19 @@
         >
       </v-card-title>
       <v-card-text>
-        <div v-for="(video, index) in videos" :key="index">
+        <div v-if="localVideos.length > 0 && videos.length === 0">
+          <div v-for="(video, index) in localVideos" :key="index">
+            <v-row>
+              <v-col cols="3">
+                <v-skeleton-loader max-height="120" type="image"></v-skeleton-loader>
+              </v-col>
+              <v-col cols="8">
+                <v-skeleton-loader max-height="120" type="text@3, button"></v-skeleton-loader>
+              </v-col>
+            </v-row>
+          </div>
+        </div>
+        <div v-for="index in new Array(videos.length)" :key="index">
           <video-list-item :video="video" @removeVideo="removeVideo(video.id)" />
         </div>
       </v-card-text>
