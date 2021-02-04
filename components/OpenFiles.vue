@@ -30,14 +30,14 @@
     <v-card v-if="localVideos.length > 0" class="pa-4 mt-6" outlined>
       <v-card-title class="headline"
         >Videos ({{ localVideos.length }})
-        <v-btn v-if="videos.length === 0" color="warning" depressed class="ml-6" @click="requestPermissions">
+        <v-btn v-if="showRequest" color="warning" depressed class="ml-6" @click="requestPermissions">
           <v-icon left> {{ mdiFileCheckOutline }}</v-icon>
           Allow local video access</v-btn
         >
       </v-card-title>
       <v-card-text>
-        <div v-if="localVideos.length > 0 && videos.length === 0">
-          <div v-for="(video, index) in localVideos" :key="index">
+        <div v-if="showRequest">
+          <div v-for="index in new Array(localVideos.length)" :key="index">
             <v-row>
               <v-col cols="3">
                 <v-skeleton-loader max-height="120" type="image"></v-skeleton-loader>
@@ -48,7 +48,7 @@
             </v-row>
           </div>
         </div>
-        <div v-for="index in new Array(videos.length)" :key="index">
+        <div v-for="(video, index) in videos" :key="index">
           <video-list-item :video="video" @removeVideo="removeVideo(video.id)" />
         </div>
       </v-card-text>
@@ -67,6 +67,7 @@ export default {
   data() {
     return {
       loading: false,
+      showRequest: false,
       videos: [],
       localVideos: [],
       loadingFiles: false,
@@ -79,7 +80,6 @@ export default {
       mdiFileVideoOutline,
     }
   },
-
   async mounted() {
     // Create DB in indexDB
     this.db = await openDB('db', 1, {
@@ -191,15 +191,17 @@ export default {
      */
     async requestPermissions() {
       try {
-        const localVideos = (await this.db.getAll('store')) || []
-        for await (const video of localVideos) {
+        for await (const video of this.localVideos) {
           if (video?.fileHandle?.kind === 'file') {
             await this.verifyPermission(video.fileHandle)
             const src = await this.getLocalUrl(video.fileHandle)
             this.videos.push({ ...video, src })
+            this.showRequest = false
           }
         }
+        this.showRequest = this.localVideos.length && !this.videos.length
       } catch (e) {
+        this.showRequest = this.localVideos.length && !this.videos.length
         console.log('🚨', e)
       }
     },
