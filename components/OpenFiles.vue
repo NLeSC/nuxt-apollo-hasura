@@ -61,6 +61,7 @@ import { mdiClose, mdiFileDocumentOutline, mdiFolder, mdiFileCheckOutline, mdiFi
 import { deleteDB, openDB } from 'idb'
 import { sha256 } from 'js-sha256'
 import { nanoid } from 'nanoid'
+import get_video_metadata from '~/apollo/videos'
 
 export default {
   name: 'OpenFiles',
@@ -91,7 +92,16 @@ export default {
     this.localVideos = (await this.db.getAll('store')) || []
     this.requestPermissions()
   },
-
+  apollo: {
+    videos: {
+      query: get_video_metadata,
+      result({ data }) {
+        if (data) {
+          this.videos = data.videos
+        }
+      },
+    },
+  },
   methods: {
     /**
      * Open Video File
