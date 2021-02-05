@@ -18,7 +18,7 @@
           </v-btn>
 
           <v-spacer class="flex-grow-1" />
-          <v-btn v-if="videos.length > 0" text @click="cleanDB"> Close all </v-btn>
+          <v-btn v-if="videosList.length > 0" text @click="cleanDB"> Close all </v-btn>
         </div>
         <div v-if="loadingFiles" class="mt-4">
           <v-progress-circular indeterminate color="primary" class="mr-3"></v-progress-circular>
@@ -48,7 +48,7 @@
             </v-row>
           </div>
         </div>
-        <div v-for="(video, index) in videos" :key="index">
+        <div v-for="(video, index) in videosList" :key="index">
           <video-list-item :video="video" @removeVideo="removeVideo(video.id)" />
         </div>
       </v-card-text>
@@ -69,7 +69,7 @@ export default {
     return {
       loading: false,
       showRequest: false,
-      videos: [],
+      videosList: [],
       localVideos: [],
       loadingFiles: false,
       db: null,
@@ -128,7 +128,7 @@ export default {
 
         // Store file handle in indexDB (database, value, key)
         this.db?.put('store', video, id)
-        this.videos.push(video)
+        this.videosList.push(video)
         this.localVideos = (await this.db.getAll('store')) || []
         this.loadingFiles = false
         // await this.openDirectory(fileHandle)
@@ -152,8 +152,8 @@ export default {
     },
 
     async removeVideo(id) {
-      this.videos.splice(
-        this.videos.findIndex((video) => video.id === id),
+      this.videosList.splice(
+        this.videosList.findIndex((video) => video.id === id),
         1
       )
       this.db.delete('store', id)
@@ -172,7 +172,7 @@ export default {
           const hash = await this.calculateSha256(src)
           const video = { id, fileHandle: handle, src, hash, name }
           this.db?.put('store', video, id)
-          this.videos.push(video)
+          this.videosList.push(video)
           this.localVideos = (await this.db.getAll('store')) || []
         }
       }
@@ -192,7 +192,7 @@ export default {
 
     async cleanDB() {
       this.localVideos = []
-      this.videos = []
+      this.videosList = []
       // Remove all items in the indexeddb without deleting the database
       const ids = await this.db.getAll('store')
       ids.map(({ id }) => this.db.delete('store', id))
@@ -207,13 +207,13 @@ export default {
           if (video?.fileHandle?.kind === 'file') {
             await this.verifyPermission(video.fileHandle)
             const src = await this.getLocalUrl(video.fileHandle)
-            this.videos.push({ ...video, src })
+            this.videosList.push({ ...video, src })
             this.showRequest = false
           }
         }
-        this.showRequest = this.localVideos.length && !this.videos.length
+        this.showRequest = this.localVideos.length && !this.videosList.length
       } catch (e) {
-        this.showRequest = this.localVideos.length && !this.videos.length
+        this.showRequest = this.localVideos.length && !this.videosList.length
         console.log('🚨', e)
       }
     },
