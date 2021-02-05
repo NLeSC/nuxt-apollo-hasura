@@ -2,7 +2,9 @@
   <div>
     <v-row>
       <v-col cols="3">
-        <video :src="video.src" width="100%" height="auto" controls></video>
+        <transition name="fade">
+          <video v-if="video.src" :src="video.src" width="100%" height="140" controls></video>
+        </transition>
       </v-col>
       <v-col cols="8">
         <div>{{ video.name }}</div>
@@ -37,3 +39,22 @@ export default {
   },
 }
 </script>
+
+<style>
+video.video {
+  width: 100%;
+}
+
+video {
+  background-color: black;
+  border-radius: 8px;
+  outline: none;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+</style>

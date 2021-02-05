@@ -5,20 +5,23 @@
       <v-icon left> {{ mdiFileCheckOutline }}</v-icon>
       Allow local video access</v-btn
     >
-    <video
-      ref="video"
-      class="video"
-      :src="videoSrc"
-      :controls="true"
-      :playsinline="playsinline"
-      height="350"
-      @play="play"
-      @pause="pause"
-      @ended="atEnded"
-      @seeking="timeUpdate"
-      @timeupdate="timeUpdate"
-      @volumechange="atVolumechange"
-    />
+    <transition name="fade">
+      <video
+        v-if="videoSrc"
+        ref="video"
+        class="video"
+        :src="videoSrc"
+        :controls="true"
+        :playsinline="playsinline"
+        height="350"
+        @play="play"
+        @pause="pause"
+        @ended="atEnded"
+        @seeking="timeUpdate"
+        @timeupdate="timeUpdate"
+        @volumechange="atVolumechange"
+      />
+    </transition>
   </div>
 </template>
 <script>
@@ -156,5 +159,16 @@ export default {
 <style>
 video.video {
   width: 100%;
+  background-color: black;
+  border-radius: 8px;
+  outline: none;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 </style>
