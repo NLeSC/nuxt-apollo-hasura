@@ -127,7 +127,7 @@ export default {
         const video = { id, fileHandle, src, hash, name: fileHandle.name }
 
         // Store file handle in indexDB (database, value, key)
-        this.db.put('store', video, id)
+        this.db?.put('store', video, id)
         this.videos.push(video)
         this.localVideos = (await this.db.getAll('store')) || []
         this.loadingFiles = false
@@ -171,7 +171,7 @@ export default {
           const src = await this.getLocalUrl(handle)
           const hash = await this.calculateSha256(src)
           const video = { id, fileHandle: handle, src, hash, name }
-          this.db.put('store', video, id)
+          this.db?.put('store', video, id)
           this.videos.push(video)
           this.localVideos = (await this.db.getAll('store')) || []
         }
