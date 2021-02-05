@@ -44,7 +44,7 @@
         </template>
       </v-col>
       <v-col lg="8">
-        <video-player :video-src="'videos/' + $route.query.video" />
+        <video-player />
       </v-col>
     </v-row>
     <v-row>

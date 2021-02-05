@@ -1,6 +1,6 @@
 <!-- Description of the Component-->
 <template>
-  <div style="width: 100%">
+  <div>
     <v-btn v-if="showRequest" color="warning" depressed class="ml-6" @click="requestPermissions">
       <v-icon left> {{ mdiFileCheckOutline }}</v-icon>
       Allow local video access</v-btn
