@@ -21,15 +21,15 @@
                 <v-card-text class="pb-0 featuresPanel">
                   <v-chip-group v-model="selected_features" column multiple>
                     <div v-for="(feature, index) in feature_names" :key="index">
-                      <v-tooltip bottom lazy v-if="feature.description">
+                      <v-tooltip v-if="feature.description" bottom lazy>
                         <template #activator="{ on }">
-                          <v-chip v-model="feature.active" :value="feature" v-on="on" filter outlined>
+                          <v-chip v-model="feature.active" :value="feature" filter outlined v-on="on">
                             {{ feature.label }}
                           </v-chip>
                         </template>
                         <span>{{ feature.description }}</span>
                       </v-tooltip>
-                      <v-chip v-else v-model="feature.active" :value="feature" v-on="on" filter outlined>
+                      <v-chip v-else v-model="feature.active" :value="feature" filter outlined v-on="on">
                         {{ feature.label }}
                       </v-chip>
                     </div>
@@ -44,7 +44,7 @@
         </template>
       </v-col>
       <v-col lg="8">
-        <video-player :video-src="'videos/' + $route.query.video" />
+        <video-player />
       </v-col>
     </v-row>
     <v-row>
@@ -64,6 +64,7 @@ export default {
       isPlaying: false,
       cursor: 0,
       feature_names: [],
+      db_video: {}, // Todo
       defaultEnabledFeatures: [
         'success',
         'topic',
@@ -95,9 +96,6 @@ export default {
       set() {
         return this.feature_names.filter((filed) => filed.active)
       },
-    },
-    db_video() {
-      return this.$route.params.db_videos
     },
   },
   apollo: {

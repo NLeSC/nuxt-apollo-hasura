@@ -24,7 +24,7 @@ export default {
   /*
    * Mode server side rendering
    */
-  ssr: true,
+  ssr: false,
 
   /*
    ** Headers of the page

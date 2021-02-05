@@ -7,6 +7,7 @@
   "private": true,
   "scripts": {
     "serve": "concurrently \"docker-compose up -d\" \"nuxt\"",
+    "dev": "concurrently \"docker-compose up -d\" \"nuxt\"",
     "start": "nuxt start",
     "build": "nuxt build",
     "generate": "nuxt generate",
@@ -27,7 +28,10 @@
     "apexcharts": "^3.20.2",
     "d3": "^6.1.1",
     "d3fc": "^15.0.18",
+    "idb": "^6.0.0",
+    "js-sha256": "^0.9.0",
     "lodash.debounce": "^4.0.8",
+    "nanoid": "^3.1.20",
     "nuxt": "^2.14.5",
     "vue-apexcharts": "^1.6.0"
   },
