@@ -27,9 +27,9 @@
       </v-card-text>
     </v-card>
 
-    <v-card v-if="localVideos.length > 0" class="pa-4 mt-6" outlined>
+    <v-card v-if="indexedDBVideos.length > 0" class="pa-4 mt-6" outlined>
       <v-card-title class="headline"
-        >Videos ({{ localVideos.length }})
+        >Videos ({{ indexedDBVideos.length }})
         <v-btn v-if="showRequest" color="warning" depressed class="ml-6" @click="requestPermissions">
           <v-icon left> {{ mdiFileCheckOutline }}</v-icon>
           Allow local video access</v-btn
@@ -37,7 +37,7 @@
       </v-card-title>
       <v-card-text>
         <div v-if="showRequest">
-          <div v-for="index in new Array(localVideos.length)" :key="index">
+          <div v-for="index in new Array(indexedDBVideos.length)" :key="index">
             <v-row>
               <v-col cols="3">
                 <v-skeleton-loader max-height="120" type="image"></v-skeleton-loader>
@@ -70,7 +70,7 @@ export default {
       loading: false,
       showRequest: false,
       videosList: [],
-      localVideos: [],
+      indexedDBVideos: [],
       loadingFiles: false,
       db: null,
       directoryHandle: null,
@@ -89,7 +89,7 @@ export default {
       },
     })
     // Retrieve video from local indexDB and request permission if necessary
-    this.localVideos = (await this.db.getAll('store')) || []
+    this.indexedDBVideos = (await this.db.getAll('store')) || []
     this.requestPermissions()
   },
   apollo: {
@@ -129,7 +129,7 @@ export default {
         // Store file handle in indexDB (database, value, key)
         this.db?.put('store', video, id)
         this.videosList.push(video)
-        this.localVideos = (await this.db.getAll('store')) || []
+        this.indexedDBVideos = (await this.db.getAll('store')) || []
         this.loadingFiles = false
         // await this.openDirectory(fileHandle)
       } catch (e) {
@@ -143,7 +143,7 @@ export default {
         const directoryHandle = await window.showDirectoryPicker()
         this.loadingFiles = true
         await this.loadFolder(directoryHandle, true)
-        this.localVideos = (await this.db.getAll('store')) || []
+        this.indexedDBVideos = (await this.db.getAll('store')) || []
         this.loadingFiles = false
       } catch (e) {
         this.loadingFiles = false
@@ -157,7 +157,7 @@ export default {
         1
       )
       this.db.delete('store', id)
-      this.localVideos = (await this.db.getAll('store')) || []
+      this.indexedDBVideos = (await this.db.getAll('store')) || []
     },
 
     async getLocalUrl(fileHandle) {
@@ -173,7 +173,7 @@ export default {
           const video = { id, fileHandle: handle, src, hash, name }
           this.db?.put('store', video, id)
           this.videosList.push(video)
-          this.localVideos = (await this.db.getAll('store')) || []
+          this.indexedDBVideos = (await this.db.getAll('store')) || []
         }
       }
     },
@@ -191,7 +191,7 @@ export default {
     },
 
     async cleanDB() {
-      this.localVideos = []
+      this.indexedDBVideos = []
       this.videosList = []
       // Remove all items in the indexeddb without deleting the database
       const ids = await this.db.getAll('store')
@@ -203,7 +203,7 @@ export default {
      */
     async requestPermissions() {
       try {
-        for await (const video of this.localVideos) {
+        for await (const video of this.indexedDBVideos) {
           if (video?.fileHandle?.kind === 'file') {
             await this.verifyPermission(video.fileHandle)
             const src = await this.getLocalUrl(video.fileHandle)
@@ -211,9 +211,9 @@ export default {
             this.showRequest = false
           }
         }
-        this.showRequest = this.localVideos.length && !this.videosList.length
+        this.showRequest = this.indexedDBVideos.length && !this.videosList.length
       } catch (e) {
-        this.showRequest = this.localVideos.length && !this.videosList.length
+        this.showRequest = this.indexedDBVideos.length && !this.videosList.length
         console.log('🚨', e)
       }
     },
