@@ -58,7 +58,7 @@
 
 <script>
 import { mdiClose, mdiFileDocumentOutline, mdiFolder, mdiFileCheckOutline, mdiFileVideoOutline } from '@mdi/js'
-import { deleteDB, openDB } from 'idb'
+import { openDB } from 'idb'
 import { sha256 } from 'js-sha256'
 import { nanoid } from 'nanoid'
 import get_video_metadata from '~/apollo/videos'
@@ -193,7 +193,9 @@ export default {
     async cleanDB() {
       this.localVideos = []
       this.videos = []
-      await deleteDB('db')
+      // Remove all items in the indexeddb without deleting the database
+      const ids = await this.db.getAll('store')
+      ids.map(({ id }) => this.db.delete('store', id))
     },
 
     /**
