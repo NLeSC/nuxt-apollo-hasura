@@ -111,6 +111,8 @@ export default {
      */
     longify(rows) {
       const extracted = []
+
+      console.log('feature', rows)
       rows.forEach((row) => {
         this.features.forEach((varr) => {
           extracted.push({
@@ -158,7 +160,6 @@ export default {
         .attr('y', 0)
         .attr('width', margin.left + 1)
         .attr('height', this.chartHeight - margin.top - margin.bottom)
-
       // Labels for row & column
       const timeBins = d3.range(this.startTime, this.endTime, 1)
       const tickValues = d3.range(this.startTime, this.endTime, 30)
@@ -206,15 +207,18 @@ export default {
         ._groups[0].forEach((d) => {
           d3.select(d)
             .on('mouseover', function (event, data) {
-              tooltip.transition().duration(200).style('opacity', 0.9)
-              tooltip
-                .html(data.description)
-                .style('left', event.layerX + 70 + 'px')
-                .style('top', event.layerY + 'px')
-                .style('opacity', 1)
+              if (data.description) {
+                tooltip.style('display', 'block')
+                tooltip.transition().duration(200).style('opacity', 0.9)
+                tooltip
+                  .html(data.description)
+                  .style('left', event.layerX + 70 + 'px')
+                  .style('top', event.layerY + 'px')
+                  .style('opacity', 1)
+              }
             })
-            .on('mouseleave', function (event, d) {
-              tooltip.style('opacity', 0)
+            .on('mouseout', function (event, d) {
+              tooltip.style('display', 'none')
               d3.select(this).style('stroke', 'none').style('opacity', 0.8)
             })
         })
@@ -317,6 +321,16 @@ export default {
           }
           return myColor(d.value)
         })
+        .on('mouseover', (event, d) => {
+          tooltip.style('display', 'block')
+          tooltip.transition().duration(200).style('opacity', 0.9)
+          tooltip
+            .html(d.value)
+            .style('left', event.layerX + 70 + 'px')
+            .style('top', event.layerY + 'px')
+            .style('opacity', 1)
+        })
+        .on('mouseleave', () => tooltip.style('display', 'none'))
       this.cells.exit().remove()
       /**
        * Draw cursor
