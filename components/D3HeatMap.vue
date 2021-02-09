@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div id="chart"></div>
+  <div ref="heatmapContainer">
+    <div id="heatmapChart" ref="heatmapChart"></div>
   </div>
 </template>
 
@@ -29,7 +29,7 @@ export default {
       resolution: 1,
       chartData: [],
       height: 500,
-      width: window.innerWidth,
+      width: 1000,
       margins: { top: 0, right: 50, bottom: 50, left: 50 },
       localCursor: 0,
     }
@@ -53,11 +53,6 @@ export default {
     },
     features() {
       this.$apollo.queries.aggregate_features.refetch()
-    },
-    width(oldWidth, newWidth) {
-      if (oldWidth !== newWidth) {
-        this.drawChart()
-      }
     },
   },
   apollo: {
@@ -92,7 +87,6 @@ export default {
     },
   },
   mounted() {
-    // this.updateChart()
     window.addEventListener('resize', this.onResize)
   },
   beforeDestroy() {
@@ -100,7 +94,10 @@ export default {
   },
   methods: {
     onResize() {
-      this.width = window.innerWidth
+      this.width = this.$el.clientWidth
+      this.height = this.$el.clientHeight
+
+      this.drawChart()
     },
     updateChart() {
       if (this.chartData && this.chartData.length > 0) {
@@ -125,11 +122,15 @@ export default {
     },
     drawChart() {
       // remove old chart if its there
-      d3.select('#chart').selectAll('*').remove()
+      d3.select('#heatmapChart').selectAll('*').remove()
       this.chartWidth = this.width - this.margins.left - this.margins.right
       this.chartHeight = this.height - this.margins.top - this.margins.bottom
 
-      this.svg = d3.select('#chart').append('svg').attr('width', this.chartWidth).attr('height', this.chartHeight)
+      this.svg = d3
+        .select('#heatmapChart')
+        .append('svg')
+        .attr('width', this.chartWidth)
+        .attr('height', this.chartHeight)
       const chartGroup = this.svg
         .append('g')
         .attr('transform', 'translate(' + this.margins.left + ',' + this.margins.top + ')')
@@ -142,15 +143,15 @@ export default {
         .append('rect')
         .attr('x', 0)
         .attr('y', 0)
-        .attr('width', this.chartWidth - this.margins.left - this.margins.right)
-        .attr('height', this.chartHeight - this.margins.top - this.margins.bottom)
+        .attr('width', this.chartWidth)
+        .attr('height', this.chartHeight)
       this.defs
         .append('clipPath')
         .attr('id', 'clipx')
         .append('rect')
         .attr('x', 0)
-        .attr('y', this.chartHeight - this.margins.top - this.margins.bottom)
-        .attr('width', this.chartWidth - this.margins.left - this.margins.right)
+        .attr('y', this.chartHeight)
+        .attr('width', this.chartWidth)
         .attr('height', this.margins.bottom)
       this.defs
         .append('clipPath')
@@ -159,7 +160,7 @@ export default {
         .attr('x', -this.margins.left)
         .attr('y', 0)
         .attr('width', this.margins.left + 1)
-        .attr('height', this.chartHeight - this.margins.top - this.margins.bottom)
+        .attr('height', this.chartHeight)
 
       // Labels for row & column
       const timeBins = d3.range(this.startTime, this.endTime, 1)
@@ -193,7 +194,7 @@ export default {
 
       // Tooltip
       const tooltip = d3
-        .select('#chart')
+        .select('#heatmapChart')
         .append('div')
         .style('opacity', 0)
         .attr('class', 'tooltip')
@@ -229,24 +230,23 @@ export default {
       /**
        * Cursor
        */
-      let deltaX
+      let initialX
       function dragHandler(that) {
         function dragstarted(event) {
           d3.select(this).raise()
 
           that.$store.commit('cursor/SEEKING', true)
-
-          deltaX = that.cursorLine.attr('x') - event.x
+          initialX = that.cursorLine.attr('x') - event.x
         }
 
         function dragged(event) {
-          let newX = event.x + deltaX
-          const maxValue = that.chartWidth - that.margins.left - that.margins.right
+          let newX = initialX + event.x
+          const maxValue = that.chartWidth
           if (newX < 0) newX = 0
           if (newX > maxValue) newX = maxValue
 
           const eachBand = that.xScale.step()
-          const index = Math.round(newX / eachBand)
+          const index = Math.floor(newX / eachBand)
           const cursor = that.xScale.domain()[index]
 
           d3.select(this).attr('x', newX)
@@ -255,44 +255,9 @@ export default {
 
         function dragended(event) {
           that.$store.commit('cursor/SEEKING', false)
-          deltaX = 0
         }
         return d3.drag().on('start', dragstarted).on('drag', dragged).on('end', dragended)
       }
-
-      // Zoom Handler
-      // function zoomHandler(that) {
-      //   function zoomed(event) {
-      //     const t = event.transform
-
-      //     const timeBins = d3.range(this.startTime, this.endTime, 1)
-      //     this.xScale = d3.scaleBand().range([0, this.chartWidth]).domain(timeBins).padding(0.01)
-
-      //     that.cells.attr('transform', t)
-      //     that.cursorLine.attr('transform', t)
-
-      //     that.xAxisGroup.attr('transform', d3.zoomIdentity.translate(t.x, that.chartHeight - margin.bottom).scale(t.k))
-      //     that.xAxisGroup.selectAll('text').attr('transform', d3.zoomIdentity.scale(1 / t.k))
-      //     that.xAxisGroup.selectAll('line').attr('transform', d3.zoomIdentity.scale(1 / t.k))
-
-      //     // that.yAxisGroup.attr('transform', d3.zoomIdentity.translate(0, t.y))
-      //     // that.yAxisGroup.selectAll('text').attr('transform', d3.zoomIdentity)
-      //     // that.yAxisGroup.selectAll('line').attr('transform', d3.zoomIdentity)
-      //   }
-
-      //   return d3
-      //     .zoom()
-      //     .scaleExtent([1, 20])
-      //     .translateExtent([
-      //       [0, 0],
-      //       [that.chartWidth, that.chartHeight],
-      //     ])
-      //     .extent([
-      //       [0, 0],
-      //       [that.chartWidth, that.chartHeight],
-      //     ])
-      //     .on('zoom', zoomed)
-      // }
 
       /**
        * Draw cursor
@@ -377,8 +342,9 @@ export default {
   },
 }
 </script>
+
 <style>
-#chart {
+#heatmapChart {
   overscroll-behavior: contain;
 }
 </style>
