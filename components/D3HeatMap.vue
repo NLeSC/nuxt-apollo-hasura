@@ -1,7 +1,5 @@
 <template>
-  <div ref="heatmapContainer">
-    <div id="heatmapChart" ref="heatmapChart"></div>
-  </div>
+  <div id="heatmapChart"></div>
 </template>
 
 <script>
@@ -30,7 +28,7 @@ export default {
       chartData: [],
       height: 500,
       width: 1000,
-      margins: { top: 0, right: 50, bottom: 50, left: 50 },
+      margins: { top: 0, right: 0, bottom: 50, left: 50 },
       localCursor: 0,
     }
   },
@@ -87,17 +85,20 @@ export default {
     },
   },
   mounted() {
-    window.addEventListener('resize', this.onResize)
+    this.$nextTick(() => {
+      this.width = this.$el.parentElement.clientWidth
+      window.addEventListener('resize', this.onResize)
+      this.updateChart()
+    })
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.onResize)
   },
   methods: {
     onResize() {
-      this.width = this.$el.clientWidth
-      this.height = this.$el.clientHeight
+      this.width = this.$el.parentElement.clientWidth
 
-      this.drawChart()
+      this.updateChart()
     },
     updateChart() {
       if (this.chartData && this.chartData.length > 0) {
@@ -126,13 +127,10 @@ export default {
       this.chartWidth = this.width - this.margins.left - this.margins.right
       this.chartHeight = this.height - this.margins.top - this.margins.bottom
 
-      this.svg = d3
-        .select('#heatmapChart')
-        .append('svg')
-        .attr('width', this.chartWidth)
-        .attr('height', this.chartHeight)
+      this.svg = d3.select('#heatmapChart').append('svg').attr('width', this.width).attr('height', this.height)
       const chartGroup = this.svg
         .append('g')
+        .attr('class', 'chartGroup')
         .attr('transform', 'translate(' + this.margins.left + ',' + this.margins.top + ')')
 
       // Clipping
@@ -150,7 +148,7 @@ export default {
         .attr('id', 'clipx')
         .append('rect')
         .attr('x', 0)
-        .attr('y', this.chartHeight)
+        .attr('y', this.chartHeight - this.margins.bottom)
         .attr('width', this.chartWidth)
         .attr('height', this.margins.bottom)
       this.defs
@@ -168,7 +166,7 @@ export default {
       const formatDuration = (d) => new Date(1000 * d).toISOString().substr(14, 5)
 
       // Build X scales and axis:
-      this.xScale = d3.scaleBand().range([0, this.chartWidth]).domain(timeBins).padding(0.01)
+      this.xScale = d3.scaleBand().range([0, this.chartWidth]).domain(timeBins).padding(0.0)
       this.xAxis = d3.axisBottom(this.xScale).tickValues(tickValues).tickFormat(formatDuration)
       this.xAxisGroup = chartGroup
         .append('g')
@@ -225,22 +223,59 @@ export default {
             })
         })
 
-      this.drawCells(chartGroup)
+      // Build color scale
+      const myColor = d3.scaleSequential().domain([0, 5]).interpolator(d3.interpolateInferno)
+      const topicColor = d3.scaleOrdinal(d3.schemeCategory10)
+      const successColor = d3.scaleSequential().domain([0, 1]).interpolator(d3.interpolateRdYlGn)
+      const pitchColor = d3.scaleSequential().domain([0, 255]).interpolator(d3.interpolateViridis)
+      const intensityColor = d3.scaleSequential().domain([0, 100]).interpolator(d3.interpolatePlasma)
+      const silenceColor = d3.scaleOrdinal(d3.schemeSet1)
+
+      // Group for main content
+      this.cells = chartGroup
+        .append('g')
+        .attr('clip-path', 'url(#clip)')
+        .selectAll('.cell')
+        .data(this.chartData, (d) => '' + d.frame + ':' + d.variable)
+        .enter()
+        .append('rect')
+        .attr('class', 'cell')
+        .attr('x', (d) => {
+          return this.xScale(d.frame)
+        })
+        .attr('y', (d) => this.yScale(d.variable))
+        .attr('width', this.xScale.bandwidth())
+        .attr('height', this.yScale.bandwidth())
+        .style('fill', (d) => {
+          if (d.variable === 'topic') {
+            return topicColor(d.value)
+          } else if (d.variable === 'success') {
+            return successColor(d.value)
+          } else if (d.variable.endsWith('c')) {
+            return myColor(d.value * 4)
+          } else if (d.variable === 'pitch') {
+            return pitchColor(d.value)
+          } else if (d.variable === 'intensity') {
+            return intensityColor(d.value)
+          } else if (d.variable === 'silence') {
+            return silenceColor(d.value)
+          }
+          return myColor(d.value)
+        })
+      this.cells.exit().remove()
 
       /**
        * Cursor
        */
-      let initialX
       function dragHandler(that) {
         function dragstarted(event) {
           d3.select(this).raise()
 
           that.$store.commit('cursor/SEEKING', true)
-          initialX = that.cursorLine.attr('x') - event.x
         }
 
         function dragged(event) {
-          let newX = initialX + event.x
+          let newX = event.x
           const maxValue = that.chartWidth
           if (newX < 0) newX = 0
           if (newX > maxValue) newX = maxValue
@@ -297,48 +332,6 @@ export default {
 
       this.svg.call(zoom(this))
     },
-    drawCells(chartGroup) {
-      // Build color scale
-      const myColor = d3.scaleSequential().domain([0, 5]).interpolator(d3.interpolateInferno)
-      const topicColor = d3.scaleOrdinal(d3.schemeCategory10)
-      const successColor = d3.scaleSequential().domain([0, 1]).interpolator(d3.interpolateRdYlGn)
-      const pitchColor = d3.scaleSequential().domain([0, 255]).interpolator(d3.interpolateViridis)
-      const intensityColor = d3.scaleSequential().domain([0, 100]).interpolator(d3.interpolatePlasma)
-      const silenceColor = d3.scaleOrdinal(d3.schemeSet1)
-
-      // Group for main content
-      this.cells = chartGroup
-        .append('g')
-        .attr('clip-path', 'url(#clip)')
-        .selectAll('.cell')
-        .data(this.chartData, (d) => '' + d.frame + ':' + d.variable)
-        .enter()
-        .append('rect')
-        .attr('class', 'cell')
-        .attr('x', (d) => {
-          return this.xScale(d.frame)
-        })
-        .attr('y', (d) => this.yScale(d.variable))
-        .attr('width', this.xScale.bandwidth())
-        .attr('height', this.yScale.bandwidth())
-        .style('fill', (d) => {
-          if (d.variable === 'topic') {
-            return topicColor(d.value)
-          } else if (d.variable === 'success') {
-            return successColor(d.value)
-          } else if (d.variable.endsWith('c')) {
-            return myColor(d.value * 4)
-          } else if (d.variable === 'pitch') {
-            return pitchColor(d.value)
-          } else if (d.variable === 'intensity') {
-            return intensityColor(d.value)
-          } else if (d.variable === 'silence') {
-            return silenceColor(d.value)
-          }
-          return myColor(d.value)
-        })
-      this.cells.exit().remove()
-    },
   },
 }
 </script>
@@ -346,5 +339,7 @@ export default {
 <style>
 #heatmapChart {
   overscroll-behavior: contain;
+  max-width: 100%;
+  width: 100%;
 }
 </style>

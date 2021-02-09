@@ -45,7 +45,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <D3HeatMap :features="selected_features" style="transform: translateX(-50px)" />
+      <D3HeatMap :features="selected_features" />
     </v-row>
   </v-container>
 </template>
