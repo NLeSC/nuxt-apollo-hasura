@@ -1,5 +1,0 @@
-mutation update_todos_by_pk($id: Int!, $title: String! ) {
-  update_todos_by_pk(pk_columns: {id: $id}, _set: {title: $title}) {
-    updated_at
-  }
-}
