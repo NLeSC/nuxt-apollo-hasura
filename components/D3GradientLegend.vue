@@ -1,7 +1,5 @@
 <template>
-  <div ref="gradientLegendContainer">
-    <div id="gradientLegendChart" ref="gradientLegendChart"></div>
-  </div>
+  <div id="gradientLegendChart" ref="gradientLegendChart"></div>
 </template>
 
 <script>
@@ -19,22 +17,18 @@ export default {
       xAxis: null,
       height: 400,
       width: 300,
-      margins: { top: 0, right: 0, bottom: 0, left: 0 },
+      margins: { top: 0, right: 10, bottom: 0, left: 10 },
       barHeight: 10,
     }
   },
   computed: {},
-  watch: {
-    width(oldWidth, newWidth) {
-      if (oldWidth !== newWidth) {
-        this.drawChart()
-      }
-    },
-  },
+  watch: {},
   mounted() {
-    this.width = this.$refs.gradientLegendContainer.clientWidth
-    window.addEventListener('resize', this.onResize)
-    this.drawChart()
+    this.$nextTick(() => {
+      this.width = this.$el.parentElement.clientWidth
+      window.addEventListener('resize', this.onResize)
+      this.updateChart()
+    })
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.onResize)
@@ -44,8 +38,10 @@ export default {
       this.drawChart()
     },
     onResize() {
-      this.width = this.$refs.gradientLegendContainer.clientWidth
-      this.drawChart()
+      this.$nextTick(() => {
+        this.width = this.$el.parentElement.clientWidth
+        this.updateChart()
+      })
     },
     drawChart() {
       // remove old chart if its there
@@ -54,11 +50,7 @@ export default {
       this.chartWidth = this.width - this.margins.left - this.margins.right
       this.chartHeight = this.height - this.margins.top - this.margins.bottom
 
-      this.svg = d3
-        .select('#gradientLegendChart')
-        .append('svg')
-        .attr('width', this.chartWidth)
-        .attr('height', this.chartHeight)
+      this.svg = d3.select('#gradientLegendChart').append('svg').attr('width', this.width).attr('height', this.height)
 
       const chartGroup = this.svg
         .append('g')
@@ -92,7 +84,7 @@ export default {
     drawGradientLegend(d3Group, descriptor, extent, interpolator, ticks) {
       const colorScale = d3.scaleSequential().domain(extent).interpolator(interpolator)
 
-      const yScale = d3.scaleLinear().range([0, this.width]).domain(extent)
+      const yScale = d3.scaleLinear().range([0, this.chartWidth]).domain(extent)
       const yAxis = d3.axisBottom(yScale).tickSize(this.barHeight).ticks(ticks)
 
       const defs = d3Group.append('defs')
@@ -118,7 +110,7 @@ export default {
 
       d3Group
         .append('rect')
-        .attr('width', this.width)
+        .attr('width', this.chartWidth)
         .attr('height', this.barHeight)
         .style('fill', 'url(#linear-gradient-' + descriptor + ')')
 

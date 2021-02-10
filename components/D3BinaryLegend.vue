@@ -1,7 +1,5 @@
 <template>
-  <div ref="binaryLegendContainer">
-    <div id="binaryLegendChart" ref="binaryLegendChart"></div>
-  </div>
+  <div id="binaryLegendChart" ref="binaryLegendChart"></div>
 </template>
 
 <script>
@@ -23,17 +21,13 @@ export default {
     }
   },
   computed: {},
-  watch: {
-    width(oldWidth, newWidth) {
-      if (oldWidth !== newWidth) {
-        this.drawChart()
-      }
-    },
-  },
+  watch: {},
   mounted() {
-    this.width = this.$refs.binaryLegendContainer.clientWidth
-    window.addEventListener('resize', this.onResize)
-    this.drawChart()
+    this.$nextTick(() => {
+      this.width = this.$el.parentElement.clientWidth
+      window.addEventListener('resize', this.onResize)
+      this.updateChart()
+    })
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.onResize)
@@ -43,8 +37,10 @@ export default {
       this.drawChart()
     },
     onResize() {
-      this.width = this.$refs.binaryLegendContainer.clientWidth
-      this.drawChart()
+      this.$nextTick(() => {
+        this.width = this.$el.parentElement.clientWidth
+        this.updateChart()
+      })
     },
     drawChart() {
       // remove old chart if its there
@@ -53,11 +49,7 @@ export default {
       this.chartWidth = this.width - this.margins.left - this.margins.right
       this.chartHeight = this.height - this.margins.top - this.margins.bottom
 
-      this.svg = d3
-        .select('#binaryLegendChart')
-        .append('svg')
-        .attr('width', this.chartWidth)
-        .attr('height', this.chartHeight)
+      this.svg = d3.select('#binaryLegendChart').append('svg').attr('width', this.width).attr('height', this.height)
 
       const chartGroup = this.svg
         .append('g')
