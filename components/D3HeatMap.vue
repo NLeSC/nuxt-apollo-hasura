@@ -8,6 +8,7 @@
 import * as d3 from 'd3'
 import aggregate_features from '~/apollo/aggregate_features'
 import end_time from '~/apollo/end_time'
+import get_topics from '~/apollo/get_topics'
 
 export default {
   props: {
@@ -31,6 +32,7 @@ export default {
       height: 500,
       width: window.innerWidth,
       localCursor: 0,
+      topics: [],
     }
   },
   computed: {
@@ -89,6 +91,20 @@ export default {
         this.error = JSON.stringify(error.message)
       },
     },
+    topics: {
+      variables() {
+        return {
+          video: 1,
+        }
+      },
+      query: get_topics,
+      result({ data }) {
+        if (data) {
+          this.topics = data
+          console.log('description', this.topics)
+        }
+      },
+    },
   },
   mounted() {
     // this.updateChart()
@@ -111,15 +127,22 @@ export default {
      */
     longify(rows) {
       const extracted = []
-
-      console.log('feature', rows)
       rows.forEach((row) => {
         this.features.forEach((varr) => {
-          extracted.push({
-            frame: row.min_timestamp,
-            variable: varr.label,
-            value: row[varr.label],
-          })
+          if (varr.label === 'topic') {
+            const d = this.topics.topics.find((topic) => topic.index === row[varr.label])
+            extracted.push({
+              frame: row.min_timestamp,
+              variable: varr.label,
+              value: d.description,
+            })
+          } else {
+            extracted.push({
+              frame: row.min_timestamp,
+              variable: varr.label,
+              value: row[varr.label],
+            })
+          }
         })
       })
       return extracted
