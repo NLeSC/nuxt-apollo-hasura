@@ -1,0 +1,6 @@
+query get_topics($video: Int) {
+  topics(where: { video: { _eq: $video } }, order_by: { index: asc }) {
+    index
+    description
+  }
+}
