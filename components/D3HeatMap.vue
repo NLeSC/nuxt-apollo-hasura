@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <div id="chart"></div>
-  </div>
+  <div id="heatmapChart"></div>
 </template>
 
 <script>
@@ -22,15 +20,16 @@ export default {
       defs: null,
       y: null,
       x: null,
-      yAxis: null,
-      xAxis: null,
+      yAxisGroup: null,
+      xAxisGroup: null,
       cursorWidth: 5,
       endTime: 0,
       startTime: 0,
       resolution: 1,
       chartData: [],
       height: 500,
-      width: window.innerWidth,
+      width: 1000,
+      margins: { top: 0, right: 0, bottom: 50, left: 50 },
       localCursor: 0,
       topics: [],
     }
@@ -48,17 +47,12 @@ export default {
       // Set new data (it must be an integer number)
       this.cursorLine?.data([newPosition]).enter()
       // Update attribute
-      this.cursorLine?.attr('x', (d) => {
-        return this.x(d)
+      this.cursorLine.attr('x', (d) => {
+        return this.xScale(d)
       })
     },
     features() {
       this.$apollo.queries.aggregate_features.refetch()
-    },
-    width(oldWidth, newWidth) {
-      if (oldWidth !== newWidth) {
-        this.drawChart()
-      }
     },
   },
   apollo: {
@@ -107,15 +101,19 @@ export default {
     },
   },
   mounted() {
-    // this.updateChart()
-    window.addEventListener('resize', this.onResize)
+    this.$nextTick(() => {
+      this.width = this.$el.parentElement.clientWidth
+      window.addEventListener('resize', this.onResize)
+      this.updateChart()
+    })
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.onResize)
   },
   methods: {
     onResize() {
-      this.width = window.innerWidth
+      this.width = this.$el.parentElement.clientWidth
+      this.updateChart()
     },
     updateChart() {
       if (this.chartData && this.chartData.length > 0) {
@@ -149,13 +147,15 @@ export default {
     },
     drawChart() {
       // remove old chart if its there
-      d3.select('#chart').selectAll('*').remove()
-      const margin = { top: 0, right: 50, bottom: 50, left: 50 }
-      this.chartWidth = this.width - margin.left - margin.right
-      this.chartHeight = this.height - margin.top - margin.bottom
+      d3.select('#heatmapChart').selectAll('*').remove()
+      this.chartWidth = this.width - this.margins.left - this.margins.right
+      this.chartHeight = this.height - this.margins.top - this.margins.bottom
 
-      this.svg = d3.select('#chart').append('svg').attr('width', this.chartWidth).attr('height', this.chartHeight)
-      const chartGroup = this.svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+      this.svg = d3.select('#heatmapChart').append('svg').attr('width', this.width).attr('height', this.height)
+      const chartGroup = this.svg
+        .append('g')
+        .attr('class', 'chartGroup')
+        .attr('transform', 'translate(' + this.margins.left + ',' + this.margins.top + ')')
 
       // Clipping
       this.defs = chartGroup.append('defs')
@@ -165,54 +165,58 @@ export default {
         .append('rect')
         .attr('x', 0)
         .attr('y', 0)
-        .attr('width', this.chartWidth - margin.left - margin.right)
-        .attr('height', this.chartHeight - margin.top - margin.bottom)
+        .attr('width', this.chartWidth)
+        .attr('height', this.chartHeight)
       this.defs
         .append('clipPath')
         .attr('id', 'clipx')
         .append('rect')
         .attr('x', 0)
-        .attr('y', this.chartHeight - margin.top - margin.bottom)
-        .attr('width', this.chartWidth - margin.left - margin.right)
-        .attr('height', margin.bottom)
+        .attr('y', this.chartHeight - this.margins.bottom)
+        .attr('width', this.chartWidth)
+        .attr('height', this.margins.bottom)
       this.defs
         .append('clipPath')
         .attr('id', 'clipy')
         .append('rect')
-        .attr('x', -margin.left)
+        .attr('x', -this.margins.left)
         .attr('y', 0)
-        .attr('width', margin.left + 1)
-        .attr('height', this.chartHeight - margin.top - margin.bottom)
+        .attr('width', this.margins.left + 1)
+        .attr('height', this.chartHeight)
+
       // Labels for row & column
       const timeBins = d3.range(this.startTime, this.endTime, 1)
       const tickValues = d3.range(this.startTime, this.endTime, 30)
       const formatDuration = (d) => new Date(1000 * d).toISOString().substr(14, 5)
 
       // Build X scales and axis:
-      this.x = d3.scaleBand().range([0, this.chartWidth]).domain(timeBins).padding(0.01)
-      this.xAxis = chartGroup
+      this.xScale = d3.scaleBand().range([0, this.chartWidth]).domain(timeBins).padding(0.0)
+      this.xAxis = d3.axisBottom(this.xScale).tickValues(tickValues).tickFormat(formatDuration)
+      this.xAxisGroup = chartGroup
         .append('g')
         .attr('clip-path', 'url(#clipx)')
         .append('g')
         .attr('class', 'axis axis--x')
-        .attr('transform', 'translate(0,' + (this.chartHeight - margin.bottom) + ')')
-        .call(d3.axisBottom(this.x).tickValues(tickValues).tickFormat(formatDuration))
+        .attr('transform', 'translate(0,' + (this.chartHeight - this.margins.bottom) + ')')
+        .call(this.xAxis)
 
       // Build Y scales and axis:
-      this.y = d3
+      this.yScale = d3
         .scaleBand()
-        .range([this.chartHeight - margin.bottom - margin.top, 0])
+        .range([this.chartHeight - this.margins.bottom - this.margins.top, 0])
         .domain(this.featuresNames)
         .padding(0.01)
-      this.yAxis = chartGroup
+      this.yAxis = d3.axisLeft(this.yScale)
+      this.yAxisGroup = chartGroup
         .append('g')
         .attr('clip-path', 'url(#clipy)')
         .append('g')
         .attr('class', 'axis axis--y')
-        .call(d3.axisLeft(this.y))
+        .call(this.yAxis)
+
       // Tooltip
       const tooltip = d3
-        .select('#chart')
+        .select('#heatmapChart')
         .append('div')
         .style('opacity', 0)
         .attr('class', 'tooltip')
@@ -223,7 +227,7 @@ export default {
         .style('border-radius', '5px')
         .style('padding', '5px')
 
-      this.yAxis
+      this.yAxisGroup
         .selectAll('.tick')
         .style('cursor', 'pointer')
         .data(this.features)
@@ -235,7 +239,7 @@ export default {
                 tooltip.transition().duration(200).style('opacity', 0.9)
                 tooltip
                   .html(data.description)
-                  .style('left', event.layerX + 70 + 'px')
+                  .style('left', event.layerX + 30 + 'px')
                   .style('top', event.layerY + 'px')
                   .style('opacity', 1)
               }
@@ -245,73 +249,14 @@ export default {
               d3.select(this).style('stroke', 'none').style('opacity', 0.8)
             })
         })
+
       // Build color scale
-      const myColor = d3.scaleSequential().domain([0, 4]).interpolator(d3.interpolateInferno)
+      const myColor = d3.scaleSequential().domain([0, 5]).interpolator(d3.interpolateInferno)
       const topicColor = d3.scaleOrdinal(d3.schemeCategory10)
       const successColor = d3.scaleSequential().domain([0, 1]).interpolator(d3.interpolateRdYlGn)
       const pitchColor = d3.scaleSequential().domain([0, 255]).interpolator(d3.interpolateViridis)
       const intensityColor = d3.scaleSequential().domain([0, 100]).interpolator(d3.interpolatePlasma)
       const silenceColor = d3.scaleOrdinal(d3.schemeSet1)
-
-      /**
-       * Cursor
-       */
-      let deltaX
-      function dragHandler(that) {
-        function dragstarted(event) {
-          that.$store.commit('cursor/SEEKING', true)
-
-          deltaX = that.cursorLine.attr('x') - event.x
-        }
-        function dragged(event) {
-          let newX = event.x + deltaX
-          const maxValue = that.chartWidth - margin.left - margin.right
-          if (newX < 0) newX = 0
-          if (newX > maxValue) newX = maxValue
-
-          const eachBand = that.x.step()
-          const index = Math.round(newX / eachBand)
-          const cursor = that.x.domain()[index]
-
-          that.cursorLine.attr('x', newX)
-          that.$store.commit('cursor/UPDATE_CURSOR_POSITION', cursor)
-        }
-        function dragended(event) {
-          that.$store.commit('cursor/SEEKING', false)
-          deltaX = 0
-        }
-        return d3.drag().on('start', dragstarted).on('drag', dragged).on('end', dragended)
-      }
-
-      // Zoom Handler
-      function zoomHandler(that) {
-        function zoomed(event) {
-          const t = event.transform
-          that.cells.attr('transform', t)
-          that.cursorLine.attr('transform', t)
-
-          that.xAxis.attr('transform', d3.zoomIdentity.translate(t.x, that.chartHeight - margin.bottom).scale(t.k))
-          that.xAxis.selectAll('text').attr('transform', d3.zoomIdentity.scale(1 / t.k))
-          that.xAxis.selectAll('line').attr('transform', d3.zoomIdentity.scale(1 / t.k))
-
-          that.yAxis.attr('transform', d3.zoomIdentity.translate(0, t.y).scale(t.k))
-          that.yAxis.selectAll('text').attr('transform', d3.zoomIdentity.scale(1 / t.k))
-          that.yAxis.selectAll('line').attr('transform', d3.zoomIdentity.scale(1 / t.k))
-        }
-
-        return d3
-          .zoom()
-          .scaleExtent([1, 20])
-          .translateExtent([
-            [0, 0],
-            [that.chartWidth, that.chartHeight],
-          ])
-          .extent([
-            [0, 0],
-            [that.chartWidth, that.chartHeight],
-          ])
-          .on('zoom', zoomed)
-      }
 
       // Group for main content
       this.cells = chartGroup
@@ -323,11 +268,11 @@ export default {
         .append('rect')
         .attr('class', 'cell')
         .attr('x', (d) => {
-          return this.x(d.frame)
+          return this.xScale(d.frame)
         })
-        .attr('y', (d) => this.y(d.variable))
-        .attr('width', this.x.bandwidth())
-        .attr('height', this.y.bandwidth())
+        .attr('y', (d) => this.yScale(d.variable))
+        .attr('width', this.xScale.bandwidth())
+        .attr('height', this.yScale.bandwidth())
         .style('fill', (d) => {
           if (d.variable === 'topic') {
             return topicColor(d.value)
@@ -349,12 +294,43 @@ export default {
           tooltip.transition().duration(200).style('opacity', 0.9)
           tooltip
             .html(d.value)
-            .style('left', event.layerX + 70 + 'px')
+            .style('left', event.layerX + 20 + 'px')
             .style('top', event.layerY + 'px')
             .style('opacity', 1)
         })
         .on('mouseleave', () => tooltip.style('display', 'none'))
       this.cells.exit().remove()
+
+      /**
+       * Cursor
+       */
+      function dragHandler(that) {
+        function dragstarted(event) {
+          d3.select(this).raise()
+
+          that.$store.commit('cursor/SEEKING', true)
+        }
+
+        function dragged(event) {
+          let newX = event.x
+          const maxValue = that.chartWidth
+          if (newX < 0) newX = 0
+          if (newX > maxValue) newX = maxValue
+
+          const eachBand = that.xScale.step()
+          const index = Math.floor(newX / eachBand)
+          const cursor = that.xScale.domain()[index]
+
+          d3.select(this).attr('x', newX)
+          that.$store.commit('cursor/UPDATE_CURSOR_POSITION', cursor)
+        }
+
+        function dragended(event) {
+          that.$store.commit('cursor/SEEKING', false)
+        }
+        return d3.drag().on('start', dragstarted).on('drag', dragged).on('end', dragended)
+      }
+
       /**
        * Draw cursor
        */
@@ -367,21 +343,41 @@ export default {
         .append('rect')
         .attr('class', 'cursorline')
         .attr('x', (d) => {
-          return this.x(d)
+          return this.xScale(d)
         })
         .attr('y', 0)
         .attr('width', this.cursorWidth)
-        .attr('height', this.chartHeight - margin.bottom)
+        .attr('height', this.chartHeight - this.margins.bottom)
         .attr('fill', '#4EC0FF')
         .call(dragHandler(this))
 
-      this.svg.call(zoomHandler(this))
+      function zoom(that) {
+        const extent = [
+          [0, 0],
+          [that.chartWidth, that.chartHeight],
+        ]
+
+        function zoomed(event) {
+          that.xScale.range([0, that.chartWidth].map((d) => event.transform.applyX(d)))
+          that.cells.attr('x', (d) => that.xScale(d.frame)).attr('width', that.xScale.bandwidth())
+          that.cursorLine.attr('transform', event.transform)
+          that.xAxisGroup.call(that.xAxis)
+        }
+
+        that.svg.call(d3.zoom().scaleExtent([1, 20]).translateExtent(extent).extent(extent).on('zoom', zoomed))
+      }
+
+      this.svg.call(zoom(this))
     },
   },
 }
 </script>
+
 <style>
-#chart {
+#heatmapChart {
+  position: relative;
   overscroll-behavior: contain;
+  max-width: 100%;
+  width: 100%;
 }
 </style>
