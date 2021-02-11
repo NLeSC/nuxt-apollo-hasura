@@ -95,7 +95,6 @@ export default {
       result({ data }) {
         if (data) {
           this.topics = data
-          console.log('description', this.topics)
         }
       },
     },
