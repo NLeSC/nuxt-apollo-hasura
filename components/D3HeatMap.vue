@@ -88,7 +88,7 @@ export default {
     this.$nextTick(() => {
       this.width = this.$el.parentElement.clientWidth
       window.addEventListener('resize', this.onResize)
-      this.updateChart()
+      // this.updateChart()
     })
   },
   beforeDestroy() {
@@ -121,21 +121,6 @@ export default {
         })
       })
       return extracted
-    },
-    zoom(that) {
-      const extent = [
-        [0, 0],
-        [that.chartWidth, that.chartHeight],
-      ]
-
-      function zoomed(event) {
-        that.xScale.range([0, that.chartWidth].map((d) => event.transform.applyX(d)))
-        that.cells.attr('x', (d) => that.xScale(d.frame)).attr('width', that.xScale.bandwidth())
-        that.cursorLine.attr('transform', event.transform)
-        that.xAxisGroup.call(that.xAxis)
-      }
-
-      that.svg.call(d3.zoom().scaleExtent([1, 20]).translateExtent(extent).extent(extent).on('zoom', zoomed))
     },
     drawChart() {
       // remove old chart if its there
@@ -330,7 +315,28 @@ export default {
         .attr('fill', '#4EC0FF')
         .call(dragHandler(this))
 
-      this.svg.call(this.zoom(this))
+      function zoom(that) {
+        const extent = [
+          [0, 0],
+          [that.chartWidth, that.chartHeight],
+        ]
+
+        function zoomed(event) {
+          that.xScale.range([0, that.chartWidth].map((d) => event.transform.applyX(d)))
+          that.cells.attr('x', (d) => that.xScale(d.frame)).attr('width', that.xScale.bandwidth())
+          that.cursorLine.attr('transform', event.transform)
+          that.xAxisGroup.call(that.xAxis)
+        }
+        
+        that.svg.call(d3
+          .zoom()
+          .scaleExtent([1, 20])
+          .translateExtent(extent)
+          .extent(extent)
+          .on('zoom', zoomed))
+      }
+
+      this.svg.call(zoom(this))
     },
   },
 }
