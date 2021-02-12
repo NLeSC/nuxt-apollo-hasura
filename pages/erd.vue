@@ -4,13 +4,13 @@
       <v-col lg="4">
         <template>
           <v-card class="descContainer">
-            <v-card-title>Title</v-card-title>
+            <v-card-title>Participant {{ db_video.participant }}</v-card-title>
             <v-card-text>
-              <div class="subtitle-1">subtitle</div>
+              <div class="subtitle-1">study: {{ db_video.study }}</div>
               <div class="desc">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum dapibus ex sit amet ligula egestas,
-                ut volutpat eros posuere. Etiam sed magna lectus. In id ornare velit. Praesent accumsan, elit non mattis
-                facilisis, lorem sapien ultricies lacus, vitae sollicitudin lacus erat fermentum arcu. Quisque pretium
+                <p>Session: {{ db_video.session }}</p>
+                <p>Memory Type: {{ db_video.memory_type }}</p>
+                <p>Memory Index: {{ db_video.memory_index }}</p>
               </div>
             </v-card-text>
             <v-card-actions class="bottom">
@@ -20,16 +20,19 @@
               <v-card v-if="reveal" class="transition-fast-in-fast-out v-card--reveal">
                 <v-card-text class="pb-0 featuresPanel">
                   <v-chip-group v-model="selected_features" column multiple>
-                    <v-chip
-                      v-for="(feature, index) in feature_names"
-                      :key="index"
-                      v-model="feature.active"
-                      :value="feature"
-                      filter
-                      outlined
-                    >
-                      {{ feature.label }}
-                    </v-chip>
+                    <div v-for="(feature, index) in feature_names" :key="index">
+                      <v-tooltip v-if="feature.description" bottom lazy>
+                        <template #activator="{ on }">
+                          <v-chip v-model="feature.active" :value="feature" filter outlined v-on="on">
+                            {{ feature.label }}
+                          </v-chip>
+                        </template>
+                        <span>{{ feature.description }}</span>
+                      </v-tooltip>
+                      <v-chip v-else v-model="feature.active" :value="feature" filter outlined v-on="on">
+                        {{ feature.label }}
+                      </v-chip>
+                    </div>
                   </v-chip-group>
                 </v-card-text>
                 <v-card-actions class="pt-0 justify-end">
@@ -41,7 +44,7 @@
         </template>
       </v-col>
       <v-col lg="8">
-        <video-player :video-src="'videos/' + $route.query.video" />
+        <video-player />
       </v-col>
     </v-row>
     <v-row>
@@ -52,7 +55,6 @@
 
 <script>
 import get_feature_names from '~/apollo/get_feature_names'
-
 export default {
   name: 'Erd',
 
@@ -62,6 +64,7 @@ export default {
       isPlaying: false,
       cursor: 0,
       feature_names: [],
+      db_video: {}, // Todo
       defaultEnabledFeatures: [
         'success',
         'topic',

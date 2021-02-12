@@ -43,7 +43,7 @@ export default {
   watch: {
     cursor(newPosition) {
       // Set new data (it must be an integer number)
-      this.cursorLine.data([newPosition]).enter()
+      this.cursorLine?.data([newPosition]).enter()
       // Update attribute
       this.cursorLine.attr('x', (d) => {
         return this.xScale(d)
