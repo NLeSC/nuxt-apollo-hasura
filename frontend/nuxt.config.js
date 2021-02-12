@@ -167,6 +167,11 @@ export default {
    ** Build configuration
    */
   build: {
+    hotMiddleware: {
+      client: {
+        overlay: false, // Disable black overlay errors
+      },
+    },
     /*
      ** You can extend webpack config here
      */
