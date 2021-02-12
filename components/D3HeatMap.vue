@@ -268,15 +268,17 @@ export default {
       /**
        * Cursor
        */
+      let initialX
       function dragHandler(that) {
         function dragstarted(event) {
           d3.select(this).raise()
 
           that.$store.commit('cursor/SEEKING', true)
+          initialX = that.cursorLine.attr('x') - event.x
         }
 
         function dragged(event) {
-          let newX = event.x
+          let newX = initialX + event.x
           const maxValue = that.chartWidth
           if (newX < 0) newX = 0
           if (newX > maxValue) newX = maxValue
@@ -315,7 +317,7 @@ export default {
         .attr('fill', '#4EC0FF')
         .call(dragHandler(this))
 
-      function zoom(that) {
+      function zoomHandler(that) {
         const extent = [
           [0, 0],
           [that.chartWidth, that.chartHeight],
@@ -327,16 +329,11 @@ export default {
           that.cursorLine.attr('transform', event.transform)
           that.xAxisGroup.call(that.xAxis)
         }
-        
-        that.svg.call(d3
-          .zoom()
-          .scaleExtent([1, 20])
-          .translateExtent(extent)
-          .extent(extent)
-          .on('zoom', zoomed))
+
+        return d3.zoom().scaleExtent([1, 20]).translateExtent(extent).extent(extent).on('zoom', zoomed)
       }
 
-      this.svg.call(zoom(this))
+      this.svg.call(zoomHandler(this))
     },
   },
 }
