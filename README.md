@@ -19,7 +19,7 @@ cd hasura && hasura metadata apply --admin-secret adminpassword
 cd hasura && hasura migrations apply --admin-secret adminpassword
 
 # Open hasura console (Will track hasura metadata changes)
-yarn hasura-console # Password sits inside docker compoase, by default: 'adminpassword'
+yarn hasura-console # Password sits inside docker compose, by default: 'adminpassword'
 ```
 ### To stop all docker containers you can use:
 ```bash

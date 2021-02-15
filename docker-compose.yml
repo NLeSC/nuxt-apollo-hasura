@@ -19,7 +19,7 @@ services:
     container_name: erd-hasura
     image: hasura/graphql-engine:v1.3.3
     ports:
-      - '4000:8080'
+      - '8080:8080'
     depends_on:
       - 'postgres'
     restart: always
