@@ -1,4 +1,3 @@
 export default (error, nuxtContext) => {
-  console.log('Global error handler')
-  console.error(error)
+  console.error('🚨 Apollo Global error handler', error)
 }
