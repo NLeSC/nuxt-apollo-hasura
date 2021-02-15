@@ -68,15 +68,6 @@ export default {
   modules: ['@nuxtjs/pwa', '@nuxtjs/apollo', '@nuxtjs/axios', '@nuxtjs/proxy'],
 
   /**
-   * Proxy
-   */
-  proxy: ['http://localhost:8080/v1/graphql'],
-
-  router: {
-    ...routerBase,
-  },
-
-  /**
    * Apollo
    */
   apollo: {
@@ -85,10 +76,15 @@ export default {
     // required
     clientConfigs: {
       default: {
-        httpEndpoint: '/v1/graphql',
+        httpEndpoint: isDev ? 'http://localhost:8080/v1/graphql' : 'http://0.0.0.0:8080/v1/graphql',
       },
     },
   },
+
+  router: {
+    ...routerBase,
+  },
+
   /*
    ** Vuetify module configuration
    ** https://github.com/nuxt-community/vuetify-module

@@ -15,7 +15,7 @@ services:
       POSTGRES_PASSWORD: ${PRODUCTION_POSTGRES_PASSWORD:-postgrespassword}
     restart: always
 
-  graphql-engine:
+  hasura:
     container_name: erd-hasura
     image: hasura/graphql-engine:v1.3.3
     ports:
