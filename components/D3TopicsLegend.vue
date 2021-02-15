@@ -1,7 +1,5 @@
 <template>
-  <div ref="topicsLegendContainer">
-    <div id="topicsLegendChart" ref="topicsLegendChart"></div>
-  </div>
+  <div id="topicsLegendChart" ref="topicsLegendChart"></div>
 </template>
 
 <script>
@@ -20,19 +18,11 @@ export default {
       xAxis: null,
       height: 500,
       width: 1000,
-      margins: { top: 0, right: 50, bottom: 50, left: 50 },
+      margins: { top: 0, right: 0, bottom: 0, left: 0 },
     }
   },
   computed: {},
-  watch: {
-    width(oldWidth, newWidth) {
-      if (oldWidth !== newWidth) {
-        if (this.topics && this.topics.length > 0) {
-          this.drawChart()
-        }
-      }
-    },
-  },
+  watch: {},
   apollo: {
     topics: {
       query: get_topics,
@@ -54,8 +44,11 @@ export default {
     },
   },
   mounted() {
-    this.width = this.$refs.topicsLegendContainer.clientWidth
-    window.addEventListener('resize', this.onResize)
+    this.$nextTick(() => {
+      this.width = this.$el.parentElement.clientWidth
+      window.addEventListener('resize', this.onResize)
+      this.updateChart()
+    })
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.onResize)
@@ -67,10 +60,10 @@ export default {
       }
     },
     onResize() {
-      this.width = this.$refs.topicsLegendContainer.clientWidth
-      if (this.topics && this.topics.length > 0) {
-        this.drawChart()
-      }
+      this.$nextTick(() => {
+        this.width = this.$el.parentElement.clientWidth
+        this.updateChart()
+      })
     },
     drawChart() {
       // remove old chart if its there
@@ -79,11 +72,7 @@ export default {
       this.chartWidth = this.width - this.margins.left - this.margins.right
       this.chartHeight = this.height - this.margins.top - this.margins.bottom
 
-      this.svg = d3
-        .select('#topicsLegendChart')
-        .append('svg')
-        .attr('width', this.chartWidth)
-        .attr('height', this.chartHeight)
+      this.svg = d3.select('#topicsLegendChart').append('svg').attr('width', this.width).attr('height', this.height)
 
       const chartGroup = this.svg
         .append('g')
