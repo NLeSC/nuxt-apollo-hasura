@@ -1,82 +1,70 @@
 # Emotion Recognition in Dementia
 
-See project: https://github.com/NLeSC/full-stack-recipes
+## Development
 
-## Setup
-
-Requirements locally: docker and Yarn.
+Requirements locally: `docker` and `Yarn`.
 
 ```bash
-
 # install dependencies
-$ yarn install
+npm i -g hasura-cli
+yarn install
 
-# serve with hot reload at localhost:3000
-$ yarn serve
+# serve in development mode with hot reload at localhost:3000
+yarn dev
+
+# Apply hasura metadata: 
+cd hasura && hasura metadata apply --admin-secret adminpassword
+
+# If migrations needed 
+cd hasura && hasura migrations apply --admin-secret adminpassword
+
+# Open hasura console (Will track hasura metadata changes)
+yarn hasura-console # Password sits inside docker compoase, by default: 'adminpassword'
+```
+### To stop all docker containers you can use:
+```bash
+yarn stop
+# or
+docker-compose down
 ```
 
-### First time setup database schema and data
+# Back up and restore Database
 
-This section is only needed the first time running the application.
+`docker-compose` needs to be running.
 
-First start the docker stack and load the sql dump
+### Back up (Create Dump)
 
+```shell
+docker exec -it erd-hasura pg_dump -n public --username postgres postgres > ./dump.sql
 ```
-$ docker-compose up -d
-$ docker exec -i emo-spectre_postgres_1 psql --username postgres postgres < ./dump.sql
-```
-
-There may be some errors but that doesn't hurt.
-
-If this command does not work you may need to supply a different container name,
-you can find out which containers are running with
-
-```
-$ docker images
+### Restore PostgresDB data
+Navigate to the folder containing the database dump and run psql from there.
+```shell
+docker exec -i erd-postgres psql --username postgres postgres < ./dump.sql
 ```
 
-change `emo-spectre_postgres_1` in the docker exec command with the container name that runs postgres
 
-### Build the application and launch server
-
-```
-$ yarn build
-$ yarn serve
-```
-
-### First time setup
-
-The following also needs to be done the first time you run the application
-
-Go to the hasura console at http://localhost:4000/console/
-In the `Data` tab make sure that the query aggregate_features is tracked.
-
-For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
-
-# Running in production
-
+# Deploy production
 There are three services that run with docker-compose:
 
 - http-server: Static Nuxt application
 - Postgres: Database
 - hasura: GraphQL API
 
-** 🚨 ===>The videos folder for production is /videos, instead of static/videos.**
-
 Steps:
 
 1. Build and run (with default environment variables or from system environment variables):
 ```shell
-$ docker-compose -f docker-compose.yml -f docker-compose-production.yml up -d
+docker-compose -f docker-compose.yml -f docker-compose-production.yml up -d
+# To force build nuxt application use --build
+docker-compose -f docker-compose.yml -f docker-compose-production.yml up -d --build
 ```
-To use `.env` locally you can specify the `.local.env` file with: 
+3. Import database.
+ ```shell
+ docker exec -i erd-postgres psql --username postgres postgres < ./dump.sql
+ ```
+4. Migrate hasura schema:
 ```shell
-$ docker-compose -f docker-compose.yml -f docker-compose-production.yml --env-file=.local.env up -d --build
+hasura metadata apply --admin-secret adminpassword
 ```
    
-2. Upload videos to the `./videos` in the root.
-3. Import database.
-   ```shell
-   docker exec -i erd-postgres psql --username postgres postgres < ./dump.sql
-   ```
-4. Migrate hasura schema.
