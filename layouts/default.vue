@@ -44,34 +44,17 @@
 </template>
 
 <script>
-import {
-  mdiChevronRight,
-  mdiChevronLeft,
-  mdiApplication,
-  mdiHomeOutline,
-  mdiDatabaseSync,
-  mdiFileLockOutline,
-  mdiMovieFilterOutline,
-} from '@mdi/js'
 import { version } from '~/package.json'
 
 export default {
   data() {
     return {
-      mdiChevronRight,
-      mdiChevronLeft,
-      mdiApplication,
-      mdiHomeOutline,
-      mdiDatabaseSync,
-      mdiFileLockOutline,
-      mdiMovieFilterOutline,
-
       clipped: true,
       drawer: this.$vuetify.breakpoint.smAndUp,
       miniVariant: false,
       items: [
         {
-          icon: mdiMovieFilterOutline,
+          icon: 'mdi-movie-filter-outline',
           title: 'Videos',
           to: '/',
         },

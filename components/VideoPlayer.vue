@@ -2,7 +2,7 @@
 <template>
   <div>
     <v-btn v-if="showRequest" color="warning" depressed class="ml-6" @click="requestPermissions">
-      <v-icon left> {{ mdiFileCheckOutline }}</v-icon>
+      <v-icon left> mdi-file-check-outline</v-icon>
       Allow local video access</v-btn
     >
     <transition name="fade">
@@ -27,7 +27,6 @@
 <script>
 import { mapState } from 'vuex'
 import { openDB } from 'idb'
-import { mdiFileCheckOutline } from '@mdi/js'
 
 export default {
   name: 'VideoPlayer',
@@ -60,7 +59,6 @@ export default {
       time: 0,
       volumeInternal: 1,
       fullscreenInternal: false,
-      mdiFileCheckOutline,
     }
   },
   computed: {
