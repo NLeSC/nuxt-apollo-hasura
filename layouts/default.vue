@@ -7,7 +7,7 @@
       fixed
       app
       :width="220"
-      mobile-break-point="759"
+      mobile-break-point="360"
     >
       <v-list>
         <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" router exact>

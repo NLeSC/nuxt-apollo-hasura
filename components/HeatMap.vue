@@ -12,7 +12,6 @@
 </template>
 
 <script>
-import aggregate_features from '~/apollo/action_units'
 export default {
   components: {
     VueApexCharts: () => import('vue-apexcharts'),

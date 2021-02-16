@@ -2,7 +2,6 @@ import colors from 'vuetify/es5/util/colors'
 
 // Check if we need to run Nuxt in development mode
 const isDev = process.env.NODE_ENV !== 'production'
-const DB_URL = 'nuxt-apollo-hasura.herokuapp.com'
 
 /* nuxt.config.js */
 // only add `router.base = '/<repository-name>/'` if `DEPLOY_ENV` is `GH_PAGES`
@@ -15,11 +14,6 @@ const routerBase =
 
 export default {
   components: true,
-  env: {
-    dbUrl: isDev ? 'http://localhost:4000' : `https://${DB_URL}`,
-    baseUriHasura: isDev ? 'http://localhost:4000/v1/graphql' : `https://${DB_URL}`,
-    baseWsHasura: isDev ? 'ws://localhost:4000/v1/graphql' : `wss://${DB_URL}`,
-  },
 
   /*
    * Mode server side rendering
@@ -71,45 +65,24 @@ export default {
   /*
    ** Nuxt.js modules
    */
-  modules: ['@nuxtjs/pwa', '@nuxtjs/apollo', '@nuxtjs/auth', '@nuxtjs/axios'],
-
-  router: {
-    ...routerBase,
-  },
-
-  /**
-   * Auth
-   */
-  auth: {
-    redirect: {
-      callback: '/callback',
-    },
-
-    strategies: {
-      local: false,
-      auth0: {
-        domain: process.env.PRODUCTION_AUTH0_DOMAIN || 'nuxt-apollo-hasura.eu.auth0.com',
-        client_id: process.env.PRODUCTION_AUTH0_CLIENT_ID || 'apEl6H8zjzPD6PhARUCUaPaFukByIQ07',
-        audience: 'custom_auth0_api_audience',
-      },
-    },
-  },
+  modules: ['@nuxtjs/pwa', '@nuxtjs/apollo', '@nuxtjs/axios', '@nuxtjs/proxy'],
 
   /**
    * Apollo
    */
   apollo: {
-    cookieAttributes: {
-      expires: 7, // optional, default: 7 (days)
-    },
-    includeNodeModules: true, // optional, default: false (this includes graphql-tag for node_modules folder)
-    authenticationType: 'Bearer', // optional, default: 'Bearer'
     // optional
     errorHandler: '~/plugins/apollo-error-handler.js',
     // required
     clientConfigs: {
-      default: '~/apollo/clientConfig.js',
+      default: {
+        httpEndpoint: isDev ? 'http://localhost:8080/v1/graphql' : 'http://0.0.0.0:8080/v1/graphql',
+      },
     },
+  },
+
+  router: {
+    ...routerBase,
   },
 
   /*

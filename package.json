@@ -6,24 +6,25 @@
   "organization": "NLeSC eScienceCenter",
   "private": true,
   "scripts": {
-    "serve": "concurrently \"docker-compose up -d\" \"nuxt\"",
     "dev": "concurrently \"docker-compose up -d\" \"nuxt\"",
+    "hasura-console": "cd hasura && hasura console --admin-secret adminpassword",
+    "stop": "docker-compose down",
     "start": "nuxt start",
     "build": "nuxt build",
     "generate": "nuxt generate",
-    "build:gh-pages": "DEPLOY_ENV=GH_PAGES nuxt build",
-    "generate:gh-pages": "DEPLOY_ENV=GH_PAGES nuxt generate",
     "lint": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
-    "deploy": "yarn build:gh-pages && GIT_DEPLOY_REPO=https://github.com/NLeSC/nuxt-apollo-hasura scripts/deploy.sh",
     "analyze": "yarn nuxt build --analyze",
     "migrate": "cd hasura && hasura migrate create hasurafiles",
-    "release": "standard-version"
+    "release": "standard-version",
+    "deploy:build": "docker-compose -f docker-compose.yml -f docker-compose-production.yml up -d --build",
+    "deploy": "docker-compose -f docker-compose.yml -f docker-compose-production.yml up -d"
   },
   "dependencies": {
     "@mdi/js": "^5.5.55",
     "@nuxtjs/apollo": "^4.0.1-rc.3",
     "@nuxtjs/auth": "^4.9.1",
     "@nuxtjs/axios": "^5.12.2",
+    "@nuxtjs/proxy": "^2.1.0",
     "@nuxtjs/pwa": "^3.0.2",
     "apexcharts": "^3.20.2",
     "d3": "^6.1.1",
@@ -46,7 +47,7 @@
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-nuxt": ">=1.0.0",
     "eslint-plugin-prettier": "^3.1.4",
-    "hasura-cli": "^1.3.1",
+    "hasura-cli": "^1.3.3",
     "prettier": "^2.1.2",
     "standard-version": "^9.0.0"
   }

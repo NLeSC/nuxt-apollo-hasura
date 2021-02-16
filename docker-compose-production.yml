@@ -7,8 +7,9 @@ services:
     build: ./
     container_name: erd-app
     working_dir: /usr/src/app
-    volumes:
-      - ./videos:/usr/src/app/static/videos
+    depends_on:
+      - postgres
+      - hasura
     ports:
       - '9696:3000'
     environment:

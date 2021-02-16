@@ -48,7 +48,7 @@ export default {
       this.cursorLine?.data([newPosition]).enter()
       // Update attribute
       this.cursorLine.attr('x', (d) => {
-        return this.xScale(d)
+        return this.cursorScale(d)
       })
     },
     features() {
@@ -103,7 +103,7 @@ export default {
     this.$nextTick(() => {
       this.width = this.$el.parentElement.clientWidth
       window.addEventListener('resize', this.onResize)
-      this.updateChart()
+      // this.updateChart()
     })
   },
   beforeDestroy() {
@@ -111,8 +111,10 @@ export default {
   },
   methods: {
     onResize() {
-      this.width = this.$el.parentElement.clientWidth
-      this.updateChart()
+      this.$nextTick(() => {
+        this.width = this.$el.parentElement.clientWidth
+        this.updateChart()
+      })
     },
     updateChart() {
       if (this.chartData && this.chartData.length > 0) {
@@ -187,6 +189,9 @@ export default {
       const timeBins = d3.range(this.startTime, this.endTime, 1)
       const tickValues = d3.range(this.startTime, this.endTime, 30)
       const formatDuration = (d) => new Date(1000 * d).toISOString().substr(14, 5)
+
+      // Scale for the cursor alone, so we dont scale it with the xScale while zooming
+      this.cursorScale = d3.scaleLinear().range([0, this.chartWidth]).domain([this.startTime, this.endTime])
 
       // Build X scales and axis:
       this.xScale = d3.scaleBand().range([0, this.chartWidth]).domain(timeBins).padding(0.0)
@@ -303,25 +308,36 @@ export default {
       /**
        * Cursor
        */
+      let initialCursorPos, initialX
       function dragHandler(that) {
+        function invertOrdinal(scale, x) {
+          const eachBand = scale.step()
+          const index = Math.round(x / eachBand)
+          return scale.domain()[index]
+        }
+
         function dragstarted(event) {
           d3.select(this).raise()
 
           that.$store.commit('cursor/SEEKING', true)
+          initialCursorPos = that.cursor
+          initialX = that.cursorLine.attr('x')
         }
 
         function dragged(event) {
-          let newX = event.x
-          const maxValue = that.chartWidth
-          if (newX < 0) newX = 0
-          if (newX > maxValue) newX = maxValue
+          const cursorDelta = invertOrdinal(that.xScale, event.x) - invertOrdinal(that.xScale, initialX)
+          let newCursorPos = initialCursorPos + cursorDelta
 
-          const eachBand = that.xScale.step()
-          const index = Math.floor(newX / eachBand)
-          const cursor = that.xScale.domain()[index]
+          if (newCursorPos < 0) {
+            newCursorPos = 0
+          } else if (newCursorPos > invertOrdinal(that.xScale, this.chartWidth)) {
+            newCursorPos = invertOrdinal(that.xScale, this.chartWidth)
+          }
+
+          const newX = that.cursorScale(newCursorPos)
 
           d3.select(this).attr('x', newX)
-          that.$store.commit('cursor/UPDATE_CURSOR_POSITION', cursor)
+          that.$store.commit('cursor/UPDATE_CURSOR_POSITION', newCursorPos)
         }
 
         function dragended(event) {
@@ -342,7 +358,7 @@ export default {
         .append('rect')
         .attr('class', 'cursorline')
         .attr('x', (d) => {
-          return this.xScale(d)
+          return this.cursorScale(d)
         })
         .attr('y', 0)
         .attr('width', this.cursorWidth)
@@ -350,7 +366,7 @@ export default {
         .attr('fill', '#4EC0FF')
         .call(dragHandler(this))
 
-      function zoom(that) {
+      function zoomHandler(that) {
         const extent = [
           [0, 0],
           [that.chartWidth, that.chartHeight],
@@ -363,10 +379,10 @@ export default {
           that.xAxisGroup.call(that.xAxis)
         }
 
-        that.svg.call(d3.zoom().scaleExtent([1, 20]).translateExtent(extent).extent(extent).on('zoom', zoomed))
+        return d3.zoom().scaleExtent([1, 20]).translateExtent(extent).extent(extent).on('zoom', zoomed)
       }
 
-      this.svg.call(zoom(this))
+      this.svg.call(zoomHandler(this))
     },
   },
 }
