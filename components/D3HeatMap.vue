@@ -133,7 +133,7 @@ export default {
             extracted.push({
               frame: row.min_timestamp,
               variable: varr.label,
-              value: d.description,
+              value: d?.description,
             })
           } else {
             extracted.push({
