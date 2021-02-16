@@ -6,6 +6,7 @@
 import * as d3 from 'd3'
 import aggregate_features from '~/apollo/aggregate_features'
 import end_time from '~/apollo/end_time'
+import get_topics from '~/apollo/get_topics'
 
 export default {
   props: {
@@ -30,6 +31,7 @@ export default {
       width: 1000,
       margins: { top: 0, right: 0, bottom: 50, left: 50 },
       localCursor: 0,
+      topics: [],
     }
   },
   computed: {
@@ -83,6 +85,19 @@ export default {
         this.error = JSON.stringify(error.message)
       },
     },
+    topics: {
+      variables() {
+        return {
+          video: 1,
+        }
+      },
+      query: get_topics,
+      result({ data }) {
+        if (data) {
+          this.topics = data
+        }
+      },
+    },
   },
   mounted() {
     this.$nextTick(() => {
@@ -113,11 +128,20 @@ export default {
       const extracted = []
       rows.forEach((row) => {
         this.features.forEach((varr) => {
-          extracted.push({
-            frame: row.min_timestamp,
-            variable: varr.label,
-            value: row[varr.label],
-          })
+          if (varr.label === 'topic') {
+            const d = this.topics.topics.find((topic) => topic.index === row[varr.label])
+            extracted.push({
+              frame: row.min_timestamp,
+              variable: varr.label,
+              value: d?.description,
+            })
+          } else {
+            extracted.push({
+              frame: row.min_timestamp,
+              variable: varr.label,
+              value: row[varr.label],
+            })
+          }
         })
       })
       return extracted
@@ -214,15 +238,18 @@ export default {
         ._groups[0].forEach((d) => {
           d3.select(d)
             .on('mouseover', function (event, data) {
-              tooltip.transition().duration(200).style('opacity', 0.9)
-              tooltip
-                .html(data.description)
-                .style('left', event.layerX + 70 + 'px')
-                .style('top', event.layerY + 'px')
-                .style('opacity', 1)
+              if (data.description) {
+                tooltip.style('display', 'block')
+                tooltip.transition().duration(200).style('opacity', 0.9)
+                tooltip
+                  .html(data.description)
+                  .style('left', event.layerX + 30 + 'px')
+                  .style('top', event.layerY + 'px')
+                  .style('opacity', 1)
+              }
             })
-            .on('mouseleave', function (event, d) {
-              tooltip.style('opacity', 0)
+            .on('mouseout', function (event, d) {
+              tooltip.style('display', 'none')
               d3.select(this).style('stroke', 'none').style('opacity', 0.8)
             })
         })
@@ -266,6 +293,16 @@ export default {
           }
           return myColor(d.value)
         })
+        .on('mouseover', (event, d) => {
+          tooltip.style('display', 'block')
+          tooltip.transition().duration(200).style('opacity', 0.9)
+          tooltip
+            .html(d.value)
+            .style('left', event.layerX + 20 + 'px')
+            .style('top', event.layerY + 'px')
+            .style('opacity', 1)
+        })
+        .on('mouseleave', () => tooltip.style('display', 'none'))
       this.cells.exit().remove()
 
       /**
@@ -353,6 +390,7 @@ export default {
 
 <style>
 #heatmapChart {
+  position: relative;
   overscroll-behavior: contain;
   max-width: 100%;
   width: 100%;
