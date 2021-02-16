@@ -80,7 +80,7 @@ export default {
       }
     },
     position() {
-      if (!this.playing) {
+      if (!this.playing && this.$refs.video) {
         this.$refs.video.currentTime = this.position
       }
     },
@@ -141,7 +141,7 @@ export default {
       console.log('volume changed')
     },
     timeUpdate() {
-      this.$store.commit('cursor/UPDATE_CURSOR_POSITION', this.$refs.video?.currentTime)
+      this.$store.commit('cursor/UPDATE_CURSOR_POSITION', this.$refs?.video?.currentTime)
     },
     play() {
       this.playing = true
