@@ -61,7 +61,6 @@ export default {
 
       // Three function that change the tooltip when user hover / move / leave a cell
       const mouseover = function (d) {
-        console.log('🎹')
         tooltip.style('opacity', 1)
       }
       const mousemove = function (d) {
