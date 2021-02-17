@@ -72,6 +72,9 @@ export default {
       },
     },
   },
+  // mounted() {
+  //   this.$store.dispatch('features/getFeaturesName')
+  // },
   methods: {
     play() {
       this.$refs.myvideo.play()
