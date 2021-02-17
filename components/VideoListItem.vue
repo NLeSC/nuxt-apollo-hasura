@@ -29,7 +29,7 @@
 export default {
   name: 'VideoListItem',
   props: {
-    video: {},
+    video: { type: Object, default: () => ({}) },
   },
 }
 </script>
