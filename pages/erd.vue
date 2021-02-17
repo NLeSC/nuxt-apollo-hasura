@@ -50,6 +50,7 @@
     <v-row>
       <D3HeatMap :features="selected_features" />
     </v-row>
+    <v-row><ActionButtons></ActionButtons></v-row>
   </v-container>
 </template>
 
