@@ -131,12 +131,9 @@ export default {
       // The user didn't grant permission, so return false.
       return false
     },
-    atEnded() {
-      console.log('video ended')
-    },
+
     atVolumechange() {
       this.volume = this.$refs.video.volume
-      console.log('volume changed')
     },
     timeUpdate() {
       this.$store.commit('cursor/UPDATE_CURSOR_POSITION', this.$refs?.video?.currentTime)
@@ -144,12 +141,10 @@ export default {
     play() {
       this.playing = true
       this.$refs.video?.play()
-      // console.log('Called play')
     },
     pause() {
       this.playing = false
       this.$refs.video?.pause()
-      // console.log('Called pause')
     },
   },
 }
