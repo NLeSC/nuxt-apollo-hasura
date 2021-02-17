@@ -3,7 +3,7 @@
     <v-app-bar clipped-left fixed app>
       <nuxt-link to="/" style="text-decoration: none; color: initial">
         <div class="d-flex">
-          <v-icon>mdi-account-box-outline</v-icon>
+          <v-icon color="#555">mdi-account-box-outline</v-icon>
           <v-toolbar-title class="ml-4" v-text="title" />
         </div>
       </nuxt-link>
