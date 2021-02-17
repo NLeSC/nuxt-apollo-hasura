@@ -12,21 +12,17 @@
       <v-list>
         <v-list-item v-if="isAdmin" to="/admin/users">
           <v-list-item-icon
-            ><v-icon> {{ mdiAccountGroup }}</v-icon></v-list-item-icon
+            ><v-icon> mdi-accountGroup </v-icon></v-list-item-icon
           >
           <v-list-item-title>Users</v-list-item-title>
         </v-list-item>
         <v-divider v-if="isAdmin"></v-divider>
         <v-list-item to="/profile">
-          <v-list-item-icon
-            ><v-icon> {{ mdiAccount }}</v-icon></v-list-item-icon
-          >
+          <v-list-item-icon><v-icon> mdi-account</v-icon></v-list-item-icon>
           <v-list-item-title>Profile</v-list-item-title>
         </v-list-item>
         <v-list-item @click="logout">
-          <v-list-item-icon
-            ><v-icon> {{ mdiExitRun }}</v-icon></v-list-item-icon
-          >
+          <v-list-item-icon><v-icon> mdi-exit-run </v-icon></v-list-item-icon>
           <v-list-item-title>Logout</v-list-item-title>
         </v-list-item>
       </v-list>
@@ -58,7 +54,7 @@
                 depressed
                 @click="loginWithGoogle"
               >
-                <v-icon left>{{ mdiGoogle }}</v-icon>
+                <v-icon left>mdi-google</v-icon>
                 Google
               </v-btn>
             </v-col>
@@ -69,7 +65,7 @@
                 depressed
                 @click="loginWithGithub"
               >
-                <v-icon left>{{ mdiGithub }}</v-icon>
+                <v-icon left>mdi-github</v-icon>
                 Github
               </v-btn>
             </v-col>
@@ -82,7 +78,7 @@
             class="mt-3"
             @click="showEmailLinkBox = !showEmailLinkBox"
           >
-            <v-icon left>{{ mdiEmailOutline }}</v-icon>
+            <v-icon left>mdi-email-outline</v-icon>
             Email link
           </v-btn>
           <v-sheet class="mt-3 mb-3">
@@ -92,7 +88,7 @@
               color="success"
               class="pa-3 white--text text-center"
             >
-              <v-icon class="mr-2" color="white">{{ mdiCheckBold }}</v-icon>
+              <v-icon class="mr-2" color="white">mdi-checkBold</v-icon>
               Check your email to login.
             </v-sheet>
             <v-container v-else v-show="showEmailLinkBox">
@@ -119,7 +115,7 @@
                     @click="validateEmailLink"
                   >
                     Send access link
-                    <v-icon right>{{ mdiSend }}</v-icon>
+                    <v-icon right>mdi-send</v-icon>
                   </v-btn>
                 </v-row>
               </v-form>
@@ -135,7 +131,7 @@
               depressed
               @click="showEmailLinkBox = !showEmailLinkBox"
             >
-              <v-icon left>{{ mdiChartBubble }}</v-icon>
+              <v-icon left>mdi-chartBubble</v-icon>
               Login with Surf
             </v-btn>
             <v-btn
@@ -146,7 +142,7 @@
               depressed
               @click="showEmailLinkBox = !showEmailLinkBox"
             >
-              <v-icon left>{{ mdiStickerCircleOutline }}</v-icon>
+              <v-icon left>mdi-sticker-circleOutline</v-icon>
               Login with AARC
             </v-btn>
           </div>
@@ -162,33 +158,10 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
-import {
-  mdiAccountGroup,
-  mdiAccount,
-  mdiExitRun,
-  mdiEmailOutline,
-  mdiCheckBold,
-  mdiSend,
-  mdiGoogle,
-  mdiGithub,
-  mdiChartBubble,
-  mdiStickerCircleOutline,
-} from '@mdi/js'
 export default {
   name: 'LoginButton',
   data() {
     return {
-      mdiAccountGroup,
-      mdiAccount,
-      mdiExitRun,
-      mdiEmailOutline,
-      mdiCheckBold,
-      mdiSend,
-      mdiGoogle,
-      mdiGithub,
-      mdiChartBubble,
-      mdiStickerCircleOutline,
-
       showEmailLinkBox: false,
 
       valid: false,

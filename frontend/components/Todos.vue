@@ -31,7 +31,7 @@
               icon
               @click="deleteTodo(todo.id)"
             >
-              <v-icon color="grey lighten-1">{{ mdiClose }}</v-icon>
+              <v-icon color="grey lighten-1">mdi-close</v-icon>
             </v-btn>
           </v-list-item-action>
         </v-list-item>
@@ -40,7 +40,6 @@
   </v-card>
 </template>
 <script>
-import { mdiClose } from '@mdi/js'
 import delete_todos_by_pk from '~/apollo/todos/delete_todos_by_pk'
 import todos from '~/apollo/todos/todos'
 import insert_todos from '~/apollo/todos/insert_todos'
@@ -53,7 +52,6 @@ export default {
     type: { type: String, default: 'public' },
   },
   data: () => ({
-    mdiClose,
     newTodo: '',
     todosCount: 0,
     makeTodoPublic: false,

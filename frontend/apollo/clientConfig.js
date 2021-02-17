@@ -12,8 +12,10 @@ const isTokenExpired = (token) => {
 
 // Retrieve token from the localStorage
 const getToken = () => {
-  const token = localStorage.getItem('auth._token_local')
-  return isTokenExpired(token) ? '' : token
+  if (process.browser) {
+    const token = localStorage.getItem('auth._token_local')
+    return isTokenExpired(token) ? '' : token
+  }
 }
 
 /*
@@ -30,7 +32,7 @@ const getHeaders = () => {
 
 // You can pass context to the function (context):
 export default function (/* context */) {
-  // if (process.client) {
+  // if (process.browser) {
   //   console.log(
   //     '🎹client config +++++++++++++> user role?: ',
   //     localStorage['auth.role']

@@ -1,4 +1,3 @@
-
 ## Setting up JWT signing tokens
 - Generate a new key public/private key running `./server/generate_RS512.sh` in the console.
 - Copy the content of `./server/publickey.txt` into the `docker-compose.yml` inside the environment variable `HASURA_GRAPHQL_JWT_SECRET` (inside the "key" string).

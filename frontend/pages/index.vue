@@ -16,17 +16,17 @@
       </v-card-title>
 
       <v-card-text>
-        <v-icon>{{ mdiDatabase }}</v-icon> Database:
+        <v-icon>mdi-database</v-icon> Database:
         <a :href="dbUrl" target="_blank" class="link"
           >Hasura console {{ dbUrl }}</a
         >
         <br />
-        <v-icon>{{ mdiFileDocumentMultiple }}</v-icon> Documentation:
+        <v-icon>mdi-file-document-multiple</v-icon> Documentation:
         <a :href="docsUrl" target="_blank" class="link">
           teamplate Documentation {{ docsUrl }}
         </a>
         <br />
-        <v-icon>{{ mdiSecurity }}</v-icon> Auth Server:
+        <v-icon>mdi-security</v-icon> Auth Server:
         <a href="http://localhost:5000" target="_blank" class="link">
           Auth server: http://localhost:5000
         </a>
@@ -54,7 +54,7 @@
           <v-col sm="6" cols="12"
             ><h4>Documentation</h4>
             <div v-for="link in links" :key="link.name">
-              <v-icon>{{ mdiLink }}</v-icon>
+              <v-icon>mdi-link</v-icon>
               <a :href="link.link" target="_blank">{{ link.name }}</a>
             </div></v-col
           >
@@ -72,20 +72,10 @@
 </template>
 
 <script>
-import {
-  mdiDatabase,
-  mdiLink,
-  mdiFileDocumentMultiple,
-  mdiSecurity,
-} from '@mdi/js'
 export default {
   name: 'Home',
   data() {
     return {
-      mdiDatabase,
-      mdiFileDocumentMultiple,
-      mdiSecurity,
-      mdiLink,
       links: [
         {
           name: 'Nuxt Documentation',

@@ -29,14 +29,14 @@
     <v-app-bar :clipped-left="clipped" fixed app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-btn icon @click.stop="miniVariant = !miniVariant">
-        <v-icon v-if="miniVariant">{{ mdiChevronRight }}</v-icon>
-        <v-icon v-else>{{ mdiChevronLeft }}</v-icon>
+        <v-icon v-if="miniVariant">mdi-chevron-right</v-icon>
+        <v-icon v-else>mdi-chevron-left</v-icon>
       </v-btn>
       <v-btn icon @click.stop="clipped = !clipped">
-        <v-icon>{{ mdiApplication }}</v-icon>
+        <v-icon>mdi-application</v-icon>
       </v-btn>
       <v-btn icon @click="$vuetify.theme.dark = !$vuetify.theme.dark">
-        <v-icon>{{ mdiBrightness6 }}</v-icon>
+        <v-icon>mdi-brightness6</v-icon>
       </v-btn>
       <v-toolbar-title class="ml-4" v-text="title" />
       <v-spacer />
@@ -54,7 +54,7 @@
         class="mr-2"
         @click="$vuetify.theme.dark = !$vuetify.theme.dark"
       >
-        <v-icon size="20">{{ mdiBrightness6 }}</v-icon>
+        <v-icon size="20">mdi-brightness6</v-icon>
       </v-btn>
       <img
         src="https://www.esciencecenter.nl/wp-content/themes/raadhuis/dist/assets/img/favicons/apple-touch-icon.png"
@@ -69,43 +69,26 @@
 </template>
 
 <script>
-import {
-  mdiChevronRight,
-  mdiChevronLeft,
-  mdiApplication,
-  mdiHomeOutline,
-  mdiDatabaseSync,
-  mdiFileLockOutline,
-  mdiBrightness6,
-} from '@mdi/js'
 import { version } from '~/package.json'
 export default {
   data() {
     return {
-      mdiChevronRight,
-      mdiChevronLeft,
-      mdiApplication,
-      mdiHomeOutline,
-      mdiDatabaseSync,
-      mdiFileLockOutline,
-      mdiBrightness6,
-
       clipped: true,
       drawer: this.$vuetify.breakpoint.smAndUp,
       miniVariant: true,
       items: [
         {
-          icon: mdiHomeOutline,
+          icon: 'mdi-home-outline',
           title: 'Home',
           to: '/',
         },
         {
-          icon: mdiDatabaseSync,
+          icon: 'mdi-database-sync',
           title: 'CRUD Database',
           to: '/crud',
         },
         {
-          icon: mdiFileLockOutline,
+          icon: 'mdi-fileLock-outline',
           title: 'Secret Page',
           to: '/secure',
         },

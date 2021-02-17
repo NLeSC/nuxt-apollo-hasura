@@ -33,10 +33,10 @@
                 <template v-slot:activator="{ on, attrs }">
                   <v-hover>
                     <div v-bind="attrs" class="mt-1" v-on="on">
-                      <v-icon color="blue lighten-3">{{ mdiFolder }}</v-icon>
+                      <v-icon color="blue lighten-3">mdi-folder</v-icon>
                       {{ numberFiles.directories }}
                       <v-icon color="blue lighten-3"
-                        >{{ mdiFileDocumentOutline }}
+                        >mdi-file-document-outline
                       </v-icon>
                       {{ numberFiles.files }}
                     </div>
@@ -75,7 +75,7 @@
           </template>
 
           <v-btn icon @click="cleanDB">
-            <v-icon>{{ mdiClose }}</v-icon>
+            <v-icon>mdi-close</v-icon>
           </v-btn>
         </div>
       </div>
@@ -84,7 +84,6 @@
 </template>
 
 <script>
-import { mdiClose, mdiFileDocumentOutline, mdiFolder } from '@mdi/js'
 import { deleteDB, openDB } from 'idb'
 
 export default {
@@ -98,9 +97,6 @@ export default {
       arrayTree: [],
       tree: {},
       directoryHandle: null,
-      mdiFolder,
-      mdiFileDocumentOutline,
-      mdiClose,
     }
   },
   computed: {

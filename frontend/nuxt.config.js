@@ -14,10 +14,7 @@ export default {
   // Auto import components with @nuxt/components
   components: true,
 
-  //
   ssr: true,
-
-  // Target: static
 
   // Nuxt telemetry questions
   telemetry: false,
@@ -147,7 +144,7 @@ export default {
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     defaultAssets: {
-      icons: 'mdiSvg',
+      // icons: 'mdiSvg',
       font: '', // <- Needed to dont' load Roboto font fro the cdn
     },
     treeShake: true,

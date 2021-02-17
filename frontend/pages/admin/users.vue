@@ -4,7 +4,7 @@
       <v-toolbar flat>
         <v-toolbar-title>
           <v-btn icon small @click="refreshUsersList">
-            <v-icon>{{ mdiRefresh }}</v-icon>
+            <v-icon>mdi-refresh</v-icon>
           </v-btn>
           Users ({{ users_aggregate && users_aggregate.aggregate.count }})
         </v-toolbar-title>
@@ -15,7 +15,7 @@
           hide-details
           label="Search"
           clearable
-          :prepend-inner-icon="mdiMagnify"
+          prepend-inner-icon="mdi-magnify"
         ></v-text-field>
       </v-toolbar>
 
@@ -39,7 +39,7 @@
             <v-list-item-title>
               {{ user.name }}
               <v-icon v-if="user.role === 'admin'" color="amber" class="ml-2">{{
-                mdiCardAccountDetailsOutline
+                mdi - card - account - details - outline
               }}</v-icon>
             </v-list-item-title>
             <v-list-item-subtitle v-text="user.email"></v-list-item-subtitle>
@@ -74,7 +74,7 @@
                 icon
                 @click="deleteUser(user.id, user.email)"
               >
-                <v-icon>{{ mdiDeleteEmpty }}</v-icon>
+                <v-icon>mdi-delete-empty</v-icon>
               </v-btn>
             </v-row>
           </v-list-item-action>
@@ -84,13 +84,6 @@
   </div>
 </template>
 <script>
-import {
-  mdiDeleteEmpty,
-  mdiCardAccountDetailsOutline,
-  mdiMagnify,
-  mdiRefresh,
-} from '@mdi/js'
-
 import users from '~/apollo/users/users'
 import delete_user_by_pk from '~/apollo/users/delete_user_by_pk'
 import update_user_role_by_pk from '~/apollo/users/update_user_role_by_pk'
@@ -99,10 +92,6 @@ export default {
   middleware: ['auth'],
   data() {
     return {
-      mdiDeleteEmpty,
-      mdiCardAccountDetailsOutline,
-      mdiMagnify,
-      mdiRefresh,
       usersListMore: [],
       debouncedSearch: '',
       timeout: null,
