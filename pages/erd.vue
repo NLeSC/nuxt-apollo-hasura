@@ -1,49 +1,10 @@
 <template>
   <v-container>
     <v-row>
-      <v-col lg="4">
-        <template>
-          <v-card class="descContainer">
-            <v-card-title>Participant {{ db_video.participant }}</v-card-title>
-            <v-card-text>
-              <div class="subtitle-1">study: {{ db_video.study }}</div>
-              <div class="desc">
-                <p>Session: {{ db_video.session }}</p>
-                <p>Memory Type: {{ db_video.memory_type }}</p>
-                <p>Memory Index: {{ db_video.memory_index }}</p>
-              </div>
-            </v-card-text>
-            <v-card-actions class="bottom">
-              <v-btn text color="teal accent-4" @click="reveal = true"> Show Features </v-btn>
-            </v-card-actions>
-            <v-expand-transition>
-              <v-card v-if="reveal" class="transition-fast-in-fast-out v-card--reveal">
-                <v-card-text class="pb-0 featuresPanel">
-                  <v-chip-group v-model="selected_features" column multiple>
-                    <div v-for="(feature, index) in feature_names" :key="index">
-                      <v-tooltip v-if="feature.description" bottom lazy>
-                        <template #activator="{ on }">
-                          <v-chip v-model="feature.active" :value="feature" filter outlined v-on="on">
-                            {{ feature.label }}
-                          </v-chip>
-                        </template>
-                        <span>{{ feature.description }}</span>
-                      </v-tooltip>
-                      <v-chip v-else v-model="feature.active" :value="feature" filter outlined v-on="on">
-                        {{ feature.label }}
-                      </v-chip>
-                    </div>
-                  </v-chip-group>
-                </v-card-text>
-                <v-card-actions class="pt-0 justify-end">
-                  <v-btn text color="teal accent-4" @click="reveal = false"> Close </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-expand-transition>
-          </v-card>
-        </template>
+      <v-col lg="6">
+        <tabs />
       </v-col>
-      <v-col lg="8">
+      <v-col lg="6">
         <video-player />
       </v-col>
     </v-row>
@@ -64,7 +25,6 @@ export default {
       isPlaying: false,
       cursor: 0,
       feature_names: [],
-      db_video: {}, // Todo
       defaultEnabledFeatures: [
         'success',
         'topic',
