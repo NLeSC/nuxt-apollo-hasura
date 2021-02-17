@@ -68,6 +68,16 @@ export default {
   modules: ['@nuxtjs/pwa', '@nuxtjs/apollo', '@nuxtjs/axios', '@nuxtjs/proxy'],
 
   /**
+   * Proxy
+   */
+  // proxy: ['http://localhost:8080/v1/graphql'],
+  proxy: {
+    '/graphql': {
+      target: isDev ? 'http://localhost:8080/v1' : 'http://hasura:8080/v1',
+      ws: true,
+    },
+  },
+  /**
    * Apollo
    */
   apollo: {
@@ -76,7 +86,7 @@ export default {
     // required
     clientConfigs: {
       default: {
-        httpEndpoint: isDev ? 'http://localhost:8080/v1/graphql' : 'http://0.0.0.0:8080/v1/graphql',
+        httpEndpoint: '/graphql',
       },
     },
   },
