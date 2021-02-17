@@ -43,66 +43,59 @@ export default {
     svg.append('g').call(d3.axisLeft(y))
 
     // Build color scale
-    const myColor = d3
-      .scaleLinear()
-      .range(['white', '#69b3a2'])
-      .domain([1, 100])
+    const myColor = d3.scaleLinear().range(['white', '#69b3a2']).domain([1, 100])
 
     // Read the data
-    d3.csv(
-      'https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/heatmap_data.csv',
-      function (data) {
-        // create a tooltip
-        const tooltip = d3
-          .select('#my_dataviz')
-          .append('div')
-          .style('opacity', 0)
-          .attr('class', 'tooltip')
-          .style('background-color', 'white')
-          .style('border', 'solid')
-          .style('border-width', '2px')
-          .style('border-radius', '5px')
-          .style('padding', '5px')
+    d3.csv('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/heatmap_data.csv', function (data) {
+      // create a tooltip
+      const tooltip = d3
+        .select('#my_dataviz')
+        .append('div')
+        .style('opacity', 0)
+        .attr('class', 'tooltip')
+        .style('background-color', 'white')
+        .style('border', 'solid')
+        .style('border-width', '2px')
+        .style('border-radius', '5px')
+        .style('padding', '5px')
 
-        // Three function that change the tooltip when user hover / move / leave a cell
-        const mouseover = function (d) {
-          console.log('🎹')
-          tooltip.style('opacity', 1)
-        }
-        const mousemove = function (d) {
-          tooltip
-            .html('The exact value of<br>this cell is: ' + d.value)
-            .style('left', d3.mouse(this)[0] + 70 + 'px')
-            .style('top', d3.mouse(this)[1] + 'px')
-        }
-        const mouseleave = function (d) {
-          tooltip.style('opacity', 0)
-        }
-
-        // add the squares
-        svg
-          .selectAll()
-          .data(data, function (d) {
-            return d.group + ':' + d.variable
-          })
-          .enter()
-          .append('rect')
-          .attr('x', function (d) {
-            return x(d.group)
-          })
-          .attr('y', function (d) {
-            return y(d.variable)
-          })
-          .attr('width', x.bandwidth())
-          .attr('height', y.bandwidth())
-          .style('fill', function (d) {
-            return myColor(d.value)
-          })
-          .on('mouseover', mouseover)
-          .on('mousemove', mousemove)
-          .on('mouseleave', mouseleave)
+      // Three function that change the tooltip when user hover / move / leave a cell
+      const mouseover = function (d) {
+        tooltip.style('opacity', 1)
       }
-    )
+      const mousemove = function (d) {
+        tooltip
+          .html('The exact value of<br>this cell is: ' + d.value)
+          .style('left', d3.mouse(this)[0] + 70 + 'px')
+          .style('top', d3.mouse(this)[1] + 'px')
+      }
+      const mouseleave = function (d) {
+        tooltip.style('opacity', 0)
+      }
+
+      // add the squares
+      svg
+        .selectAll()
+        .data(data, function (d) {
+          return d.group + ':' + d.variable
+        })
+        .enter()
+        .append('rect')
+        .attr('x', function (d) {
+          return x(d.group)
+        })
+        .attr('y', function (d) {
+          return y(d.variable)
+        })
+        .attr('width', x.bandwidth())
+        .attr('height', y.bandwidth())
+        .style('fill', function (d) {
+          return myColor(d.value)
+        })
+        .on('mouseover', mouseover)
+        .on('mousemove', mousemove)
+        .on('mouseleave', mouseleave)
+    })
   },
 }
 </script>
