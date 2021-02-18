@@ -10,7 +10,7 @@ import get_topics from '~/apollo/get_topics'
 
 export default {
   props: {
-    features: { type: Array, required: true },
+    features: { type: Array, required: false },
   },
   data() {
     return {
