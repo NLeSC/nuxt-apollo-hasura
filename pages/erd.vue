@@ -57,7 +57,9 @@
         <D3BinaryLegend></D3BinaryLegend>
       </v-col>
     </v-row>
-    <v-row><ActionButtons></ActionButtons></v-row>
+    <v-row>
+      <ActionButtons></ActionButtons>
+    </v-row>
   </v-container>
 </template>
 
