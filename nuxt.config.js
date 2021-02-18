@@ -53,7 +53,7 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: [],
+  plugins: [{ src: '~/plugins/vuex-persist', ssr: false }],
   /*
    ** Nuxt.js dev-modules
    */
@@ -70,7 +70,6 @@ export default {
   /**
    * Proxy
    */
-  // proxy: ['http://localhost:8080/v1/graphql'],
   proxy: {
     '/graphql': {
       target: isDev ? 'http://localhost:8080/v1' : 'http://hasura:8080/v1',
