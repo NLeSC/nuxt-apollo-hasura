@@ -18,7 +18,7 @@
     </v-col>
     <v-col cols="1">
       <v-btn icon color="#aaa" @click="$emit('removeVideo')">
-        <v-icon>{{ mdiClose }}</v-icon>
+        <v-icon>mdi-close</v-icon>
       </v-btn>
     </v-col>
   </v-row>

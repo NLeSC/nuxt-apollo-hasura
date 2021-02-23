@@ -16,15 +16,15 @@
 <script>
 export default {
   props: {
-    features: { type: Array, required: false },
-    feature_names: { type: Array, required: false },
+    features: { type: Array, default: () => [], required: false },
+    featureNames: { type: Array, default: () => [], required: false },
   },
   data() {
     return {}
   },
   computed: {
     selected_features() {
-      return this.feature_names.filter((filed) => filed.active)
+      return this.featureNames.filter((filed) => filed.active)
     },
   },
 }
