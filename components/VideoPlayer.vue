@@ -16,7 +16,6 @@
         height="350"
         @play="play"
         @pause="pause"
-        @ended="atEnded"
         @seeking="timeUpdate"
         @timeupdate="timeUpdate"
         @volumechange="atVolumechange"
@@ -131,7 +130,6 @@ export default {
       // The user didn't grant permission, so return false.
       return false
     },
-
     atVolumechange() {
       this.volume = this.$refs.video.volume
     },

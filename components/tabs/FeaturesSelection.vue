@@ -1,6 +1,6 @@
 <template>
   <v-chip-group v-model="selected_features" column multiple>
-    <div v-for="(feature, index) in feature_names" :key="index">
+    <div v-for="(feature, index) in featureNames" :key="index">
       <v-tooltip bottom transition="none" :disabled="!feature.description">
         <template #activator="{ on }">
           <v-chip v-model="feature.active" :value="feature" filter outlined v-on="on">
