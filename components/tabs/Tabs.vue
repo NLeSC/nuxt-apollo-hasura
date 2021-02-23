@@ -11,7 +11,7 @@
           <Info />
         </v-tab-item>
         <v-tab-item>
-          <FeaturesSelection :feature-names="feature_names" :features="features" />
+          <FeaturesSelection :feature-names="featureNames" :features="features" />
         </v-tab-item>
         <v-tab-item>
           <Legend />
