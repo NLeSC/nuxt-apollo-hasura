@@ -9,11 +9,11 @@
       <v-card-text>
         <div class="d-flex">
           <v-btn depressed color="default" :disabled="loadingFiles" @click="open">
-            <v-icon left>{{ mdiFileVideoOutline }}</v-icon>
+            <v-icon left> mdi-file-video-outline</v-icon>
             Open single video
           </v-btn>
           <v-btn depressed color="primary" :disabled="loadingFiles" class="ml-3" @click="openDirectory">
-            <v-icon left>{{ mdiFolder }}</v-icon>
+            <v-icon left>mdi-folder</v-icon>
             Open folder
           </v-btn>
 
@@ -31,7 +31,7 @@
       <v-card-title class="headline"
         >Videos ({{ indexedDBVideos.length }})
         <v-btn v-if="showRequest" color="warning" depressed class="ml-6" @click="requestPermissions">
-          <v-icon left> {{ mdiFileCheckOutline }}</v-icon>
+          <v-icon left> mdi-file-check-outline</v-icon>
           Allow local video access</v-btn
         >
       </v-card-title>
@@ -57,7 +57,6 @@
 </template>
 
 <script>
-import { mdiClose, mdiFileDocumentOutline, mdiFolder, mdiFileCheckOutline, mdiFileVideoOutline } from '@mdi/js'
 import { openDB } from 'idb'
 import { sha256 } from 'js-sha256'
 import { nanoid } from 'nanoid'
@@ -74,11 +73,6 @@ export default {
       loadingFiles: false,
       db: null,
       directoryHandle: null,
-      mdiFolder,
-      mdiFileDocumentOutline,
-      mdiClose,
-      mdiFileCheckOutline,
-      mdiFileVideoOutline,
     }
   },
   async mounted() {
