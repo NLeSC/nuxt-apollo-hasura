@@ -16,7 +16,6 @@
         height="350"
         @play="play"
         @pause="pause"
-        @ended="atEnded"
         @seeking="timeUpdate"
         @timeupdate="timeUpdate"
         @volumechange="atVolumechange"
