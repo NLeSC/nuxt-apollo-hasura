@@ -12,13 +12,13 @@
       <div>
         <!--              There is no data on the server about this video:-->
         <nuxt-link :to="{ name: 'erd', query: { video: video.id } }">
-          <v-btn color="primary">Analyze</v-btn>
+          <v-btn color="primary" @click="setVideo">Analyze</v-btn>
         </nuxt-link>
       </div>
     </v-col>
     <v-col cols="1">
       <v-btn icon color="#aaa" @click="$emit('removeVideo')">
-        <v-icon>mdi-close</v-icon>
+        <v-icon> mdi-close </v-icon>
       </v-btn>
     </v-col>
   </v-row>
@@ -28,6 +28,12 @@ export default {
   name: 'VideoListItem',
   props: {
     video: { type: Object, default: () => ({}) },
+  },
+  methods: {
+    // save selected video in vuex store
+    setVideo() {
+      this.$store.dispatch('videos/selectVideo', this.$props.video)
+    },
   },
 }
 </script>
