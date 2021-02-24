@@ -1,6 +1,6 @@
 <template>
   <v-chip-group v-model="selected_features" column multiple>
-    <div v-for="(feature, index) in feature_names" :key="index">
+    <div v-for="(feature, index) in featureNames" :key="index">
       <v-tooltip bottom transition="none" :disabled="!feature.description">
         <template #activator="{ on }">
           <v-chip v-model="feature.active" :value="feature" filter outlined v-on="on">
@@ -16,15 +16,15 @@
 <script>
 export default {
   props: {
-    features: { type: Array, required: false },
-    feature_names: { type: Array, required: false },
+    features: { type: Array, default: () => [], required: false },
+    featureNames: { type: Array, default: () => [], required: false },
   },
   data() {
     return {}
   },
   computed: {
     selected_features() {
-      return this.feature_names.filter((filed) => filed.active)
+      return this.featureNames.filter((filed) => filed.active)
     },
   },
 }

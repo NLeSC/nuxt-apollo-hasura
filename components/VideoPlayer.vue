@@ -130,7 +130,6 @@ export default {
       // The user didn't grant permission, so return false.
       return false
     },
-
     atVolumechange() {
       this.volume = this.$refs.video.volume
     },
