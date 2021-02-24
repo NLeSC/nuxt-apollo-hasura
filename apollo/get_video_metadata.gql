@@ -1,0 +1,14 @@
+
+query get_video_metadata($hash: String) {
+  videoMetadata: videos(where: { hash: { _eq: $hash } }) {
+    id
+    hash
+    participant
+    session
+    study
+    experiment
+    memory_type
+    memory_index
+  }
+}
+
