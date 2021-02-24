@@ -797,12 +797,13 @@
   - role: public
     permission:
       columns:
+      - experiment
+      - hash
       - id
-      - study
+      - memory_index
+      - memory_type
       - participant
       - session
-      - experiment
-      - memory_type
-      - memory_index
+      - study
       filter: {}
       allow_aggregations: true
