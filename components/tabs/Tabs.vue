@@ -11,7 +11,7 @@
           <Info />
         </v-tab-item>
         <v-tab-item>
-          <FeaturesSelection :feature-names="featureNames" :features="features" />
+          <FeaturesSelection :feature-names="featureNames" />
         </v-tab-item>
         <v-tab-item>
           <Legend />
@@ -24,7 +24,6 @@
 <script>
 export default {
   props: {
-    features: { type: Array, default: () => [], required: false },
     featureNames: { type: Array, default: () => [], required: false },
   },
   computed: {

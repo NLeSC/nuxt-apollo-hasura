@@ -12,7 +12,7 @@
       <div>
         <!--              There is no data on the server about this video:-->
         <nuxt-link :to="{ name: 'erd', query: { video: video.id } }">
-          <v-btn color="primary" @click="setVideo">Analyze</v-btn>
+          <v-btn color="primary" @click="setVideo"><v-icon left>mdi-movie-filter-outline</v-icon>Analyze</v-btn>
         </nuxt-link>
       </div>
     </v-col>

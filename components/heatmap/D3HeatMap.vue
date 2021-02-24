@@ -10,7 +10,8 @@ import get_topics from '~/apollo/get_topics'
 
 export default {
   props: {
-    features: { type: Array, default: () => [], required: false },
+    featureNames: { type: Array, default: () => [], required: false },
+    selectedFeatures: { type: Array, default: () => [], required: false },
   },
   data() {
     return {
@@ -23,7 +24,7 @@ export default {
       yAxisGroup: null,
       xAxisGroup: null,
       cursorWidth: 5,
-      endTime: 0,
+      endTime: null,
       startTime: 0,
       resolution: 1,
       chartData: [],
@@ -38,9 +39,6 @@ export default {
     cursor() {
       return this.$store.state.cursor.position
     },
-    featuresNames() {
-      return this.features.map((feature) => feature.label)
-    },
   },
   watch: {
     cursor(newPosition) {
@@ -51,11 +49,24 @@ export default {
         return this.cursorScale(d)
       })
     },
-    features() {
+
+    selectedFeatures() {
       this.$apollo.queries.aggregate_features.refetch()
     },
   },
   apollo: {
+    end_time: {
+      query: end_time,
+      result({ data, loading, networkStatus }) {
+        if (data) {
+          this.endTime = Math.ceil(data.end_time?.aggregate?.max.timestamp)
+        }
+      },
+      error(error) {
+        this.error = JSON.stringify(error.message)
+      },
+    },
+
     aggregate_features: {
       // graphql query
       query: aggregate_features,
@@ -71,20 +82,10 @@ export default {
         }
       },
       error(error) {
-        this.error = JSON.stringify(error.message)
+        console.error('🚨 Error in query aggregate_features:', error)
       },
     },
-    end_time: {
-      query: end_time,
-      result({ data, loading, networkStatus }) {
-        if (data) {
-          this.endTime = Math.ceil(data.end_time.aggregate.max.timestamp)
-        }
-      },
-      error(error) {
-        this.error = JSON.stringify(error.message)
-      },
-    },
+
     topics: {
       variables() {
         return {
@@ -127,19 +128,19 @@ export default {
     longify(rows) {
       const extracted = []
       rows.forEach((row) => {
-        this.features.forEach((varr) => {
-          if (varr.label === 'topic') {
-            const d = this.topics.topics.find((topic) => topic.index === row[varr.label])
+        this.featureNames.forEach((featureName) => {
+          if (featureName === 'topic') {
+            const d = this.topics.topics.find((topic) => topic.index === row[featureName])
             extracted.push({
               frame: row.min_timestamp,
-              variable: varr.label,
+              variable: featureName,
               value: d?.description,
             })
           } else {
             extracted.push({
               frame: row.min_timestamp,
-              variable: varr.label,
-              value: row[varr.label],
+              variable: featureName,
+              value: row[featureName],
             })
           }
         })

@@ -2,7 +2,7 @@ import get_feature_names from '~/apollo/get_feature_names'
 
 export const state = () => ({
   featureNames: [],
-  defaultEnabledFeatures: [
+  selectedFeatures: [
     'success',
     'topic',
     'silence',
@@ -24,9 +24,10 @@ export const state = () => ({
     'au15c',
   ],
 })
+
 export const getters = {
-  selected_features: (state) => {
-    return state.enabledFeatures.filter((filed) => filed.active)
+  getSelectedFeatures: (state) => {
+    return state.selectedFeatures
   },
 }
 
@@ -57,5 +58,8 @@ export const actions = {
 export const mutations = {
   UPDATE_FEATURES_NAME(state, payload) {
     state.featureNames = payload
+  },
+  UPDATE_SELECTED_FEATURES(state, payload) {
+    state.selectedFeatures = payload
   },
 }

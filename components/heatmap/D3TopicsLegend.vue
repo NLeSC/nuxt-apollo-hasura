@@ -16,8 +16,8 @@ export default {
       x: null,
       yAxis: null,
       xAxis: null,
-      height: 500,
-      width: 1000,
+      height: 160,
+      width: 300,
       margins: { top: 0, right: 0, bottom: 0, left: 0 },
     }
   },
@@ -45,8 +45,8 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      this.width = this.$el.parentElement.clientWidth
-      window.addEventListener('resize', this.onResize)
+      // this.width = this.$el.parentElement.clientWidth
+      // window.addEventListener('resize', this.onResize)
       this.updateChart()
     })
   },

@@ -15,7 +15,7 @@ export default {
       x: null,
       yAxis: null,
       xAxis: null,
-      height: 400,
+      height: 200,
       width: 300,
       margins: { top: 0, right: 10, bottom: 0, left: 10 },
       barHeight: 10,
@@ -65,19 +65,19 @@ export default {
       this.pitchLegend = chartGroup
         .append('g')
         .attr('class', 'topicGroup')
-        .attr('transform', 'translate(0, ' + this.barHeight * 8 + ')')
+        .attr('transform', 'translate(0, ' + this.barHeight * 7 + ')')
       this.drawGradientLegend(this.pitchLegend, 'pitch', [0, 255], d3.interpolateViridis, 6)
 
       this.intensityLegend = chartGroup
         .append('g')
         .attr('class', 'topicGroup')
-        .attr('transform', 'translate(0, ' + this.barHeight * 14 + ')')
+        .attr('transform', 'translate(0, ' + this.barHeight * 12 + ')')
       this.drawGradientLegend(this.intensityLegend, 'intensity', [0, 100], d3.interpolatePlasma, 6)
 
       this.silenceLegend = chartGroup
         .append('g')
         .attr('class', 'topicGroup')
-        .attr('transform', 'translate(0, ' + this.barHeight * 20 + ')')
+        .attr('transform', 'translate(0, ' + this.barHeight * 17 + ')')
       this.drawGradientLegend(this.silenceLegend, 'silence', [0, 1], d3.interpolateRdYlGn, 6)
     },
 
