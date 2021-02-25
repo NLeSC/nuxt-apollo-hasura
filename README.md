@@ -1,4 +1,4 @@
-![Node.js CI](https://github.com/github/docs/actions/workflows/main.yml/badge.svg)
+![ci](https://github.com/github/docs/actions/workflows/main.yml/badge.svg)
 # Emotion Recognition in Dementia
 
 ## Development
