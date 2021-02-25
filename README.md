@@ -1,4 +1,4 @@
-![Frontend Build](https://github.com/github/docs/actions/workflows/ci.yml/badge.svg)
+![ci](https://github.com/emrecdem/emo-spectre/actions/workflows/ci.yml/badge.svg)
 # Emotion Recognition in Dementia
 
 ## Development
