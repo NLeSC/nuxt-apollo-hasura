@@ -87,4 +87,6 @@ docker exec -i erd-postgres psql --username postgres postgres < ./dump.sql
 ```shell
 yarn hasura-metadata-apply
 ```
-   
+
+# Continuous Integration
+Running build with Github actions only for frontend app, not with docker.
