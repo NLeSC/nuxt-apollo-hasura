@@ -1,4 +1,4 @@
-![ci](https://github.com/github/docs/actions/workflows/main.yml/badge.svg)
+![Frontend Build](https://github.com/github/docs/actions/workflows/ci.yml/badge.svg)
 # Emotion Recognition in Dementia
 
 ## Development
