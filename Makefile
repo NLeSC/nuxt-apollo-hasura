@@ -1,3 +1,5 @@
+SHELL := /bin/bash
+
 .PHONY:  reset-db-to-defaults
 ##
 ## Note:
@@ -22,12 +24,12 @@ restore-data:
 	@docker-compose down
 	@docker-compose up -d postgres
 	@echo "Waking up postgres container..."
-	@ping -t 5 google.com >nul
+	@./scripts/wait-for localhost:`docker port erd-postgres | sed 's/\(.*\)\/.*/\1/'`
 	docker exec -i erd-postgres dropdb -U postgres postgres
 	docker exec -i erd-postgres createdb -U postgres postgres
 	docker-compose up -d
 	@echo "Waking up hasura container..."
-	@ping -t 5 google.com >nul
+	@./scripts/wait-for localhost:`docker port erd-hasura | sed 's/\(.*\)\/.*/\1/'`
 	docker exec -i erd-postgres psql --username postgres postgres < ./CI/dev-data-dump.sql
 	npx yarn hasura-metadata-apply
 	@rm nul
