@@ -2,14 +2,14 @@
   <v-container>
     <v-row>
       <v-col lg="6">
-        <tabs :feature-names="featureNames" />
+        <tabs />
       </v-col>
       <v-col lg="6">
         <video-player />
       </v-col>
     </v-row>
     <v-row>
-      <D3HeatMap :feature-names="featureNames" :selected-features="selectedFeatures" />
+      <D3HeatMap :features="selectedFeatures" />
     </v-row>
   </v-container>
 </template>
@@ -27,8 +27,14 @@ export default {
     }
   },
   computed: {
-    selectedFeatures() {
+    defaultEnabledFeatures() {
       return this.$store.state.features.selectedFeatures
+    },
+    selectedFeatures() {
+      return this.featureNames.filter((filed) => filed.active)
+    },
+    featureNamesStore() {
+      return this.$store.state.features.featureNames
     },
   },
   apollo: {
@@ -36,15 +42,17 @@ export default {
       query: get_feature_names,
       result({ data, loading, networkStatus }) {
         if (data) {
-          this.featureNames = data.get_feature_names.fields
+          const featureNames = data.get_feature_names.fields
             .map((field) => ({
               label: field.name,
-              active: this.selectedFeatures.includes(field.name),
+              active: this.defaultEnabledFeatures.includes(field.name),
               description: field.description,
             }))
-            .filter((field) => {
-              return field.label !== 'grouped_seconds' && field.label !== 'min_timestamp'
+            .filter((filed) => {
+              return filed.label !== 'grouped_seconds' && filed.label !== 'min_timestamp'
             })
+          this.featureNames = featureNames
+          this.$store.commit('features/UPDATE_FEATURES_NAME', data.get_feature_names.fields)
         }
       },
       error(error) {
@@ -52,9 +60,6 @@ export default {
       },
     },
   },
-  // mounted() {
-  //   this.$store.dispatch('features/getFeaturesName')
-  // },
   methods: {
     play() {
       this.$refs.myvideo.play()

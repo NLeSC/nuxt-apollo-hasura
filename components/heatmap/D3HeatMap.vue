@@ -1,17 +1,16 @@
 <template>
-  <div id="heatmapChart"></div>
+  <div v-if="activeFeatures" id="heatmapChart"></div>
 </template>
 
 <script>
 import * as d3 from 'd3'
+import { mapGetters } from 'vuex'
 import aggregate_features from '~/apollo/aggregate_features'
 import end_time from '~/apollo/end_time'
 import get_topics from '~/apollo/get_topics'
-
 export default {
   props: {
-    featureNames: { type: Array, default: () => [], required: false },
-    selectedFeatures: { type: Array, default: () => [], required: false },
+    features: { type: Array, default: () => [], required: false },
   },
   data() {
     return {
@@ -24,7 +23,7 @@ export default {
       yAxisGroup: null,
       xAxisGroup: null,
       cursorWidth: 5,
-      endTime: null,
+      endTime: 0,
       startTime: 0,
       resolution: 1,
       chartData: [],
@@ -36,8 +35,14 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      activeFeatures: 'features/getActiveFeatures',
+    }),
     cursor() {
       return this.$store.state.cursor.position
+    },
+    featuresNames() {
+      return this.activeFeatures.map((feature) => feature.label)
     },
   },
   watch: {
@@ -49,24 +54,12 @@ export default {
         return this.cursorScale(d)
       })
     },
-
-    selectedFeatures() {
+    activeFeatures() {
+      this.updateChart()
       this.$apollo.queries.aggregate_features.refetch()
     },
   },
   apollo: {
-    end_time: {
-      query: end_time,
-      result({ data, loading, networkStatus }) {
-        if (data) {
-          this.endTime = Math.ceil(data.end_time?.aggregate?.max.timestamp)
-        }
-      },
-      error(error) {
-        this.error = JSON.stringify(error.message)
-      },
-    },
-
     aggregate_features: {
       // graphql query
       query: aggregate_features,
@@ -76,7 +69,7 @@ export default {
         }
       },
       result({ data, loading, networkStatus }) {
-        if (data) {
+        if (data && data.aggregate_features.length > 0) {
           this.chartData = this.longify(data.aggregate_features)
           this.updateChart()
         }
@@ -85,11 +78,21 @@ export default {
         console.error('🚨 Error in query aggregate_features:', error)
       },
     },
-
+    end_time: {
+      query: end_time,
+      result({ data, loading, networkStatus }) {
+        if (data) {
+          this.endTime = Math.ceil(data.end_time.aggregate.max.timestamp)
+        }
+      },
+      error(error) {
+        this.error = JSON.stringify(error.message)
+      },
+    },
     topics: {
       variables() {
         return {
-          video: 1,
+          video: 1, // todo: select the current video
         }
       },
       query: get_topics,
@@ -104,7 +107,6 @@ export default {
     this.$nextTick(() => {
       this.width = this.$el.parentElement.clientWidth
       window.addEventListener('resize', this.onResize)
-      // this.updateChart()
     })
   },
   beforeDestroy() {
@@ -128,19 +130,19 @@ export default {
     longify(rows) {
       const extracted = []
       rows.forEach((row) => {
-        this.featureNames.forEach((featureName) => {
-          if (featureName === 'topic') {
-            const d = this.topics.topics.find((topic) => topic.index === row[featureName])
+        this.activeFeatures.forEach((feature) => {
+          if (feature.label === 'topic') {
+            const d = this.topics.topics.find((topic) => topic.index === row[feature.label])
             extracted.push({
               frame: row.min_timestamp,
-              variable: featureName,
+              variable: feature.label,
               value: d?.description,
             })
           } else {
             extracted.push({
               frame: row.min_timestamp,
-              variable: featureName,
-              value: row[featureName],
+              variable: feature.label,
+              value: row[feature.label],
             })
           }
         })
@@ -235,7 +237,7 @@ export default {
       this.yAxisGroup
         .selectAll('.tick')
         .style('cursor', 'pointer')
-        .data(this.features)
+        .data(this.activeFeatures)
         ._groups[0].forEach((d) => {
           d3.select(d)
             .on('mouseover', function (event, data) {

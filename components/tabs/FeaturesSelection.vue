@@ -4,8 +4,8 @@
       <div v-for="(feature, index) in featureNames" :key="index">
         <v-tooltip bottom transition="none" :disabled="!feature.description">
           <template #activator="{ on }">
-            <v-chip filter outlined :value="feature.label" v-on="on">
-              {{ feature.label }}
+            <v-chip filter outlined :value="feature.name" v-on="on">
+              {{ feature.name }}
             </v-chip>
           </template>
           <span>{{ feature.description }}</span>
@@ -16,11 +16,16 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
-  props: {
-    featureNames: { type: Array, default: () => [], required: false },
-  },
   computed: {
+    ...mapGetters({
+      activeFeatures: 'features/getActiveFeatures',
+    }),
+    featureNames() {
+      return this.$store.state.features.featureNames
+    },
     selectedFeatures: {
       get() {
         return this.$store.state.features.selectedFeatures
