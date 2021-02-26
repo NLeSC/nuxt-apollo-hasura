@@ -1,11 +1,14 @@
 <template>
-  <v-container>
-    <div class="headline">Participant {{ video_metadata.participant }}</div>
-    <p>study: {{ video_metadata.study }}</p>
-    <p>Session: {{ video_metadata.session }}</p>
-    <p>Memory Type: {{ video_metadata.memory_type }}</p>
-    <p>Memory Index: {{ video_metadata.memory_index }}</p>
-  </v-container>
+  <div>
+    <div v-if="video_metadata">
+      <div class="headline">Participant {{ video_metadata.participant }}</div>
+      <p>study: {{ video_metadata.study }}</p>
+      <p>Session: {{ video_metadata.session }}</p>
+      <p>Memory Type: {{ video_metadata.memory_type }}</p>
+      <p>Memory Index: {{ video_metadata.memory_index }}</p>
+    </div>
+    <div v-else>There is no info data for this video.</div>
+  </div>
 </template>
 
 <script>
@@ -19,8 +22,7 @@ export default {
   computed: {
     video_hash() {
       // Retrieve selected video from vuex store
-      const selectedVideo = this.$store.state.videos.selectedVideo
-      return selectedVideo.hash
+      return this.$store.state.videos.selectedVideo?.hash
     },
   },
   apollo: {
