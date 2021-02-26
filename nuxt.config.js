@@ -127,6 +127,11 @@ export default {
    ** Build configuration
    */
   build: {
+    hotMiddleware: {
+      client: {
+        overlay: false, // Disable Nuxt Black Screen ESLint
+      },
+    },
     /*
      ** You can extend webpack config here
      */

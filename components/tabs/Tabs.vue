@@ -11,7 +11,7 @@
           <Info />
         </v-tab-item>
         <v-tab-item>
-          <FeaturesSelection :feature-names="featureNames" :features="features" />
+          <FeaturesSelection />
         </v-tab-item>
         <v-tab-item>
           <Legend />
@@ -23,11 +23,10 @@
 
 <script>
 export default {
-  props: {
-    features: { type: Array, default: () => [], required: false },
-    featureNames: { type: Array, default: () => [], required: false },
-  },
   computed: {
+    selectedFeatures() {
+      return this.$store.state.features.selectedFeatures
+    },
     tab: {
       get() {
         return this.$store.state.general.selectedTab

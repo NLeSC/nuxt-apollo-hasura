@@ -1,13 +1,13 @@
 <template>
-  <div id="heatmapChart"></div>
+  <div v-if="activeFeatures" id="heatmapChart"></div>
 </template>
 
 <script>
 import * as d3 from 'd3'
+import { mapGetters } from 'vuex'
 import aggregate_features from '~/apollo/aggregate_features'
 import end_time from '~/apollo/end_time'
 import get_topics from '~/apollo/get_topics'
-
 export default {
   props: {
     features: { type: Array, default: () => [], required: false },
@@ -35,11 +35,14 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      activeFeatures: 'features/getActiveFeatures',
+    }),
     cursor() {
       return this.$store.state.cursor.position
     },
     featuresNames() {
-      return this.features.map((feature) => feature.label)
+      return this.activeFeatures.map((feature) => feature.label)
     },
   },
   watch: {
@@ -51,7 +54,8 @@ export default {
         return this.cursorScale(d)
       })
     },
-    features() {
+    activeFeatures() {
+      this.updateChart()
       this.$apollo.queries.aggregate_features.refetch()
     },
   },
@@ -65,13 +69,13 @@ export default {
         }
       },
       result({ data, loading, networkStatus }) {
-        if (data) {
+        if (data && data.aggregate_features.length > 0) {
           this.chartData = this.longify(data.aggregate_features)
           this.updateChart()
         }
       },
       error(error) {
-        this.error = JSON.stringify(error.message)
+        console.error('🚨 Error in query aggregate_features:', error)
       },
     },
     end_time: {
@@ -88,7 +92,7 @@ export default {
     topics: {
       variables() {
         return {
-          video: 1,
+          video: 1, // todo: select the current video
         }
       },
       query: get_topics,
@@ -103,7 +107,6 @@ export default {
     this.$nextTick(() => {
       this.width = this.$el.parentElement.clientWidth
       window.addEventListener('resize', this.onResize)
-      // this.updateChart()
     })
   },
   beforeDestroy() {
@@ -127,19 +130,19 @@ export default {
     longify(rows) {
       const extracted = []
       rows.forEach((row) => {
-        this.features.forEach((varr) => {
-          if (varr.label === 'topic') {
-            const d = this.topics.topics.find((topic) => topic.index === row[varr.label])
+        this.activeFeatures.forEach((feature) => {
+          if (feature.label === 'topic') {
+            const d = this.topics.topics.find((topic) => topic.index === row[feature.label])
             extracted.push({
               frame: row.min_timestamp,
-              variable: varr.label,
+              variable: feature.label,
               value: d?.description,
             })
           } else {
             extracted.push({
               frame: row.min_timestamp,
-              variable: varr.label,
-              value: row[varr.label],
+              variable: feature.label,
+              value: row[feature.label],
             })
           }
         })
@@ -234,7 +237,7 @@ export default {
       this.yAxisGroup
         .selectAll('.tick')
         .style('cursor', 'pointer')
-        .data(this.features)
+        .data(this.activeFeatures)
         ._groups[0].forEach((d) => {
           d3.select(d)
             .on('mouseover', function (event, data) {
