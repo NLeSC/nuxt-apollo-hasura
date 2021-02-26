@@ -2,7 +2,6 @@
 ### Node template
 
 #data
-*.sql
 *-lock.json
 # Logs
 /logs

@@ -1,14 +1,15 @@
 <template>
   <v-app>
-    <v-navigation-drawer
-      v-model="drawer"
-      :mini-variant="true"
-      :clipped="clipped"
-      fixed
-      app
-      :width="220"
-      mobile-break-point="360"
-    >
+    <v-app-bar clipped-left fixed app>
+      <nuxt-link to="/" style="text-decoration: none; color: initial">
+        <div class="d-flex">
+          <v-icon color="#555">mdi-account-box-outline</v-icon>
+          <v-toolbar-title class="ml-4" v-text="title" />
+        </div>
+      </nuxt-link>
+      <v-spacer />
+    </v-app-bar>
+    <v-navigation-drawer mini-variant fixed clipped permanent app>
       <v-list>
         <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" router exact>
           <v-list-item-action>
@@ -20,11 +21,7 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar :clipped-left="clipped" fixed app>
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-toolbar-title class="ml-4" v-text="title" />
-      <v-spacer />
-    </v-app-bar>
+
     <v-content>
       <v-container>
         <nuxt />
@@ -44,34 +41,16 @@
 </template>
 
 <script>
-import {
-  mdiChevronRight,
-  mdiChevronLeft,
-  mdiApplication,
-  mdiHomeOutline,
-  mdiDatabaseSync,
-  mdiFileLockOutline,
-  mdiMovieFilterOutline,
-} from '@mdi/js'
 import { version } from '~/package.json'
 
 export default {
   data() {
     return {
-      mdiChevronRight,
-      mdiChevronLeft,
-      mdiApplication,
-      mdiHomeOutline,
-      mdiDatabaseSync,
-      mdiFileLockOutline,
-      mdiMovieFilterOutline,
-
-      clipped: true,
       drawer: this.$vuetify.breakpoint.smAndUp,
       miniVariant: false,
       items: [
         {
-          icon: mdiMovieFilterOutline,
+          icon: 'mdi-movie-filter-outline',
           title: 'Videos',
           to: '/',
         },

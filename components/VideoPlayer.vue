@@ -2,7 +2,7 @@
 <template>
   <div>
     <v-btn v-if="showRequest" color="warning" depressed class="ml-6" @click="requestPermissions">
-      <v-icon left> {{ mdiFileCheckOutline }}</v-icon>
+      <v-icon left> mdi-file-check-outline</v-icon>
       Allow local video access</v-btn
     >
     <transition name="fade">
@@ -16,7 +16,6 @@
         height="350"
         @play="play"
         @pause="pause"
-        @ended="atEnded"
         @seeking="timeUpdate"
         @timeupdate="timeUpdate"
         @volumechange="atVolumechange"
@@ -27,7 +26,6 @@
 <script>
 import { mapState } from 'vuex'
 import { openDB } from 'idb'
-import { mdiFileCheckOutline } from '@mdi/js'
 
 export default {
   name: 'VideoPlayer',
@@ -60,7 +58,6 @@ export default {
       time: 0,
       volumeInternal: 1,
       fullscreenInternal: false,
-      mdiFileCheckOutline,
     }
   },
   computed: {
@@ -80,7 +77,7 @@ export default {
       }
     },
     position() {
-      if (!this.playing) {
+      if (!this.playing && this.$refs.video) {
         this.$refs.video.currentTime = this.position
       }
     },
@@ -133,25 +130,19 @@ export default {
       // The user didn't grant permission, so return false.
       return false
     },
-    atEnded() {
-      console.log('video ended')
-    },
     atVolumechange() {
       this.volume = this.$refs.video.volume
-      console.log('volume changed')
     },
     timeUpdate() {
-      this.$store.commit('cursor/UPDATE_CURSOR_POSITION', this.$refs.video?.currentTime)
+      this.$store.commit('cursor/UPDATE_CURSOR_POSITION', this.$refs?.video?.currentTime)
     },
     play() {
       this.playing = true
       this.$refs.video?.play()
-      // console.log('Called play')
     },
     pause() {
       this.playing = false
       this.$refs.video?.pause()
-      // console.log('Called pause')
     },
   },
 }

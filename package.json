@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "concurrently \"docker-compose up -d\" \"nuxt\"",
     "hasura-console": "cd hasura && hasura console --admin-secret adminpassword",
+    "hasura-metadata-apply": "cd hasura && hasura metadata apply --admin-secret adminpassword",
     "stop": "docker-compose down",
     "start": "nuxt start",
     "build": "nuxt build",
@@ -34,7 +35,8 @@
     "lodash.debounce": "^4.0.8",
     "nanoid": "^3.1.20",
     "nuxt": "^2.14.5",
-    "vue-apexcharts": "^1.6.0"
+    "vue-apexcharts": "^1.6.0",
+    "vuex-persist": "^3.1.3"
   },
   "devDependencies": {
     "@babel/runtime-corejs3": "^7.11.2",

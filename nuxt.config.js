@@ -53,7 +53,8 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: [],
+  plugins: [{ src: '~/plugins/vuex-persist', ssr: false }],
+
   /*
    ** Nuxt.js dev-modules
    */
@@ -68,6 +69,15 @@ export default {
   modules: ['@nuxtjs/pwa', '@nuxtjs/apollo', '@nuxtjs/axios', '@nuxtjs/proxy'],
 
   /**
+   * Proxy
+   */
+  proxy: {
+    '/graphql': {
+      target: isDev ? 'http://localhost:8080/v1' : 'http://hasura:8080/v1',
+      ws: true,
+    },
+  },
+  /**
    * Apollo
    */
   apollo: {
@@ -76,7 +86,7 @@ export default {
     // required
     clientConfigs: {
       default: {
-        httpEndpoint: isDev ? 'http://localhost:8080/v1/graphql' : 'http://0.0.0.0:8080/v1/graphql',
+        httpEndpoint: '/graphql',
       },
     },
   },
@@ -92,7 +102,6 @@ export default {
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     defaultAssets: {
-      icons: 'mdiSvg',
       font: '', // <- Needed to dont' load Roboto font fro the cdn
     },
     treeShake: true,
