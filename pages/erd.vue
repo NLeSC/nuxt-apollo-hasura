@@ -11,6 +11,7 @@
     <v-row>
       <D3HeatMap :features="selectedFeatures" />
     </v-row>
+    <ActionButtons></ActionButtons>
   </v-container>
 </template>
 
