@@ -31,7 +31,8 @@ restore-data:
 	@echo "Waking up hasura container..."
 	@./scripts/wait-for localhost:`docker port erd-hasura | sed 's/\(.*\)\/.*/\1/'`
 	docker exec -i erd-postgres psql --username postgres postgres < ./CI/dev-data-dump.sql
-	npx yarn hasura-metadata-apply
+	make hasura-apply-migrations
+	make hasura-apply-metadata 
 	@echo "DONE."
 
 
@@ -44,7 +45,7 @@ hasura-apply-metadata:
 	cd hasura && npx hasura metadata apply  --admin-secret adminpassword # --endpoint http://another-graphql-instance.herokuapp.com
 
 hasura-apply-migrations:
-	cd hasura && npx hasura metadata apply --admin-secret adminpassword
+	cd hasura && npx hasura migrate apply --admin-secret adminpassword
 
 hasura-restore-full:
 	cat db/dev.dumpall.sql | docker exec -i postgres-container psql -U postgres -d postgres < db/dev.dumpall.sql
