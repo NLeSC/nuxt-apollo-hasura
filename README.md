@@ -37,7 +37,7 @@ docker-compose down
 ### Back up (Create Dump)
 
 ```shell
-docker exec -it erd-hasura pg_dump -n public --username postgres postgres > ./dump.sql
+docker exec -it erd-postgres pg_dump -n public --username postgres postgres > ./CI/dev-data-dump.sql
 ```
 ### Restore PostgresDB data
 
