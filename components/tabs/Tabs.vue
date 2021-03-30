@@ -3,7 +3,6 @@
     <v-tabs v-model="tab">
       <v-tab>Info</v-tab>
       <v-tab>Features</v-tab>
-      <v-tab>Legend</v-tab>
     </v-tabs>
     <v-card-text style="height: 300px; overflow: auto">
       <v-tabs-items v-model="tab">
@@ -12,9 +11,6 @@
         </v-tab-item>
         <v-tab-item>
           <FeaturesSelection />
-        </v-tab-item>
-        <v-tab-item>
-          <Legend />
         </v-tab-item>
       </v-tabs-items>
     </v-card-text>
