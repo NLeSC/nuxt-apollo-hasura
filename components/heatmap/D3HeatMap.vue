@@ -27,9 +27,9 @@ export default {
       startTime: 0,
       resolution: 1,
       chartData: [],
-      height: 500,
+      height: 600,
       width: 1000,
-      margins: { top: 0, right: 0, bottom: 20, left: 50 },
+      margins: { top: 0, right: 20, bottom: 20, left: 50 },
       localCursor: 0,
       topics: [],
     }

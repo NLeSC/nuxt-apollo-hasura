@@ -16,8 +16,8 @@ export default {
       yAxis: null,
       xAxis: null,
       height: 200,
-      width: 300,
-      margins: { top: 0, right: 10, bottom: 0, left: 10 },
+      width: 200,
+      margins: { top: 0, right: 20, bottom: 0, left: 10 },
       barHeight: 10,
     }
   },
