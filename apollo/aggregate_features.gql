@@ -1,5 +1,5 @@
-query aggregate_features($duration: float8!) {
-  aggregate_features(args: { start_time: 0, end_time: $duration, resolution: 1 }) {
+query aggregate_features($duration: float8!, $hash: String) {
+  aggregate_features(args: { start_time: 0, end_time: $duration, resolution: 1, video_hash: $hash }) {
     pitch
     intensity
     silence
