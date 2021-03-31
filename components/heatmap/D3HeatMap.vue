@@ -44,6 +44,10 @@ export default {
     featuresNames() {
       return this.activeFeatures.map((feature) => feature.label)
     },
+    video_hash() {
+      // Retrieve selected video from vuex store
+      return this.$store.state.videos.selectedVideo?.hash
+    },
   },
   watch: {
     cursor(newPosition) {
@@ -66,6 +70,7 @@ export default {
       variables() {
         return {
           duration: this.endTime,
+          hash: this.video_hash,
         }
       },
       result({ data, loading, networkStatus }) {
