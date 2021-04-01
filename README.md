@@ -93,9 +93,11 @@ Making test api-calls:
 -   url: http://localhost:8080/jobs
 -   header: "api-key":"in1uP28Y1Et9YGp95VLYzhm5Jgd5M1r0CKI7326RHwbVcHGa"
 -   body/json: {"name": "Workflow name test","workflow": "cwl/sleep.cwl","input": {"time": "3s"}}
-Once the response is recieved: you can call again iwth GET
+
+Once the response is recieved: you can call again with GET
 to the uri provided in the response.
 
+create a folder called cwl inside the xenon-flow folder (you got from cloning the repo) and place inside the `sleep.cwl` file you will find in the `CI` folder
 
 
 # Deploy production
