@@ -63,6 +63,41 @@ docker exec -i erd-postgres psql --username postgres postgres < ./dump.sql
 yarn hasura-metadata-apply
 ```
 
+# Running CWL Locally
+## Install xenon-flow locally
+
+You will need at least Java 11 and Python already in your machine
+
+Clone the repository:
+```
+$ gh repo clone xenon-middleware/xenon-flow
+$ pip install cwltool (you may need sudo permissions)
+
+# Download all the dependecies for CWL with Gradle
+
+./gradlew build
+--
+# Start the server
+./gradlew bootRun
+--
+# Running at (Swagger):
+open http://localhost:8080/
+
+# admin
+http://localhost:8080/admin/index.html
+user: api-key
+password: in1uP28Y1Et9YGp95VLYzhm5Jgd5M1r0CKI7326RHwbVcHGa
+```
+Making test api-calls:
+- POST: 
+-   url: http://localhost:8080/jobs
+-   header: "api-key":"in1uP28Y1Et9YGp95VLYzhm5Jgd5M1r0CKI7326RHwbVcHGa"
+-   body/json: {"name": "Workflow name test","workflow": "cwl/sleep.cwl","input": {"time": "3s"}}
+Once the response is recieved: you can call again iwth GET
+to the uri provided in the response.
+
+
+
 # Deploy production
 There are three services that run with docker-compose:
 
