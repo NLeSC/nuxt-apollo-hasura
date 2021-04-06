@@ -1,5 +1,5 @@
-query data_aggregate {
-  data_aggregate {
+query data_aggregate($video: bigint) {
+  data_aggregate(where: { video: { _eq: $video } }) {
     aggregate {
       stddev {
         AU01_c

@@ -8,6 +8,7 @@ import { mapGetters } from 'vuex'
 import aggregate_features from '~/apollo/aggregate_features'
 import data_aggregate from '~/apollo/data_aggregate'
 import end_time from '~/apollo/end_time'
+import video_id from '~/apollo/video_id'
 import get_topics from '~/apollo/get_topics'
 export default {
   props: {
@@ -25,6 +26,7 @@ export default {
       yAxisGroup: null,
       xAxisGroup: null,
       cursorWidth: 5,
+      videoId: -1,
       endTime: 0,
       startTime: 0,
       resolution: 1,
@@ -91,6 +93,11 @@ export default {
     data_aggregate: {
       // graphql query
       query: data_aggregate,
+      variables() {
+        return {
+          video: this.videoId,
+        }
+      },
       result({ data, loading, networkStatus }) {
         if (this.normalization && data) {
           this.normalizationData = this.deUnderscore(data.data_aggregate.aggregate)
@@ -101,8 +108,29 @@ export default {
         console.error('🚨 Error in query normalized_aggregate:', error)
       },
     },
+    video_id: {
+      query: video_id,
+      variables() {
+        return {
+          hash: this.video_hash,
+        }
+      },
+      result({ data, loading, networkStatus }) {
+        if (data) {
+          this.videoId = data.video_id.id
+        }
+      },
+      error(error) {
+        this.error = JSON.stringify(error.message)
+      },
+    },
     end_time: {
       query: end_time,
+      variables() {
+        return {
+          video: this.videoId,
+        }
+      },
       result({ data, loading, networkStatus }) {
         if (data) {
           this.endTime = Math.ceil(data.end_time.aggregate.max.timestamp)
@@ -115,7 +143,7 @@ export default {
     topics: {
       variables() {
         return {
-          video: 1, // todo: select the current video
+          video: this.videoId, // todo: select the current video
         }
       },
       query: get_topics,

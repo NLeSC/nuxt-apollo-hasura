@@ -1,5 +1,5 @@
-query end_time {
-  end_time: data_aggregate {
+query end_time($video: bigint) {
+  end_time: data_aggregate(where: { video: { _eq: $video } }) {
     aggregate {
       max {
         timestamp
