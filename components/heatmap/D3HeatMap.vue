@@ -6,11 +6,13 @@
 import * as d3 from 'd3'
 import { mapGetters } from 'vuex'
 import aggregate_features from '~/apollo/aggregate_features'
+import data_aggregate from '~/apollo/data_aggregate'
 import end_time from '~/apollo/end_time'
 import get_topics from '~/apollo/get_topics'
 export default {
   props: {
     features: { type: Array, default: () => [], required: false },
+    normalization: { type: Boolean, default: () => false, required: false },
   },
   data() {
     return {
@@ -27,6 +29,8 @@ export default {
       startTime: 0,
       resolution: 1,
       chartData: [],
+      aggregateData: [],
+      normalizationData: [],
       height: 600,
       width: 1000,
       margins: { top: 0, right: 20, bottom: 20, left: 50 },
@@ -57,6 +61,7 @@ export default {
     activeFeatures() {
       this.updateChart()
       this.$apollo.queries.aggregate_features.refetch()
+      this.$apollo.queries.data_aggregate.refetch()
     },
   },
   apollo: {
@@ -70,12 +75,25 @@ export default {
       },
       result({ data, loading, networkStatus }) {
         if (data && data.aggregate_features.length > 0) {
-          this.chartData = this.longify(data.aggregate_features)
+          this.aggregateData = data.aggregate_features
           this.updateChart()
         }
       },
       error(error) {
         console.error('🚨 Error in query aggregate_features:', error)
+      },
+    },
+    data_aggregate: {
+      // graphql query
+      query: data_aggregate,
+      result({ data, loading, networkStatus }) {
+        if (this.normalization && data) {
+          this.normalizationData = this.deUnderscore(data.data_aggregate.aggregate)
+          this.updateChart()
+        }
+      },
+      error(error) {
+        console.error('🚨 Error in query normalized_aggregate:', error)
       },
     },
     end_time: {
@@ -120,7 +138,11 @@ export default {
       })
     },
     updateChart() {
-      if (this.chartData && this.chartData.length > 0) {
+      if (this.normalization && this.aggregateData && this.aggregateData.length > 0 && this.normalizationData) {
+        this.chartData = this.normalize(this.aggregateData, this.normalizationData)
+        this.drawChart()
+      } else if (!this.normalization && this.aggregateData && this.aggregateData.length > 0) {
+        this.chartData = this.longify(this.aggregateData)
         this.drawChart()
       }
     },
@@ -143,6 +165,50 @@ export default {
               frame: row.min_timestamp,
               variable: feature.label,
               value: row[feature.label],
+            })
+          }
+        })
+      })
+      return extracted
+    },
+    deUnderscore(aggregate) {
+      const result = []
+      const keys = Object.keys(aggregate.avg)
+      keys.forEach(function (key) {
+        result[key.replace(/_/i, '').toLowerCase()] = {
+          average: aggregate.avg[key],
+          stddev: aggregate.stddev[key],
+        }
+      })
+      return result
+    },
+    /**
+     * Normalize data for the graph
+     */
+    normalize(aggregateData, normalizationData) {
+      const extracted = []
+      aggregateData.forEach((row) => {
+        this.activeFeatures.forEach((feature) => {
+          if (feature.label === 'topic') {
+            const d = this.topics.topics.find((topic) => topic.index === row[feature.label])
+            extracted.push({
+              frame: row.min_timestamp,
+              variable: feature.label,
+              value: d?.description,
+            })
+          } else if (feature.label === 'silence' || feature.label === 'success') {
+            extracted.push({
+              frame: row.min_timestamp,
+              variable: feature.label,
+              value: row[feature.label],
+            })
+          } else {
+            extracted.push({
+              frame: row.min_timestamp,
+              variable: feature.label,
+              value:
+                (row[feature.label] - normalizationData[feature.label].average) /
+                normalizationData[feature.label].stddev,
             })
           }
         })
@@ -258,12 +324,20 @@ export default {
         })
 
       // Build color scale
-      const myColor = d3.scaleSequential().domain([0, 5]).interpolator(d3.interpolateInferno)
+
       const topicColor = d3.scaleOrdinal(d3.schemeCategory10)
       const successColor = d3.scaleSequential().domain([0, 1]).interpolator(d3.interpolateRdYlGn)
-      const pitchColor = d3.scaleSequential().domain([0, 255]).interpolator(d3.interpolateViridis)
-      const intensityColor = d3.scaleSequential().domain([0, 100]).interpolator(d3.interpolatePlasma)
       const silenceColor = d3.scaleOrdinal(d3.schemeSet1)
+
+      let myColor = d3.scaleSequential().domain([0, 5]).interpolator(d3.interpolateInferno)
+      let pitchColor = d3.scaleSequential().domain([0, 255]).interpolator(d3.interpolateViridis)
+      let intensityColor = d3.scaleSequential().domain([0, 100]).interpolator(d3.interpolatePlasma)
+
+      if (this.normalization) {
+        myColor = d3.scaleDiverging().domain([-2.5, 0, 2.5]).interpolator(d3.interpolatePuOr)
+        pitchColor = d3.scaleDiverging().domain([-2.5, 0, 2.5]).interpolator(d3.interpolatePiYG)
+        intensityColor = d3.scaleDiverging().domain([-2.5, 0, 2.5]).interpolator(d3.interpolateRdBu)
+      }
 
       // Group for main content
       this.cells = chartGroup
@@ -286,7 +360,7 @@ export default {
           } else if (d.variable === 'success') {
             return successColor(d.value)
           } else if (d.variable.endsWith('c')) {
-            return myColor(d.value * 4)
+            return myColor(d.value)
           } else if (d.variable === 'pitch') {
             return pitchColor(d.value)
           } else if (d.variable === 'intensity') {

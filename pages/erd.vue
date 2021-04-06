@@ -10,11 +10,12 @@
     </v-row>
     <v-row>
       <v-col lg="10">
-        <D3HeatMap :features="selected_features" />
+        <D3HeatMap :features="selected_features" :normalization="normalization" />
       </v-col>
       <v-col lg="2">
         <D3TopicsLegend></D3TopicsLegend>
-        <D3GradientLegend></D3GradientLegend>
+        <D3GradientLegend v-if="!normalization"></D3GradientLegend>
+        <D3DivergingLegend v-if="normalization"></D3DivergingLegend>
         <D3BinaryLegend></D3BinaryLegend>
       </v-col>
     </v-row>
@@ -34,6 +35,7 @@ export default {
       isPlaying: false,
       cursor: 0,
       featureNames: [],
+      normalization: true,
     }
   },
   computed: {
