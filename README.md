@@ -1,4 +1,5 @@
 # Nuxt Apollo Hasura Example
+Made by [@ctwhome](https://github.com/ctwhome)
 
 Project idea: [Full Stack Recipes](https://github.com/NLeSC/full-stack-recipes)
 
@@ -57,13 +58,22 @@ To run in production, use the `start` command
 $ yarn start
 ```
 
+
 ### Updating from template
 
-Fetch from the `template` remote. If you cloned via github, you will need to add the remote as above.
+Fetch from the \`template\` remote. If you cloned via Github, you will need to add the remote origin.
 
-``` bash
-$ git fetch --all --allow-unrelated-histories
+```shell
+# Add template repository
+git remote add template https://github.com/NLeSC/nuxt-apollo-hasura
+
+# Update repo
+git fetch --all 
+
+# Merge the branch you want from the remote template
+git merge template/main --allow-unrelated-histories
 ```
+
 ## Licensing Notes
 Tracking and understanding licensing Node applications can be tedious due to the 3rd party packages involved in the project.
 
